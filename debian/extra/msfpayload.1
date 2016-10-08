@@ -1,0 +1,75 @@
+.TH MSFPAYLOAD 1 "March 20, 2013" "4.6.0‐dev.15168" "Metasploit Framework - Payload Generator"
+.SH NAME
+msfpayload - Payload Generator
+.SH SYNOPSIS
+msfpayload <options>
+.br 
+msfpayload <payload> [var=val] [<output>]
+.SH OPTIONS
+-h        Help banner
+.br
+-l        List available payloads
+.TP
+output:
+[S]ummary		Provides a configuration summary
+.br 
+[C] 			Outputs the payload in C format
+.br 
+[P]erl 		Outputs the payload in Perl format
+.br 
+Rub[y]		Outputs the payload in Ruby format
+.br 
+[R]aw		Outputs the the payload in Raw format
+.br 
+[J]s			Outputs the the payload in JavaScript format
+.br 
+e[X]e		Outputs the the payload in Windows executable
+.br 
+[D]ll		Outputs the the payload as a Dll
+.br 
+[V]BA		Outputs the the payload as a VBA script
+.br 
+[W]ar		Outputs the the payload in War format
+.SH DESCRIPTION
+msfpayload is a command-line instance of Metasploit that is used to generate and output all of the various types of shellcode that are available in Metasploit. The most common use of this tool is for the generation of shellcode for an exploit that is not currently in the Metasploit Framework or for testing different types of shellcode and options before finalizing a module. 
+
+.SH EXAMPLE
+msfpayload windows/shell_bind_tcp EXITFUNC=seh LPORT=1234 C
+
+.SH SEE ALSO
+msfcli(1)
+.br
+msfvenom(1)
+.br
+msfconsole(1)
+.br
+msfencode(1)
+.SH AUTHORS
+.TP
+.B
+Creator
+HD Moore - @hdmoore / hdm@metasploit.com
+.SH COPYRIGHT
+Copyright (C) 2006-2013, Rapid7 Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+.TP
+* 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+.TP
+* 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+.TP
+* 
+Neither the name of Rapid7 LLC nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+
+The Metasploit Framework is provided under the 3-clause BSD license above.
+
+The copyright on this package is held by Rapid7 LLC.
+
+This license does not apply to several components within the Metasploit
+Framework source tree.  For more details see the LICENSE file.

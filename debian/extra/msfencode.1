@@ -1,0 +1,120 @@
+.TH MSFVENOM 1 "March 22, 2013" "4.6.0-dev.15168" "Metasploit Framework - msfencode"
+.SH NAME
+msfencode - Payload Encoder
+.SH SYNOPSIS
+msfencode <options>
+.SH OPTIONS
+.TP
+-a <opt>  
+The architecture to encode as
+.TP 
+-b <opt>  
+The list of characters to avoid: '\\x00\\xff'
+.TP
+-c <opt>  
+The number of times to encode the data
+.TP
+-d <opt>  
+Specify the directory in which to look for EXE templates
+.TP
+-e <opt>  
+The encoder to use
+.TP
+-h        
+Help banner
+.TP
+ -i <opt>  
+Encode the contents of the supplied file path
+.TP
+-k        
+Keep template working; run payload in new thread (use with -x)
+.TP
+-l        
+List available encoders
+.TP 
+-m <opt>  
+Specifies an additional module search path
+.TP
+-n        
+Dump encoder information
+.TP
+-o <opt>  
+The output file
+.TP
+-p <opt>  
+The platform to encode for
+.TP
+-s <opt>  
+The maximum size of the encoded data
+.TP 
+-v        
+Increase verbosity
+.TP
+-x <opt>  
+Specify an alternate executable template
+.TP
+-v        
+Increase verbosity
+.TP
+-x <opt>  
+Specify an alternate executable template 
+.TP 3
+-t <opt>  
+The output format:
+.br
+raw,ruby,rb,perl,pl,bash,sh,c,js_be,js_le
+.br
+java,dll,exe,exe-small,elf,macho
+.br
+vba,vba-exe,vbs,loop-vbs,asp,aspx,war,psh,psh-net
+.SH DESCRIPTION
+msfencode is the command line tool used to encode payloads, and is part of the Metasploit Framework.
+.SH EXEMPLE
+Encoding payload generated and provided by 
+.B
+msfpayload
+:
+.TP 20
+msfpayload windows/shell/bind_tcp LPORT=4444 R |
+.B
+msfencode -e x86/shikata_ga_nai -b '\\x00' -c 3 -t C
+.SH SEE ALSO
+msfcli(1)
+.br
+msfconsole(1)
+.br
+msfpayload(1)
+.br
+msfvenom(1)
+.SH AUTHORS
+.TP
+.B
+Creator
+HD Moore - @hdmoore / hdm@metasploit.com
+.SH COPYRIGHT
+Copyright (C) 2006-2013, Rapid7 Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+.TP
+* 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+.TP
+* 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+.TP
+* 
+Neither the name of Rapid7 LLC nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+
+The Metasploit Framework is provided under the 3-clause BSD license above.
+
+The copyright on this package is held by Rapid7 LLC.
+
+This license does not apply to several components within the Metasploit
+Framework source tree.  For more details see the LICENSE file.
+
+
+

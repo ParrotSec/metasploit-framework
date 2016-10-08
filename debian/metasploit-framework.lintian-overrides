@@ -1,0 +1,57 @@
+# Exclude data directory from most binary policies since these
+# files typically execute on other systems or have specific reasons
+# for violating policies
+statically-linked-binary usr/share/metasploit-framework/data/*
+unstripped-binary-or-object usr/share/metasploit-framework/data/*
+binary-from-other-architecture usr/share/metasploit-framework/data/*
+arch-dependent-file-in-usr-share usr/share/metasploit-framework/data/*
+binary-has-unneeded-section usr/share/metasploit-framework/data/*
+hardening-no-relro usr/share/metasploit-framework/data/*
+hardening-no-fortify-functions usr/share/metasploit-framework/data/*
+program-not-linked-against-libc usr/share/metasploit-framework/data/*
+shared-lib-without-dependency-information usr/share/metasploit-framework/data/*
+font-in-non-font-package usr/share/metasploit-framework/data/*
+package-contains-vcs-control-file usr/share/metasploit-framework/data/*
+windows-devel-file-in-package usr/share/metasploit-framework/data/*
+executable-jar-without-main-class usr/share/metasploit-framework/data/*
+missing-manifest usr/share/metasploit-framework/data/*
+executable-not-elf-or-script usr/share/metasploit-framework/data/*
+
+# Also ignore everything in the ruby bundle
+arch-dependent-file-in-usr-share usr/share/metasploit-framework/vendor/bundle/*
+spelling-error-in-binary usr/share/metasploit-framework/vendor/bundle/*
+embedded-library usr/share/metasploit-framework/vendor/bundle/*
+hardening-no-fortify-functions usr/share/metasploit-framework/vendor/bundle/*
+binary-from-other-architecture usr/share/metasploit-framework/vendor/bundle/*
+binary-has-unneeded-section usr/share/metasploit-framework/vendor/bundle/*
+library-not-linked-against-libc usr/share/metasploit-framework/vendor/bundle/*
+unstripped-binary-or-object usr/share/metasploit-framework/vendor/bundle/*
+statically-linked-binary usr/share/metasploit-framework/vendor/bundle/*
+extra-license-file usr/share/metasploit-framework/vendor/bundle/*
+package-contains-vcs-control-file usr/share/metasploit-framework/vendor/bundle/*
+embedded-javascript-library usr/share/metasploit-framework/vendor/bundle/*
+package-contains-empty-directory usr/share/metasploit-framework/vendor/bundle/*
+ruby-script-but-no-ruby-dep usr/share/metasploit-framework/vendor/bundle/*
+executable-not-elf-or-script usr/share/metasploit-framework/vendor/bundle/*
+binary-or-shlib-defines-rpath usr/share/metasploit-framework/vendor/bundle/*
+privacy-breach-google-adsense usr/share/metasploit-framework/vendor/bundle/*
+windows-devel-file-in-package usr/share/metasploit-framework/vendor/bundle/*
+codeless-jar usr/share/metasploit-framework/vendor/bundle/*
+unusual-interpreter usr/share/metasploit-framework/vendor/bundle/* *
+missing-dep-for-interpreter rackup => ruby-rack *
+wrong-path-for-interpreter usr/share/metasploit-framework/vendor/bundle/* *
+interpreter-not-absolute usr/share/metasploit-framework/vendor/bundle/* *
+
+# The executable jars are a mistake
+missing-dep-on-jarwrapper
+
+# Really not important
+script-not-executable *
+unusual-interpreter */Rakefile *
+unusual-interpreter */Rakefile.cross *
+possible-documentation-but-no-doc-base-registration
+arch-dep-package-has-big-usr-share *
+
+# We have a custom ruby interpreter
+wrong-path-for-interpreter usr/share/metasploit-framework/msf* *
+wrong-path-for-interpreter usr/share/metasploit-framework/tools/*.rb *

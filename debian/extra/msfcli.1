@@ -1,0 +1,77 @@
+.TH MSFCLI 1 "March 20, 2013" "4.6.0-dev.15168" "Metasploit Framework - Command Line Interface"
+.SH NAME
+msfcli - MSF Commnand Line Interface
+.SH SYNOPSIS
+msfcli <exploit_name> <option=value> [mode]
+.SH OPTIONS
+.TP 2
+Mode
+(A)dvanced     Show available advanced options for this module
+.br
+(AC)tions      Show available actions for this auxiliary module
+.br
+(C)heck        Run the check routine of the selected module
+.br
+(E)xecute      Execute the selected module
+.br
+(H)elp         You're looking at it baby!
+.br
+(I)DS Evasion  Show available ids evasion options for this module
+.br
+(O)ptions      Show available options for this module
+.br
+(P)ayloads     Show available payloads for this module
+.br
+(S)ummary      Show information about this module
+.br
+(T)argets      Show available targets for this exploit module
+.SH DESCRIPTION
+Msfcli provides a powerful command-line interface to the framework. The only real drawback of msfcli is that it is not supported quite as well as msfconsole and it can only handle one shell at a time, making it rather impractical for client-side attacks. It also doesn't support any of the advanced automation features of msfconsole. 
+.SH USAGE
+When using msfcli, variables are assigned using '=' and that all options are case-sensitive.
+If you aren't entirely sure about what options belong to a particular module, you can append the letter 'O' to the end of the string at whichever point you are stuck.
+To display the payloads that are available for the current module, append the letter 'P' to the command-line string. 
+.SH EXAMPLE
+msfcli exploit/multi/samba/usermap_script O
+.br
+msfcli exploit/multi/samba/usermap_script P
+.br
+msfcli exploit/multi/handler LHOST=127.0.0.1 LPORT=4444 E
+.SH SEE ALSO
+msfpayload(1)
+.br
+msfvenom(1)
+.br
+msfconsole(1)
+.br
+msfencode(1)
+.SH AUTHORS
+.TP
+.B
+Creator
+HD Moore - @hdmoore / hdm@metasploit.com
+.SH COPYRIGHT
+Copyright (C) 2006-2013, Rapid7 Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+.TP
+* 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+.TP
+* 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+.TP
+* 
+Neither the name of Rapid7 LLC nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+
+The Metasploit Framework is provided under the 3-clause BSD license above.
+
+The copyright on this package is held by Rapid7 LLC.
+
+This license does not apply to several components within the Metasploit
+Framework source tree.  For more details see the LICENSE file.
+

@@ -1,0 +1,34 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_clean:
+	dh_clean --exclude=external/serialport/README.orig
+	rm -rf vendor/bundle
+
+override_dh_auto_configure:
+	# Do nothing
+
+override_dh_auto_build:
+	# Build binary gems
+	bundle config --local path vendor/bundle
+	bundle config --local without development:test
+	# Work-around failure to install json via bundle install...
+	gem install json -v 1.8.3 --install-dir vendor/bundle/ruby/2.3.0
+	bundle install --force
+	bundle config --local frozen true
+
+override_dh_install:
+	dh_install --exclude=data/gui --exclude=LICENSE --exclude=LICENCE --exclude=LICENSE.txt
+	echo "Note: The presence of this file tells msfupdate to rely on apt-get to install updates" > debian/metasploit-framework/usr/share/metasploit-framework/.apt
+	# Hard code shebang for ruby scripts
+	for binfile in $$(ls -d -1 debian/metasploit-framework/usr/share/metasploit-framework/tools/*.rb debian/metasploit-framework/usr/share/metasploit-framework/tools/exploit/*.rb debian/metasploit-framework/usr/share/metasploit-framework/msf*); do \
+	  sed -i $${binfile} -e '1,1s|#!.*ruby|#!/usr/share/metasploit-framework/ruby|' ; \
+	done
+
+override_dh_shlibdeps:
+	dh_shlibdeps --exclude=/data/ --exclude=/modules/
+
+override_dh_strip:
+	dh_strip --exclude=/data/ --exclude=/modules/ --exclude=/vendor/bundle/

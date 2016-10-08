@@ -1,0 +1,3 @@
+version=3
+opts="filenamemangle=s/.*\/(.*)$/metasploit-framework-$1/,dversionmangle=s/[-+]\d+//,uversionmangle=s/^(\d+)$/0~$1/" \
+https://github.com/rapid7/metasploit-framework/releases .*/(\d.*)\.tar\.gz

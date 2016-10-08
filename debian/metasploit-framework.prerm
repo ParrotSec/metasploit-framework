@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+BINS="msfconsole msfd msfdb msfrpc msfrpcd msfupdate msfvenom"
+
+if [ "$1" = "remove" ]; then
+    for BIN in $BINS; do
+	update-alternatives --remove $BIN /usr/share/metasploit-framework/$BIN
+    done
+fi
+
+#DEBHELPER#
+
+exit 0

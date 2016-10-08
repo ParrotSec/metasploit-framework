@@ -1,0 +1,5 @@
+debian/extra/msfcli.1
+debian/extra/msfconsole.1
+debian/extra/msfencode.1
+debian/extra/msfpayload.1
+debian/extra/msfvenom.1

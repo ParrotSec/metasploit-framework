@@ -1,0 +1,99 @@
+.TH MSFPESCAN 1 "March 22, 2013" "4.6.0-dev.15168" "Metasploit Framework - msfpescan"
+.SH NAME
+msfpescan - PE File Scanner
+.SH SYNOPSIS
+msfpescan [mode] <options> [targets]
+.SH OPTIONS
+.TP 2
+Modes:
+    -j, --jump [regA,regB,regC]      
+    Search for jump equivalent instructions
+    
+    -p, --poppopret                  
+    Search for pop+pop+ret combinations
+    
+    -r, --regex [regex]              
+    Search for regex match
+    
+    -a, --analyze-address [address]  
+    Display the code at the specified address
+    
+    -b, --analyze-offset [offset]    
+    Display the code at the specified offset
+    
+    -f, --fingerprint                
+    Attempt to identify the packer/compiler
+    
+    -i, --info                       
+    Display detailed information about the image
+    
+    -R, --ripper [directory]         
+    Rip all module resources to disk
+        --context-map [directory]    
+        Generate context-map files
+.TP 2
+Options:
+    -M, --memdump                    
+    The targets are memdump.exe directories
+    
+    -A, --after [bytes]
+    Number of bytes to show after match (-a/-b)
+    
+    -B, --before [bytes]
+    Number of bytes to show before match (-a/-b)
+    
+    -D, --disasm                     
+    Disassemble the bytes at this address
+    
+    -I, --image-base [address]
+    Specify an alternate ImageBase
+    
+    -F, --filter-addresses [regex] 
+    Filter addresses based on a regular expression
+    
+    -h, --help                       
+    Show help message
+.SH DESCRIPTION
+Use 
+.B
+msfpescan 
+to locate a suitable return address.
+.br
+If an exploit code doesn't explicitly tell you what type of return address is required but is good enough to tell you the dll name for the existing exploit, you can find out what type of return address you are looking for and run msfpescan against the appropriate file with the provided address to determine the return type.
+.SH EXEMPLE
+msfpescan -D -a 0x767a38f6 win2000sp4.umpnpmgr.dll
+.br
+msfpescan -p targetos.umpnpmgr.dll
+.SH SEE ALSO
+msfelfscan(1)
+.br
+msfrop(1)
+.SH AUTHORS
+.TP
+.B
+Creator
+HD Moore - @hdmoore / hdm@metasploit.com
+.SH COPYRIGHT
+Copyright (C) 2006-2013, Rapid7 Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+.TP
+* 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+.TP
+* 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+.TP
+* 
+Neither the name of Rapid7 LLC nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+
+The Metasploit Framework is provided under the 3-clause BSD license above.
+
+The copyright on this package is held by Rapid7 LLC.
+
+This license does not apply to several components within the Metasploit
+Framework source tree.  For more details see the LICENSE file.
