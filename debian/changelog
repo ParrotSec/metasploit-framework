@@ -1,6 +1,7 @@
-metasploit-framework (4.12.31-0parrot1) UNRELEASED; urgency=medium
+metasploit-framework (4.12.35-0parrot1) testing; urgency=medium
 
   * Remove old package history and switch to gbp
+  * Import new upstream release
 
  -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sat, 22 Oct 2016 23:38:28 +0200
 
