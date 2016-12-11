@@ -1,5 +1,9 @@
 #!/usr/bin/make -f
 
+major-rubyversion=$(shell ruby -v | cut -d ' ' -f 2 | cut -d '.' -f 1)
+minor-rubyversion=$(shell ruby -v | cut -d ' ' -f 2 | cut -d '.' -f 2)
+minormax-rubyversion=$(shell echo $$(( $(minor-rubyversion) + 1 )) )
+
 %:
 	dh $@
 
@@ -18,6 +22,9 @@ override_dh_auto_build:
 	gem install json -v 1.8.3 --install-dir vendor/bundle/ruby/2.3.0
 	bundle install --force
 	bundle config --local frozen true
+
+override_dh_gencontrol:
+	dh_gencontrol -- -Vruby:Depends="ruby (>= 1:$(major-rubyversion).$(minor-rubyversion)), ruby (<< 1:$(major-rubyversion).$(minormax-rubyversion))"
 
 override_dh_install:
 	dh_install --exclude=data/gui --exclude=LICENSE --exclude=LICENCE --exclude=LICENSE.txt
