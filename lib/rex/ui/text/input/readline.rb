@@ -40,6 +40,20 @@ begin
       ::Readline.completion_proc = tab_complete_proc || @rl_saved_proc
     end
 
+
+    #
+    # Retrieve the line buffer
+    #
+    def line_buffer
+      if defined? RbReadline
+        RbReadline.rl_line_buffer
+      else
+        ::Readline.line_buffer
+      end
+    end
+
+    attr_accessor :prompt
+
     #
     # Whether or not the input medium supports readline.
     #
@@ -124,12 +138,17 @@ begin
       # to reimplement []`Readline.readline`](https://github.com/luislavena/rb-readline/blob/ce4908dae45dbcae90a6e42e3710b8c3a1f2cd64/lib/readline.rb#L36-L58)
       # for rb-readline to support setting input and output.  Output needs to be set so that colorization works for the
       # prompt on Windows.
+      self.prompt = prompt
+      reset_sequence = "\001\r\033[K\002"
+      if (/mingw/ =~ RUBY_PLATFORM)
+        reset_sequence = ""
+      end
       if defined? RbReadline
         RbReadline.rl_instream = fd
         RbReadline.rl_outstream = output
 
         begin
-          line = RbReadline.readline(prompt)
+          line = RbReadline.readline(reset_sequence + prompt)
         rescue ::Exception => exception
           RbReadline.rl_cleanup_after_signal()
           RbReadline.rl_deprep_terminal()
@@ -143,7 +162,7 @@ begin
 
         line.try(:dup)
       else
-        ::Readline.readline(prompt, true)
+        ::Readline.readline(reset_sequence + prompt, true)
       end
     end
 
