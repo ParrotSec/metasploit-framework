@@ -1,6 +1,0 @@
-# Ignore problems on data
-source-is-missing data/*
-source-contains-prebuilt-ms-help-file data/*
-
-# We don't care about external/* it's not used
-ancient-libtool external/*

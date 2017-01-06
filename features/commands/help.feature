@@ -21,12 +21,12 @@ Feature: Help command
           getg          Gets the value of a global variable
           grep          Grep the output of another command
           help          Help menu
+          history       Show command history
           irb           Drop into irb scripting mode
           load          Load a framework plugin
           quit          Exit the console
           route         Route traffic through a session
           save          Saves the active datastores
-          sess          Interact with a given session
           sessions      Dump session listings and display information about sessions
           set           Sets a context-specific variable to a value
           setg          Sets a global variable to a value

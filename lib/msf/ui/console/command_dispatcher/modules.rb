@@ -570,7 +570,7 @@ module Msf
 
             res = %w{all encoders nops exploits payloads auxiliary post plugins options}
             if (active_module)
-              res.concat(%w{ missing advanced evasion targets actions })
+              res.concat %w{missing advanced evasion targets actions info}
               if (active_module.respond_to? :compatible_sessions)
                 res << "sessions"
               end
@@ -596,6 +596,14 @@ module Msf
 
             # Try to create an instance of the supplied module name
             mod_name = args[0]
+
+            # Ensure we have a reference name and not a path
+            if mod_name.start_with?('modules/', '/')
+              mod_name.sub!(/^(?:modules)?\//, '')
+            end
+            if mod_name.end_with?('.', '.r', '.rb')
+              mod_name.sub!(/\.(?:rb?)?$/, '')
+            end
 
             begin
               mod = framework.modules.create(mod_name)

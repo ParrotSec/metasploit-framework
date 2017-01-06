@@ -387,13 +387,14 @@ RSpec.describe Msf::Ui::Console::CommandDispatcher::Db do
           "  -h,--help         Show this help information",
           "  -u,--up           Only show hosts which are up",
           "  -o <file>         Send output to a file in csv format",
+          "  -O <column>       Order rows by specified column number",
           "  -R,--rhosts       Set RHOSTS from the results of the search",
           "  -S,--search       Search string to filter by",
           "  -i,--info         Change the info of a host",
           "  -n,--name         Change the name of a host",
           "  -m,--comment      Change the comment of a host",
           "  -t,--tag          Add or specify a tag to a range of hosts",
-          "Available columns: address, arch, comm, comments, created_at, cred_count, detected_arch, exploit_attempt_count, host_detail_count, info, mac, name, note_count, os_flavor, os_lang, os_name, os_sp, purpose, scope, service_count, state, updated_at, virtual_host, vuln_count, tags"
+          "Available columns: address, arch, comm, comments, created_at, cred_count, detected_arch, exploit_attempt_count, host_detail_count, info, mac, name, note_count, os_family, os_flavor, os_lang, os_name, os_sp, purpose, scope, service_count, state, updated_at, virtual_host, vuln_count, tags"
         ]
       end
     end
@@ -462,6 +463,7 @@ RSpec.describe Msf::Ui::Console::CommandDispatcher::Db do
           "  -r <protocol>     Only show [tcp|udp] services",
           "  -u,--up           Only show services which are up",
           "  -o <file>         Send output to a file in csv format",
+          "  -O <column>       Order rows by specified column number",
           "  -R,--rhosts       Set RHOSTS from the results of the search",
           "  -S,--search       Search string to filter by",
           "Available columns: created_at, info, name, port, proto, state, updated_at"
