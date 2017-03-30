@@ -1,5 +1,3 @@
-From: =?utf-8?q?Rapha=C3=ABl_Hertzog?= <hertzog@debian.org>
-Date: Tue, 21 Jul 2015 16:06:57 +0200
 Subject: Avoid call to git ls-files via gemspec
 
 The call to git ls-files generates spurious error messages
@@ -8,15 +6,19 @@ on a package setup that does not have any .git metadata.
  metasploit-framework.gemspec | 3 ---
  1 file changed, 3 deletions(-)
 
---- a/metasploit-framework.gemspec
-+++ b/metasploit-framework.gemspec
-@@ -24,9 +24,6 @@ Gem::Specification.new do |spec|
-   spec.homepage      = 'https://www.metasploit.com'
-   spec.license       = 'BSD-3-clause'
- 
--  spec.files         = `git ls-files`.split($/).reject { |file|
--    file =~ /^documentation|^data\/gui|^external/
--  }
-   spec.bindir = '.'
-   if ENV['CREATE_BINSTUBS']
-     spec.executables   = [
+Index: metasploit-framework/metasploit-framework.gemspec
+===================================================================
+--- metasploit-framework.orig/metasploit-framework.gemspec
++++ metasploit-framework/metasploit-framework.gemspec
+@@ -65,9 +65,9 @@ Gem::Specification.new do |spec|
+   # are needed when there's no database
+   spec.add_runtime_dependency 'metasploit-model'
+   # Needed for Meterpreter
+-  spec.add_runtime_dependency 'metasploit-payloads', '1.2.14'
++  spec.add_runtime_dependency 'metasploit-payloads', '1.2.19'
+   # Needed for the next-generation POSIX Meterpreter
+-  spec.add_runtime_dependency 'metasploit_payloads-mettle', '0.1.7'
++  spec.add_runtime_dependency 'metasploit_payloads-mettle', '0.1.8'
+   # Needed by msfgui and other rpc components
+   spec.add_runtime_dependency 'msgpack'
+   # get list of network interfaces, like eth* from OS.
