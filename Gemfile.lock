@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    metasploit-framework (4.14.5)
+    metasploit-framework (4.14.7)
       actionpack (~> 4.2.6)
       activerecord (~> 4.2.6)
       activesupport (~> 4.2.6)
@@ -53,6 +53,7 @@ PATH
       rex-text
       rex-zip
       robots
+      ruby_smb
       rubyntlm
       rubyzip
       sqlite3
@@ -89,7 +90,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    addressable (2.5.0)
+    addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
     arel (6.0.4)
     arel-helpers (2.3.0)
@@ -102,6 +103,7 @@ GEM
       rspec-expectations (>= 2.99)
       thor (~> 0.19)
     bcrypt (3.1.11)
+    bindata (2.3.5)
     bit-struct (0.15.0)
     builder (3.2.3)
     capybara (2.13.0)
@@ -215,7 +217,7 @@ GEM
     nessus_rest (0.1.6)
     net-ssh (4.1.0)
     network_interface (0.0.1)
-    nexpose (5.3.1)
+    nexpose (5.3.2)
     nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
     octokit (4.6.2)
@@ -267,7 +269,7 @@ GEM
       rex-core
       rex-struct2
       rex-text
-    rex-core (0.1.7)
+    rex-core (0.1.8)
     rex-encoder (0.1.2)
       metasm
       rex-arch
@@ -301,7 +303,7 @@ GEM
       rex-socket
       rex-text
     rex-struct2 (0.1.0)
-    rex-text (0.2.12)
+    rex-text (0.2.13)
     rex-zip (0.1.1)
       rex-text
     rkelly-remix (0.0.7)
@@ -323,6 +325,11 @@ GEM
       rspec-mocks (~> 3.5.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
+    ruby_smb (0.0.8)
+      bindata
+      bit-struct
+      rubyntlm (~> 0.5)
+      windows_error
     rubyntlm (0.6.1)
     rubyzip (1.2.1)
     sawyer (0.8.1)
@@ -346,9 +353,9 @@ GEM
     thor (0.19.4)
     thread_safe (0.3.6)
     timecop (0.8.1)
-    tzinfo (1.2.2)
+    tzinfo (1.2.3)
       thread_safe (~> 0.1)
-    tzinfo-data (1.2017.1)
+    tzinfo-data (1.2017.2)
       tzinfo (>= 1.0.0)
     windows_error (0.1.1)
     xpath (2.0.0)
