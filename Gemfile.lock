@@ -13,7 +13,7 @@ GIT
 PATH
   remote: .
   specs:
-    metasploit-framework (4.15.2)
+    metasploit-framework (4.15.3)
       actionpack (~> 4.2.6)
       activerecord (~> 4.2.6)
       activesupport (~> 4.2.6)
@@ -30,7 +30,7 @@ PATH
       metasploit-model
       metasploit-payloads (= 1.2.37)
       metasploit_data_models
-      metasploit_payloads-mettle (= 0.1.10)
+      metasploit_payloads-mettle (= 0.1.14)
       msgpack
       nessus_rest
       net-ssh
@@ -189,7 +189,7 @@ GEM
       postgres_ext
       railties (~> 4.2.6)
       recog (~> 2.0)
-    metasploit_payloads-mettle (0.1.10)
+    metasploit_payloads-mettle (0.1.14)
     method_source (0.8.2)
     mini_portile2 (2.2.0)
     minitest (5.10.2)
@@ -256,7 +256,7 @@ GEM
       rex-core
       rex-struct2
       rex-text
-    rex-core (0.1.11)
+    rex-core (0.1.12)
     rex-encoder (0.1.4)
       metasm
       rex-arch
