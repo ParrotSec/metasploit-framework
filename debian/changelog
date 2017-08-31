@@ -1,4 +1,10 @@
-metasploit-framework (4.15.4-1parro01) testing; urgency=medium
+metasploit-framework (4.16.3-1parrot1) testing; urgency=medium
+
+  * New upstream release.
+
+ -- Lisetta "Sheireen" Ferrero <sheireen@parrotsec.org>  Thu, 31 Aug 2017 02:43:28 +0200
+
+metasploit-framework (4.15.4-1parrot1) testing; urgency=medium
 
   * New upstream release.
 
