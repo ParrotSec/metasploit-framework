@@ -97,8 +97,9 @@ class Console::CommandDispatcher::Core
     # the OS platform rather than the meterpreter arch. When we've properly implemented
     # the platform update feature we can remove some of these conditions
     if client.platform == 'windows' || client.platform == 'linux' ||
-        client.platform == 'python' || client.platform == 'java' ||
-        client.arch == ARCH_PYTHON || client.platform == 'android'
+        client.platform == 'python' || client.arch == ARCH_PYTHON ||
+        client.platform == 'java' || client.arch == ARCH_JAVA ||
+        client.platform == 'android' || client.arch == ARCH_DALVIK
       # Yet to implement transport hopping for other meterpreters.
       c['transport'] = 'Change the current transport mechanism'
 
@@ -142,7 +143,7 @@ class Console::CommandDispatcher::Core
     print_line(@@pivot_opts.usage)
     print_line
     print_line('Supported pivot types:')
-    print_line('     - pipe (using named pipes over SMB)') 
+    print_line('     - pipe (using named pipes over SMB)')
     print_line('Supported arhiectures:')
     @@pivot_supported_archs.each do |a|
       print_line('     - ' + a)
@@ -757,7 +758,7 @@ class Console::CommandDispatcher::Core
   # Arguments for transport switching
   #
   @@transport_opts = Rex::Parser::Arguments.new(
-    '-t' => [true, "Transport type: #{Rex::Post::Meterpreter::ClientCore::VALID_TRANSPORTS.keys.join(', ')}"],
+    '-t' => [true, "Transport type: #{Rex::Post::Meterpreter::ClientCore::VALID_TRANSPORTS.join(', ')}"],
     '-l' => [true, 'LHOST parameter (for reverse transports)'],
     '-p' => [true, 'LPORT parameter'],
     '-i' => [true, 'Specify transport by index (currently supported: remove)'],
