@@ -1,3 +1,9 @@
+metasploit-framework (4.16.11-1parrot0) testing; urgency=medium
+
+  * New upstream release.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sun, 15 Oct 2017 01:37:35 +0200
+
 metasploit-framework (4.16.6-1parrot1) testing; urgency=medium
 
   * New upstream release.
