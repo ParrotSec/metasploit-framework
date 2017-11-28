@@ -11,6 +11,11 @@ if [ "$1" = "configure" ]; then
             update-alternatives --quiet --remove $OLD_BIN /usr/share/metasploit-framework/$OLD_BIN
         done
     fi
+    if dpkg --compare-versions "$2" lt-nl 4.14.22; then
+        # this file was needed by msfupdate to use apt instead of git.
+        # Upstream removed this option
+        rm -f /usr/share/metasploit-framework/.apt
+    fi
     for BIN in $BINS; do
 	update-alternatives --install /usr/bin/$BIN $BIN /usr/share/metasploit-framework/$BIN 50
     done

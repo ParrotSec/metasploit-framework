@@ -2,7 +2,7 @@ Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Source: http://www.metasploit.com/
 
 Files: *
-Copyright: 2006-2016, Rapid7, Inc.
+Copyright: 2006-2017, Rapid7, Inc.
 License: BSD-3-clause
 
 # The Metasploit Framework is provided under the 3-clause BSD license provided
@@ -70,23 +70,15 @@ Files: lib/anemone.rb lib/anemone/*
 Copyright: 2009 Vertive, Inc.
 License: MIT
 
-Files: lib/bit-struct.rb lib/bit-struct/*
-Copyright: 2005-2009, Joel VanderWerf
-License: Ruby
-
-Files: lib/metasm.rb lib/metasm/* data/cpuinfo/*
+Files: lib/metasm/* data/cpuinfo/*
 Copyright: 2006-2010 Yoann GUILLOT
 License: LGPL-2.1
-
-Files: lib/nessus/*
-Copyright: Vlatoko Kosturjak
-License: BSD-3-clause
 
 Files: lib/net/dns.rb lib/net/dns/*
 Copyright: 2006 Marco Ceresa
 License: Ruby
 
-Files: lib/net/ssh.rb lib/net/ssh/*
+Files: lib/net/ssh/*
 Copyright: 2008 Jamis Buck <jamis@37signals.com>
 License: MIT
 
@@ -94,7 +86,7 @@ Files: lib/postgres_msf.rb lib/postgres/postgres-pr/message.rb lib/postgres/post
 Copyright: 2005 Michael Neumann
 License: BSD-3-clause or Ruby
 
-Files: lib/openvas/*
+Files: plugins/openvas.rb
 Copyright: No copyright statement provided
 License: MIT
 
@@ -109,10 +101,6 @@ License: Ruby
 Files: lib/snmp.rb lib/snmp/*
 Copyright: 2004, David R. Halliday
 License: Ruby
-
-Files: lib/sshkey.rb lib/sshkey/*
-Copyright: 2011 James Miller
-License: MIT
 
 Files: lib/windows_console_color_support.rb
 Copyright: 2011 Michael 'mihi' Schierl

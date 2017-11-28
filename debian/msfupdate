@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -e
+
+echo "msfupdate is no longer supported when Metasploit is part of the operating
+system. Please use 'apt update; apt install metasploit-framework'"

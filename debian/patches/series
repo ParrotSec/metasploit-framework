@@ -1,2 +1,1 @@
-#Avoid-call-to-git-ls-files-via-gemspec.patch
-msfupdate-change-distro.patch
+drop-installation-msfupdate.patch

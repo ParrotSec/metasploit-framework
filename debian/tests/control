@@ -1,0 +1,6 @@
+Test-Command: debian/tests/runtests.sh test_update test_msfvenom
+Restrictions: allow-stderr, needs-root
+
+Test-Command: debian/tests/runtests.sh test_msfconsole test_msf_db_port_scan test_tools test_msfrpcd test_windows_meterpreter test_msfd
+Restrictions: allow-stderr, needs-root, isolation-container, breaks-testbed
+Depends: @, apache2, screen, wine, expect, netcat-traditional, net-tools
