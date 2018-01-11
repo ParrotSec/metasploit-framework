@@ -123,6 +123,7 @@ Gem::Specification.new do |spec|
   # Protocol Libraries
   #
   spec.add_runtime_dependency 'dnsruby'
+  spec.add_runtime_dependency 'mqtt'
   spec.add_runtime_dependency 'net-ssh'
   spec.add_runtime_dependency 'rbnacl', ['< 5.0.0']
   spec.add_runtime_dependency 'bcrypt_pbkdf'
@@ -186,4 +187,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'nexpose'
   # Needed for NDMP sockets
   spec.add_runtime_dependency 'xdr'
+  # Needed for ::Msf...CertProvider
+  spec.add_runtime_dependency 'faker'
 end
