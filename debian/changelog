@@ -1,3 +1,10 @@
+metasploit-framework (4.16.34-1parrot1) testing; urgency=medium
+
+  * Import new upstream release.
+  * Add rbnacl-libsodium patch.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sat, 27 Jan 2018 01:45:36 +0100
+
 metasploit-framework (4.16.32-1parrot1) testing; urgency=medium
 
   * New upstream release.
