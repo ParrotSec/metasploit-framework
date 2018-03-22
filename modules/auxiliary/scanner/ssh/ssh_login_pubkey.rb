@@ -72,7 +72,7 @@ class MetasploitModule < Msf::Auxiliary
     return unless ssh_socket
 
     # Create a new session from the socket
-    conn = Net::SSH::CommandStream.new(ssh_socket, '/bin/sh', true)
+    conn = Net::SSH::CommandStream.new(ssh_socket)
 
     # Clean up the stored data - need to stash the keyfile into
     # a datastore for later reuse.
@@ -107,6 +107,10 @@ class MetasploitModule < Msf::Auxiliary
       s.platform = "windows"
     when /Unknown command or computer name/
       s.platform = "cisco-ios"
+    when /unknown keyword/ # ScreenOS
+      s.platform = "juniper"
+    when /JUNOS Base OS/ #JunOS
+      s.platform = "juniper"
     end
 
     s

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+name_script=$(basename $0)
+tool_name=${name_script##msf-}
+
+exec /usr/share/metasploit-framework/tools/exploit/$tool_name.rb "$@"

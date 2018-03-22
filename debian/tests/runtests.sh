@@ -24,15 +24,15 @@ test_tools() {
 
 
 	echo "Testing if generating an egghunter in py format works correctly..."
-	/usr/share/metasploit-framework/tools/exploit/egghunter.rb --egg W00T --format py
+	msf-egghunter --egg W00T --format py
 	echo "Generating metasploit pattern..."
-	/usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 500
+	msf-pattern_create -l 500
 	echo "Locate 3Ak4 in the buffer strings..."
-	/usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -l 500 -q 3Ak4
+	msf-pattern_offset -l 500 -q 3Ak4
 	echo "Testing metasm_shell utility..."
     cat <<EOF > $AUTOPKGTEST_TMP/run_metasm_shell
 #!/usr/bin/expect
-spawn /usr/share/metasploit-framework/tools/exploit/metasm_shell.rb
+spawn msf-metasm_shell
 expect "metasm >"
 send "add esp, 10\n"
 expect "metasm >"
@@ -44,7 +44,7 @@ EOF
 	echo -e "\nTesting nasm_shell utility..."
 	cat <<EOF > $AUTOPKGTEST_TMP/run_nasm_shell
 #!/usr/bin/expect
-spawn /usr/share/metasploit-framework/tools/exploit/nasm_shell.rb
+spawn msf-nasm_shell
 expect "nasm >"
 send "add esp, 10\n"
 expect "nasm >"
@@ -53,16 +53,18 @@ EOF
 
 	chmod 755 $AUTOPKGTEST_TMP/run_nasm_shell
 	$AUTOPKGTEST_TMP/run_nasm_shell
-#	disabled because it's temporarily broken: see https://github.com/rapid7/metasploit-framework/issues/9219
+#	disabled because it's temporarily broken:
+#       see https://github.com/rapid7/metasploit-framework/issues/9219
+#       add a link msf-msu_finder when fixed
 #	echo -e "\nTesting msu_finder..."
-#	/usr/share/metasploit-framework/tools/exploit/msu_finder.rb -q "ms15-100" -r x86
+#	msf-msu_finder -q "ms15-100" -r x86
 	msfvenom -p linux/x64/meterpreter/reverse_tcp LPORT=4444 -f exe > $AUTOPKGTEST_TMP/reverse.exe
 	echo "Testing exe2vba.rb..."
-	/usr/share/metasploit-framework/tools/exploit/exe2vba.rb $AUTOPKGTEST_TMP/reverse.exe $AUTOPKGTEST_TMP/reverse.vba
+	msf-exe2vba $AUTOPKGTEST_TMP/reverse.exe $AUTOPKGTEST_TMP/reverse.vba
 	echo "Testing exe2vbs.rb..."
-	/usr/share/metasploit-framework/tools/exploit/exe2vbs.rb $AUTOPKGTEST_TMP/reverse.exe $AUTOPKGTEST_TMP/reverse.vbs
+	msf-exe2vbs $AUTOPKGTEST_TMP/reverse.exe $AUTOPKGTEST_TMP/reverse.vbs
 	echo "Testing find_badchars utility..."
-	msfvenom -p windows/exec -f raw -v shellcode CMD=calc.exe EXITFUNC=thread | /usr/share/metasploit-framework/tools/exploit/find_badchars.rb -b "\x00\x0a"
+	msfvenom -p windows/exec -f raw -v shellcode CMD=calc.exe EXITFUNC=thread | msf-find_badchars -b "\x00\x0a"
 
 }
 

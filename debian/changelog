@@ -1,3 +1,15 @@
+metasploit-framework (4.16.45-1parrot2) testing; urgency=medium
+
+  * Import kali debianization improvements.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Thu, 22 Mar 2018 01:45:14 +0100
+
+metasploit-framework (4.16.45-1parrot1) testing; urgency=medium
+
+  * Import new upstream release.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Mon, 19 Mar 2018 00:39:07 +0100
+
 metasploit-framework (4.16.34-1parrot1) testing; urgency=medium
 
   * Import new upstream release.
