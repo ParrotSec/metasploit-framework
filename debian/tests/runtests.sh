@@ -126,7 +126,7 @@ test_msfd() {
 test_msfvenom() {
 
 
-	msfvenom -l
+	msfvenom -l all
 	echo "Generating calc shellcode in py format"
 	msfvenom -p windows/exec -b "\x00\x0a" -f python -v shellcode CMD=calc.exe EXITFUNC=thread 
 	msfvenom -p linux/x86/meterpreter/bind_tcp LPORT=4444 -f elf > $AUTOPKGTEST_TMP/bind-shell.elf

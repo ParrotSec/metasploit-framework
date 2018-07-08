@@ -25,7 +25,7 @@ override_dh_gencontrol:
 override_dh_install:
 	dh_install --exclude=data/gui --exclude=LICENSE --exclude=LICENCE --exclude=LICENSE.txt
 	# Hard code shebang for ruby scripts
-	for binfile in $$(ls -d -1 debian/metasploit-framework/usr/share/metasploit-framework/tools/*.rb debian/metasploit-framework/usr/share/metasploit-framework/tools/exploit/*.rb debian/metasploit-framework/usr/share/metasploit-framework/msf*); do \
+	for binfile in $$(ls -d -1 debian/metasploit-framework/usr/share/metasploit-framework/tools/exploit/*.rb debian/metasploit-framework/usr/share/metasploit-framework/msf*); do \
 	  sed -i $${binfile} -e '1,1s|#!.*ruby|#!/usr/share/metasploit-framework/ruby|' ; \
 	done
 	chmod -x debian/metasploit-framework/usr/share/metasploit-framework/data/wordlists/*

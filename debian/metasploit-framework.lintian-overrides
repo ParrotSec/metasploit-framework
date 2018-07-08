@@ -8,7 +8,6 @@ arch-dependent-file-in-usr-share usr/share/metasploit-framework/data/*
 binary-has-unneeded-section usr/share/metasploit-framework/data/*
 hardening-no-relro usr/share/metasploit-framework/data/*
 hardening-no-fortify-functions usr/share/metasploit-framework/data/*
-program-not-linked-against-libc usr/share/metasploit-framework/data/*
 shared-lib-without-dependency-information usr/share/metasploit-framework/data/*
 font-in-non-font-package usr/share/metasploit-framework/data/*
 package-contains-vcs-control-file usr/share/metasploit-framework/data/*
@@ -26,7 +25,6 @@ binary-from-other-architecture usr/share/metasploit-framework/vendor/bundle/*
 binary-has-unneeded-section usr/share/metasploit-framework/vendor/bundle/*
 library-not-linked-against-libc usr/share/metasploit-framework/vendor/bundle/*
 unstripped-binary-or-object usr/share/metasploit-framework/vendor/bundle/*
-statically-linked-binary usr/share/metasploit-framework/vendor/bundle/*
 extra-license-file usr/share/metasploit-framework/vendor/bundle/*
 package-contains-vcs-control-file usr/share/metasploit-framework/vendor/bundle/*
 embedded-javascript-library usr/share/metasploit-framework/vendor/bundle/*
@@ -47,8 +45,6 @@ missing-dep-on-jarwrapper
 
 # Really not important
 script-not-executable *
-unusual-interpreter */Rakefile *
-unusual-interpreter */Rakefile.cross *
 possible-documentation-but-no-doc-base-registration
 arch-dep-package-has-big-usr-share *
 

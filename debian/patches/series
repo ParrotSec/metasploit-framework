@@ -1,2 +1,3 @@
 drop-installation-msfupdate.patch
-fix-usage-messages.patch
+fix-usage-example.patch
+add-missing-dependencies.patch

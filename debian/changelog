@@ -1,3 +1,9 @@
+metasploit-framework (4.16.65-1parrot1) testing; urgency=medium
+
+  * Import new upstream release.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sun, 08 Jul 2018 22:49:13 +0200
+
 metasploit-framework (4.16.55-1parrot1) testing; urgency=medium
 
   * Import new upstream release.

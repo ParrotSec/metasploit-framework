@@ -5,7 +5,7 @@ set -e
 OLD_BINS="metasm_shell nasm_shell pattern_create pattern_offset exe2vba exe2vbs pdf2xdp msf_irb_shell find_badchars java_deserializer jsobfu msf-egghunter msf-virustotal halflm_second hmac_sha1_crack lm2ntcrack md5_lookup makeiplist"
 
 if [ "$1" = "upgrade" ]; then
-    if dpkg --compare-versions "$2" eq 4.16.45-1parrot2; then
+    if dpkg --compare-versions "$2" eq 4.16.34-0kali2; then
 	for OLD_BIN in $OLD_BINS; do
             update-alternatives --quiet --remove $OLD_BIN /usr/share/metasploit-framework/$OLD_BIN
         done
