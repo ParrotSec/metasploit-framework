@@ -42,8 +42,6 @@ module Interactive
     # Handle suspend notifications
     handle_suspend
 
-    handle_usr1
-
     # As long as we're interacting...
     while (self.interacting == true)
 
@@ -130,7 +128,6 @@ protected
   # The original suspend proc.
   #
   attr_accessor :orig_suspend
-  attr_accessor :orig_usr1
 
   #
   # Stub method that is meant to handler interaction
@@ -233,7 +230,6 @@ protected
     end
   end
 
-
   #
   # Restores the previously installed signal handler for suspend
   # notifications.
@@ -246,30 +242,6 @@ protected
         Signal.trap("TSTP", "DEFAULT")
       end
       self.orig_suspend = nil
-    rescue
-    end
-  end
-
-  def handle_usr1
-    if orig_usr1.nil?
-      begin
-        self.orig_usr1 = Signal.trap("USR1") do
-          Thread.new { _usr1 }.join
-        end
-      rescue
-      end
-    end
-  end
-
-
-  def restore_usr1
-    begin
-      if orig_usr1
-        Signal.trap("USR1", orig_usr1)
-      else
-        Signal.trap("USR1", "DEFAULT")
-      end
-      self.orig_usr1 = nil
     rescue
     end
   end

