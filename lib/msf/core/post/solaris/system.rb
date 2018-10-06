@@ -93,7 +93,10 @@ module System
   # @return [Boolean]
   #
   def has_gcc?
-    command_exists? 'gcc'
+    # /usr/sfw/bin - default gcc path on some systems
+    # /opt/sfw/bin - default gcc path for gcc package
+    # /opt/csw/bin - default gcc path for OpenCSW gcc package
+    command_exists?('gcc') || command_exists?('/usr/sfw/bin/gcc') || command_exists?('/opt/sfw/bin/gcc') || command_exists?('/opt/csw/bin/gcc')
   rescue
     raise 'Unable to check for gcc'
   end
@@ -114,9 +117,9 @@ module System
   #
   def pidof(program)
     pids = []
-    full = cmd_exec('ps aux').to_s
+    full = cmd_exec('ps -elf').to_s
     full.split("\n").each do |pid|
-      pids << pid.split(' ')[1].to_i if pid.include? program
+      pids << pid.split(' ')[3].to_i if pid.include? program
     end
     pids
   end
