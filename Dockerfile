@@ -1,4 +1,4 @@
-FROM ruby:2.5.1-alpine3.7 AS builder
+FROM ruby:2.5.3-alpine3.7 AS builder
 LABEL maintainer="Rapid7"
 
 ARG BUNDLER_ARGS="--jobs=8 --without development test coverage"
@@ -32,9 +32,12 @@ RUN apk add --no-cache \
     && gem install bundler \
     && bundle install --clean --no-cache --system $BUNDLER_ARGS \
     # temp fix for https://github.com/bundler/bundler/issues/6680
-    && rm -rf /usr/local/bundle/cache
+    && rm -rf /usr/local/bundle/cache \
+    # needed so non root users can read content of the bundle
+    && chmod -R a+r /usr/local/bundle
 
-FROM ruby:2.5.1-alpine3.7
+
+FROM ruby:2.5.3-alpine3.7
 LABEL maintainer="Rapid7"
 
 ENV APP_HOME /usr/src/metasploit-framework/
@@ -43,13 +46,12 @@ ENV NMAP_PRIVILEGED=""
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 COPY . $APP_HOME
 
-RUN chmod -R a+r /usr/local/bundle
 RUN apk add --no-cache bash sqlite-libs nmap nmap-scripts nmap-nselibs postgresql-libs python python3 ncurses libcap su-exec
 
-WORKDIR $APP_HOME
 RUN /usr/sbin/setcap cap_net_raw,cap_net_bind_service=+eip $(which ruby)
 RUN /usr/sbin/setcap cap_net_raw,cap_net_bind_service=+eip $(which nmap)
 
+WORKDIR $APP_HOME
 # we need this entrypoint to dynamically create a user
 # matching the hosts UID and GID so we can mount something
 # from the users home directory. If the IDs don't match

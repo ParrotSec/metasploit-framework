@@ -215,8 +215,6 @@ module Msf
 
           refs.each do |ref|
             case ref.ctx_id
-            when 'AKA'
-              normalized << "* *Also known as:* #{ref.ctx_val}"
             when 'MSB'
               normalized << "* [#{ref.ctx_val}](#{ref.site})"
             when 'URL'
@@ -255,6 +253,32 @@ module Msf
         # @return [String]
         def normalize_rank(rank)
           "[#{Msf::RankingName[rank].capitalize}](https://github.com/rapid7/metasploit-framework/wiki/Exploit-Ranking)"
+        end
+
+
+        # Returns the markdown format for module side effects.
+        #
+        # @param side_effects [Array<String>] Module effects.
+        # @return [String]
+        def normalize_side_effects(side_effects)
+          md_side_effects = side_effects.collect { |s| "* #{s}\n" }.join
+          md_side_effects.empty? ? 'N/A' : md_side_effects
+        end
+
+
+        # Returns the markdown format for module reliability.
+        #
+        # @param reliability [Array<String>] Module reliability.
+        # @return [String]
+        def normalize_reliability(reliability)
+          md_reliability = reliability.collect { |r| "* #{r}\n" }.join
+          md_reliability.empty? ? 'N/A' : md_reliability
+        end
+
+
+        def normalize_stability(stability)
+          md_stability = stability.collect { |s| "* #{s}\n" }.join
+          md_stability.empty? ? 'N/A' : md_stability
         end
 
 
