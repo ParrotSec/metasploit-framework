@@ -155,6 +155,36 @@ class ReadableText
     tbl.to_s + "\n"
   end
 
+  def self.dump_traits(mod, indent=' ')
+    output = ''
+
+    unless mod.side_effects.empty?
+      output << "Module side effects:\n"
+      mod.side_effects.each { |side_effect|
+        output << indent + side_effect + "\n"
+      }
+      output << "\n"
+    end
+
+    unless mod.stability.empty?
+      output << "Module stability:\n"
+      mod.stability.each { |stability|
+        output << indent + stability + "\n"
+      }
+      output << "\n"
+    end
+
+    unless mod.reliability.empty?
+      output << "Module reliability:\n"
+      mod.reliability.each { |reliability|
+        output << indent + reliability + "\n"
+      }
+      output << "\n"
+    end
+
+    output
+  end
+
   # Dumps information about an exploit module.
   #
   # @param mod [Msf::Exploit] the exploit module.
@@ -179,9 +209,15 @@ class ReadableText
     }
     output << "\n"
 
+    output << dump_traits(mod)
+
     # Targets
     output << "Available targets:\n"
     output << dump_exploit_targets(mod, indent)
+
+    # Check
+    output << "Check supported:\n"
+    output << "#{indent}#{mod.respond_to?(:check) ? 'Yes' : 'No'}\n\n"
 
     # Options
     if (mod.options.has_options?)
@@ -210,6 +246,9 @@ class ReadableText
     # References
     output << dump_references(mod, indent)
 
+    # AKA
+    output << dump_aka(mod, indent)
+
     return output
 
   end
@@ -235,11 +274,17 @@ class ReadableText
     }
     output << "\n"
 
+    output << dump_traits(mod)
+
     # Actions
     if mod.action
       output << "Available actions:\n"
       output << dump_module_actions(mod, indent)
     end
+
+    # Check
+    output << "Check supported:\n"
+    output << "#{indent}#{mod.respond_to?(:check) ? 'Yes' : 'No'}\n\n"
 
     # Options
     if (mod.options.has_options?)
@@ -255,6 +300,9 @@ class ReadableText
 
     # References
     output << dump_references(mod, indent)
+
+    # AKA
+    output << dump_aka(mod, indent)
 
     return output
   end
@@ -280,6 +328,8 @@ class ReadableText
       output << indent + author.to_s + "\n"
     end
     output << "\n"
+
+    output << dump_traits(mod)
 
     # Compatible session types
     if mod.session_types
@@ -310,6 +360,9 @@ class ReadableText
 
     # References
     output << dump_references(mod, indent)
+
+    # AKA
+    output << dump_aka(mod, indent)
 
     return output
   end
@@ -374,6 +427,8 @@ class ReadableText
       output << indent + author.to_s + "\n"
     }
     output << "\n"
+
+    output << dump_traits(mod)
 
     # Description
     output << "Description:\n"
@@ -519,6 +574,27 @@ class ReadableText
         else
           output << indent + ref.to_s + "\n"
         end
+      end
+
+      output << "\n"
+    end
+
+    output
+  end
+
+  # Dumps the aka names associated with the supplied module.
+  #
+  # @param mod [Msf::Module] the module.
+  # @param indent [String] the indentation to use.
+  # @return [String] the string form of the information.
+  def self.dump_aka(mod, indent = '')
+    output = ''
+
+    if mod.notes['AKA'].present?
+      output << "AKA:\n"
+
+      mod.notes['AKA'].each do |aka_name|
+        output << indent + aka_name + "\n"
       end
 
       output << "\n"
@@ -730,8 +806,8 @@ class ReadableText
       sess_checkin = "<none>"
       sess_registration = "No"
 
-      if session.respond_to?(:platform)
-        sess_type << " " + session.platform
+      if session.respond_to?(:platform) && session.platform
+        sess_type << " #{session.platform}"
       end
 
       if session.respond_to?(:last_checkin) && session.last_checkin
