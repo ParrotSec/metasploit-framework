@@ -28,7 +28,7 @@ require 'rex'
 require 'openssl'
 
 def usage
-  $stderr.puts("\nUsage: msf-hmac_sha1_crack hashes.txt <wordlist | - >\n")
+  $stderr.puts("\nUsage: #{$0} hashes.txt <wordlist | - >\n")
   $stderr.puts("The format of hash file is <identifier>:<hex-salt>:<hash>\n\n")
   exit
 end
