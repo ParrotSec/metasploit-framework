@@ -1,5 +1,5 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Source: http://www.metasploit.com/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Source: https://www.metasploit.com/
 
 Files: *
 Copyright: 2006-2018, Rapid7, Inc.
@@ -65,26 +65,45 @@ License: GPL-2+
 
 Files: external/source/exploits/cve-2015-0016/*
  external/source/exploits/CVE-2016-0040/Metasploit/Metasploit.*
-Copyright: 2011-2012 Stephen Fewer of Harmony Security (www.harmonysecurity.com)
+ external/source/exploits/cve-2018-8897/dll/*
+ external/source/exploits/rottenpotato/MSFRottenPotato/*
+Copyright: 2011-2013 Stephen Fewer of Harmony Security (www.harmonysecurity.com)
 License: BSD-3-clause
 
 Files: external/source/flash_detector/bin/js/swfobject.js
 Copyright: 2007-2008 Adobe Systems Incorporated and its licensors
 License: MIT
 
+Files: external/source/exploits/cve-2018-8897/exe/*
+Copyright: 2018, Can Bölük
+License: BSD-3-clause
+
+Files: external/source/exploits/CVE-2018-8440/dll/ALPC-TaskSched-LPE*
+Copyright: 2015 Google Inc. All Rights Reserved.
+License: Apache-2.0
+
 Files: lib/anemone.rb lib/anemone/*
 Copyright: 2009 Vertive, Inc.
 License: MIT
 
-Files: lib/metasm/* data/cpuinfo/*
-Copyright: 2006-2010 Yoann GUILLOT
+Files: tools/exploit/metasm_shell.rb
+Copyright: 2007 Yoann GUILLOT
 License: LGPL-2.1
 
 Files: lib/msf/core/modules/external/python/async_timeout/*
 Copyright: 2016-2017 Andrew Svetlov
 License: Apache-2.0
 
+Files: lib/msf/core/web_services/public/* lib/msf/core/web_services/views/api_docs.erb
+Copyright: Copyright 2018 SmartBear Software
+License: Apache-2.0
+
+Files: modules/auxiliary/gather/office365userenum.py
+Copyright: 2015  Oliver Morton (Sec-1 Ltd)
+License: GPL-2+
+
 Files: modules/auxiliary/scanner/smb/impacket/dcomexec.py
+ modules/auxiliary/scanner/smb/impacket/secretsdump.py
 Copyright: 2003-2018 CORE Security Technologies
 License: Apache-2.0
 

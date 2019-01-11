@@ -1,3 +1,11 @@
+metasploit-framework (5.0.0-1parrot1) testing; urgency=medium
+
+  * Import new upstrema release.
+  * Update copyright notes.
+  * Bump Standards-Version 4.3.0.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 11 Jan 2019 19:10:21 +0100
+
 metasploit-framework (4.17.25-1parrot1) testing; urgency=medium
 
   * Import new upstream release.

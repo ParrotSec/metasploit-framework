@@ -18,8 +18,10 @@ Build-Depends:
   libffi-dev,
   ruby-json (>= 1.8.3),
   zlib1g-dev,
-Standards-Version: 4.1.2
+Standards-Version: 4.3.0
 Homepage: https://www.metasploit.com/
+Vcs-Git: git@git.parrotsec.org:security-tools/metasploit-framework.git
+Vcs-Browser: https://nest.parrotsec.org/security-tools/metasploit-framework.git
 
 Package: metasploit-framework
 Architecture: any
@@ -35,14 +37,11 @@ Depends:
   wget,
 # For our own msfdb
   openssl,
-# Generic dependencies 
+# Generic dependencies
   ${misc:Depends},
   ${shlibs:Depends},
   ruby-json (>= 1.8.3),
-# Conflict and break old packaging in moto...
-Conflicts: metasploit-common
-Breaks: metasploit (<= 4.11.4-2015071402-1kali0)
-Suggests: java7-runtime-headless, clamav, clamav-daemon
+Suggests: default-jdk, clamav, clamav-daemon, armitage
 Description: Framework for exploit development and vulnerability research
  The Metasploit Framework is an open source platform that supports
  vulnerability research, exploit development, and the creation of custom

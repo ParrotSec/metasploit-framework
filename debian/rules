@@ -33,6 +33,9 @@ override_dh_install:
 override_dh_shlibdeps:
 	dh_shlibdeps --exclude=/data/ --exclude=/modules/
 
+override_dh_makeshlibs:
+	dh_makeshlibs --exclude=/data/
+
 override_dh_strip:
 	dh_strip --exclude=/data/ --exclude=/modules/ --exclude=/vendor/bundle/
 
