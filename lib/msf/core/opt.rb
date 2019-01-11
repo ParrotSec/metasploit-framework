@@ -40,9 +40,13 @@ module Msf
       Msf::OptString.new(__method__.to_s, [ required, desc, default ])
     end
 
-    # @return [OptAddress]
-    def self.RHOST(default=nil, required=true, desc="The target address")
-      Msf::OptAddress.new(__method__.to_s, [ required, desc, default ])
+    # @return [OptAddressRange]
+    def self.RHOSTS(default=nil, required=true, desc="The target address range or CIDR identifier")
+      Msf::OptAddressRange.new('RHOSTS', [ required, desc, default ])
+    end
+
+    def self.RHOST(default=nil, required=true, desc="The target address range or CIDR identifier")
+      Msf::OptAddressRange.new('RHOSTS', [ required, desc, default ], aliases: [ 'RHOST' ])
     end
 
     # @return [OptPort]
@@ -107,6 +111,7 @@ module Msf
     LPORT = LPORT()
     Proxies = Proxies()
     RHOST = RHOST()
+    RHOSTS = RHOSTS()
     RPORT = RPORT()
     SSLVersion = SSLVersion()
   end

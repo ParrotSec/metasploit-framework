@@ -152,6 +152,12 @@ class Meterpreter < Rex::Post::Meterpreter::Client
         # TODO: This session was either staged or previously known, and so we should do some accounting here!
       end
 
+      # Unhook the process prior to loading stdapi to reduce logging/inspection by any AV/PSP
+      if datastore['AutoUnhookProcess'] == true
+        console.run_single('load unhook')
+        console.run_single('unhook_pe')
+      end
+
       unless datastore['AutoLoadStdapi'] == false
 
         session.load_stdapi
@@ -501,20 +507,22 @@ class Meterpreter < Rex::Post::Meterpreter::Client
             end
           end
 
+          sysinfo = sys.config.sysinfo
+          host = Msf::Util::Host.normalize_host(self)
+
           framework.db.report_note({
             :type => "host.os.session_fingerprint",
-            :host => self,
+            :host => host,
             :workspace => wspace,
             :data => {
-              :name => sys.config.sysinfo["Computer"],
-              :os => sys.config.sysinfo["OS"],
-              :arch => sys.config.sysinfo["Architecture"],
+              :name => sysinfo["Computer"],
+              :os => sysinfo["OS"],
+              :arch => sysinfo["Architecture"],
             }
           })
 
           if self.db_record
-            self.db_record.desc = safe_info
-            self.db_record.save!
+            framework.db.update_session(self)
           end
 
           # XXX: This is obsolete given the Mdm::Host.normalize_os() support for host.os.session_fingerprint
