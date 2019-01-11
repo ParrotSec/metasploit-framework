@@ -34,7 +34,7 @@ class MetasploitModule < Msf::Auxiliary
         ['CVE', '2018-10933'],
         ['URL', 'https://www.libssh.org/security/advisories/CVE-2018-10933.txt']
       ],
-      'DisclosureDate' => 'Oct 16 2018',
+      'DisclosureDate' => '2018-10-16',
       'License'        => MSF_LICENSE,
       'Actions'        => [
         ['Shell',   'Description' => 'Spawn a shell'],
@@ -137,7 +137,9 @@ class MetasploitModule < Msf::Auxiliary
 
     case action.name
     when 'Shell'
-      start_session(self, "#{self.name} (#{version})", {}, false, shell.lsock)
+      if datastore['CreateSession']
+        start_session(self, "#{self.name} (#{version})", {}, false, shell.lsock)
+      end
     when 'Execute'
       output = shell.channel && (shell.channel[:data] || '').chomp
 

@@ -16,6 +16,7 @@ require 'msf/ui/console/command_dispatcher/nop'
 require 'msf/ui/console/command_dispatcher/payload'
 require 'msf/ui/console/command_dispatcher/auxiliary'
 require 'msf/ui/console/command_dispatcher/post'
+require 'msf/ui/console/command_dispatcher/evasion'
 require 'msf/ui/console/command_dispatcher/jobs'
 require 'msf/ui/console/command_dispatcher/resource'
 require 'msf/ui/console/command_dispatcher/modules'
@@ -235,22 +236,19 @@ class Core
 
     avdwarn = nil
 
-    banner_trailers = {
-      :version     => "%yelmetasploit v#{Metasploit::Framework::VERSION}%clr",
-      :exp_aux_pos => "#{framework.stats.num_exploits} exploits - #{framework.stats.num_auxiliary} auxiliary - #{framework.stats.num_post} post",
-      :pay_enc_nop => "#{framework.stats.num_payloads} payloads - #{framework.stats.num_encoders} encoders - #{framework.stats.num_nops} nops",
-      :free_trial  => "Free Metasploit Pro trial: http://r-7.co/trymsp",
-      :padding     => 48
-    }
+    stats       = framework.stats
+    version     = "%yelmetasploit v#{Metasploit::Framework::VERSION}%clr",
+    exp_aux_pos = "#{stats.num_exploits} exploits - #{stats.num_auxiliary} auxiliary - #{stats.num_post} post",
+    pay_enc_nop = "#{stats.num_payloads} payloads - #{stats.num_encoders} encoders - #{stats.num_nops} nops",
+    eva         = "#{stats.num_evasion} evasion",
+    dev_note    = "** This is Metasploit 5 development branch **"
+    padding     = 48
 
-    banner << ("       =[ %-#{banner_trailers[:padding]+8}s]\n" % banner_trailers[:version])
-    banner << ("+ -- --=[ %-#{banner_trailers[:padding]}s]\n" % banner_trailers[:exp_aux_pos])
-    banner << ("+ -- --=[ %-#{banner_trailers[:padding]}s]\n" % banner_trailers[:pay_enc_nop])
-
-    # TODO: People who are already on a Pro install shouldn't see this.
-    # It's hard for Framework to tell the difference though since
-    # license details are only in Pro -- we can't see them from here.
-    banner << ("+ -- --=[ %-#{banner_trailers[:padding]}s]\n" % banner_trailers[:free_trial])
+    banner << ("       =[ %-#{padding+8}s]\n" % version)
+    banner << ("+ -- --=[ %-#{padding}s]\n" % exp_aux_pos)
+    banner << ("+ -- --=[ %-#{padding}s]\n" % pay_enc_nop)
+    banner << ("+ -- --=[ %-#{padding}s]\n" % eva)
+    banner << ("+ -- --=[ %-#{padding}s]\n" % dev_note)
 
     if ::Msf::Framework::EICARCorrupted
       avdwarn = []
@@ -1568,23 +1566,6 @@ class Core
         print_error("Unknown variable")
         cmd_set_help
         return false
-      end
-    end
-
-    # Warn when setting RHOST option for module which expects RHOSTS
-    if args.first.upcase.eql?('RHOST')
-      mod = active_module
-      unless mod.nil?
-        if !mod.options.include?('RHOST') && mod.options.include?('RHOSTS')
-          warn_rhost = false
-          if mod.exploit? && mod.datastore['PAYLOAD']
-            p = framework.payloads.create(mod.datastore['PAYLOAD'])
-            warn_rhost = (p && !p.options.include?('RHOST'))
-          else
-            warn_rhost = true
-          end
-          print_warning("RHOST is not a valid option for this module. Did you mean RHOSTS?") if warn_rhost
-        end
       end
     end
 

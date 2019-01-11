@@ -45,6 +45,11 @@ class Msf::Modules::External::Shim
     meta[:authors]     = mod.meta['authors'].map(&:dump).join(",\n          ")
     meta[:license]     = mod.meta['license'].nil? ? 'MSF_LICENSE' : mod.meta['license']
 
+    # Set modules without options to have an empty map
+    if mod.meta['options'].nil?
+      mod.meta['options'] = {}
+    end
+
     options = mod.meta['options'].reject {|n, _| ignore_options.include? n}
 
     meta[:options]     = options.map do |n, o|
@@ -144,6 +149,8 @@ class Msf::Modules::External::Shim
   # ensure that they are properly capitalized before rendering.
   #
   def self.transform_notes(notes)
+    return {} unless notes
+
     notes.reduce({}) do |acc, (key, val)|
       acc[key.upcase] = val
       acc
