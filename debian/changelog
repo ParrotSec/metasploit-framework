@@ -1,3 +1,10 @@
+metasploit-framework (5.0.14-1parrot1) testing; urgency=medium
+
+  * Import new Upstream release.
+  * Fix missing GEM_PATH.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 29 Mar 2019 12:51:03 +0100
+
 metasploit-framework (5.0.13-1parrot1) testing; urgency=medium
 
   * Import new upstream release.
