@@ -16,6 +16,10 @@ if ! echo "$GEM_PATH" | egrep -q "/usr/share/metasploit-framework/vendor/bundle"
 	fi
     done
 fi
+
+GEM_PATH="${GEM_PATH:+"$GEM_PATH:"}"/usr/share/rubygems-integration/all""
+
 export GEM_PATH
 
 exec ruby "$@"
+
