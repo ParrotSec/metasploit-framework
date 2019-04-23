@@ -24,7 +24,7 @@ $:.unshift(ENV['MSF_LOCAL_LIB']) if ENV['MSF_LOCAL_LIB']
 require 'rex'
 
 def usage
-  $stderr.puts("\n" + "    Usage: msf-halflm_second <options>\n" + $args.usage)
+  $stderr.puts("\n" + "    Usage: #{$0} <options>\n" + $args.usage)
   exit
 end
 
