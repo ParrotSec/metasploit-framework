@@ -15,13 +15,11 @@ module Msf
           include Msf::Ui::Console::CommandDispatcher
           include Msf::Ui::Console::CommandDispatcher::Common
 
-          # Constant for a retry timeout on using modules before they're loaded
-          CMD_USE_TIMEOUT = 3
-
           @@search_opts = Rex::Parser::Arguments.new(
             "-h"     => [ false, "Help banner"],
             "-o"     => [ true, "Send output to a file in csv format"],
             "-S"     => [ true, "Search string for row filter"],
+            "-u"     => [ false, "Use module if there is one result"]
           )
 
           def commands
@@ -323,6 +321,7 @@ module Msf
             print_line "  -h                Show this help information"
             print_line "  -o <file>         Send output to a file in csv format"
             print_line "  -S <string>       Search string for row filter"
+            print_line "  -u                Use module if there is one result"
             print_line
             print_line "Keywords:"
             {
@@ -362,10 +361,11 @@ module Msf
             if args.empty?
               print_error("Argument required\n")
               cmd_search_help
-              return
+              return false
             end
 
             match = ''
+            use = false
             search_term = nil
             output_file = nil
             @@search_opts.parse(args) { |opt, idx, val|
@@ -377,6 +377,8 @@ module Msf
                   return
                 when '-o'
                   output_file = val
+                when "-u"
+                  use = true
                 else
                   match += val + " "
               end
@@ -385,15 +387,21 @@ module Msf
             if match.empty? && search_term.nil?
               print_error("Keywords or search argument required\n")
               cmd_search_help
-              return
+              return false
             end
 
             # Display the table of matches
             tbl = generate_module_table("Matching Modules", search_term)
             search_params = parse_search_string(match)
+            count = 0
             begin
-              Msf::Modules::Metadata::Cache.instance.find(search_params).each do |m|
+              modules = Msf::Modules::Metadata::Cache.instance.find(search_params)
+
+              return false if modules.length == 0
+
+              modules.each do |m|
                 tbl << [
+                    count += 1,
                     m.full_name,
                     m.disclosure_date.nil? ? '' : m.disclosure_date.strftime("%Y-%m-%d"),
                     RankingName[m.rank].to_s,
@@ -401,9 +409,15 @@ module Msf
                     m.name
                 ]
               end
+
+              if modules.length == 1 && use
+                used_module = modules.first.full_name
+                cmd_use(used_module, true)
+              end
             rescue ArgumentError
               print_error("Invalid argument(s)\n")
               cmd_search_help
+              return false
             end
 
             if output_file
@@ -413,7 +427,10 @@ module Msf
               }
             else
               print_line(tbl.to_s)
+              print_status("Using #{used_module}") if used_module
             end
+
+            true
           end
 
           #
@@ -485,7 +502,7 @@ module Msf
               cmd_show_help
               return
             end
-            
+
             mod = self.active_module
 
             args.each { |type|
@@ -610,6 +627,9 @@ module Msf
             # Try to create an instance of the supplied module name
             mod_name = args[0]
 
+            # See if the supplied module name has already been resolved
+            mod_resolved = args[1] == true ? true : false
+
             # Ensure we have a reference name and not a path
             if mod_name.start_with?('./', 'modules/')
               mod_name.sub!(%r{^(?:\./)?modules/}, '')
@@ -620,11 +640,13 @@ module Msf
 
             begin
               mod = framework.modules.create(mod_name)
+
               unless mod
-                # Try one more time; see #4549
-                sleep CMD_USE_TIMEOUT
-                mod = framework.modules.create(mod_name)
-                unless mod
+                unless mod_resolved
+                  mods_found = cmd_search('-u', mod_name)
+                end
+
+                unless mods_found
                   print_error("Failed to load module: #{mod_name}")
                   return false
                 end
@@ -1137,6 +1159,7 @@ module Msf
 
           def show_module_set(type, module_set, regex = nil, minrank = nil, opts = nil) # :nodoc:
             tbl = generate_module_table(type)
+            count = 0
             module_set.sort.each { |refname, mod|
               o = nil
 
@@ -1168,6 +1191,7 @@ module Msf
                   end
                   if (opts == nil or show == true)
                     tbl << [
+                      count += 1,
                       refname,
                       o.disclosure_date.nil? ? "" : o.disclosure_date.strftime("%Y-%m-%d"),
                       o.rank_to_s,
@@ -1188,7 +1212,7 @@ module Msf
               'Header'     => type,
               'Prefix'     => "\n",
               'Postfix'    => "\n",
-              'Columns'    => [ 'Name', 'Disclosure Date', 'Rank', 'Check', 'Description' ],
+              'Columns'    => [ '#', 'Name', 'Disclosure Date', 'Rank', 'Check', 'Description' ],
               'SearchTerm' => search_term
             )
           end
