@@ -272,7 +272,7 @@ module Md5LookupUtility
     def self.get_parsed_options
       options = {}
       parser = OptionParser.new do |opt|
-        opt.banner = "Usage: msf-md5_lookup [options]"
+        opt.banner = "Usage: #{__FILE__} [options]"
         opt.separator ''
         opt.separator 'Specific options:'
 

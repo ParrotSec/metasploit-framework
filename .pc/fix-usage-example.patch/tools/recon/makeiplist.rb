@@ -34,7 +34,7 @@ class OptsConsole
 
     opts = OptionParser.new do |opts|
       opts.banner = %Q|This script takes a list of ranges and converts it to a per line IP list.
-Usage: msf-makeiplist [options]|
+Usage: #{__FILE__} [options]|
 
       opts.separator ""
       opts.separator "Specific options:"
