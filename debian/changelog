@@ -1,3 +1,9 @@
+metasploit-framework (5.0.36-1parrot1) testing; urgency=medium
+
+  * Import new upstream release.
+ 
+ -- disrupt_the_flow <disrupt_the_flow@parrotsec.org>  Tue, 16 Jul 2019 16:11:39 +0300
+
 metasploit-framework (5.0.30-1parrot1) testing; urgency=medium
 
   * Import new upstream release.

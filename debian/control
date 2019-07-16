@@ -1,7 +1,8 @@
 Source: metasploit-framework
 Section: net
 Priority: optional
-Maintainer: Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>
+Maintainer: ParrotOS Dev Team
+Uploaders: Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>, disrupt_tre_flow <disrupt_the_flow@parrotsec.org>
 Build-Depends:
   debhelper (>= 10),
 # Dependencies needed to fetch and build the gems in a bundle
