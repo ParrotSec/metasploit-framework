@@ -1,16 +1,16 @@
 Description: Drop installation of msfupdate
  Since version 4.14.21 msfupdate doesn't work anymore for Kali (with apt).
  Upstream has already removed it for Kali in the git repository.
-Author: Sophie Brun <sophie@freexian.com>
+Author: Sophie Brun <sophie@offensive-security.com>
 Bug: https://github.com/rapid7/metasploit-framework/issues/8448
 Bug-Kali: https://bugs.kali.org/view.php?id=4039
 Applied-Upstream: https://github.com/rapid7/metasploit-framework/commit/ab6b5f381d5ef71e75697b4b5044d3f52d8d797b
-Last-Update: 2017-05-29
+Last-Update: 2019-12-13
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/msfupdate
 +++ /dev/null
-@@ -1,317 +0,0 @@
+@@ -1,315 +0,0 @@
 -#!/usr/bin/env ruby
 -# -*- coding: binary -*-
 -#
@@ -25,8 +25,6 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 -while File.symlink?(msfbase)
 -  msfbase = File.expand_path(File.readlink(msfbase), File.dirname(msfbase))
 -end
--
--require 'backports'
 -
 -class Msfupdate
 -  attr_reader :stdin
@@ -328,3 +326,4 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 -  cli.run!
 -  cli.maybe_wait_and_exit
 -end
+

@@ -168,3 +168,4 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  
        opts.separator ""
        opts.separator "Specific options:"
+
