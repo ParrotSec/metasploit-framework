@@ -1,3 +1,10 @@
+metasploit-framework (5.0.74-parrot1) rolling-testing; urgency=medium
+
+  * Import new upstream release.
+  * Rebuild package using latest bundler version.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Tue, 18 Feb 2020 03:10:14 +0100
+
 metasploit-framework (5.0.72-parrot1) rolling; urgency=medium
 
   * Import new upstream release.
