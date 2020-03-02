@@ -1,3 +1,9 @@
+metasploit-framework (5.0.77-parrot1) rolling-testing; urgency=medium
+
+  * Import new upstream release.
+
+ -- Federica "marafed" Marasà <marafed@parrotsec.org>  Mon, 02 Mar 2020 19:37:31 +0100
+
 metasploit-framework (5.0.74-parrot1) rolling-testing; urgency=medium
 
   * Import new upstream release.
