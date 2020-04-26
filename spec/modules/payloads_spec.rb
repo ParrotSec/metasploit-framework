@@ -898,6 +898,16 @@ RSpec.describe 'modules/payloads', :content do
                           reference_name: 'cmd/unix/reverse_socat_udp'
   end
 
+  context 'cmd/unix/reverse_ssh' do
+    it_should_behave_like 'payload cached size is consistent',
+                          ancestor_reference_names: [
+                              'singles/cmd/unix/reverse_ssh'
+                          ],
+                          dynamic_size: true,
+                          modules_pathname: modules_pathname,
+                          reference_name: 'cmd/unix/reverse_ssh'
+  end
+
   context 'cmd/unix/reverse_perl' do
     it_should_behave_like 'payload cached size is consistent',
                           ancestor_reference_names: [
@@ -943,7 +953,7 @@ RSpec.describe 'modules/payloads', :content do
                           ancestor_reference_names: [
                               'singles/cmd/unix/reverse_python_ssl'
                           ],
-                          dynamic_size: false,
+                          dynamic_size: true,
                           modules_pathname: modules_pathname,
                           reference_name: 'cmd/unix/reverse_python_ssl'
   end
@@ -996,6 +1006,16 @@ RSpec.describe 'modules/payloads', :content do
                           dynamic_size: false,
                           modules_pathname: modules_pathname,
                           reference_name: 'cmd/unix/reverse_stub'
+  end
+
+  context 'cmd/unix/reverse_tclsh' do
+    it_should_behave_like 'payload cached size is consistent',
+                          ancestor_reference_names: [
+                              'singles/cmd/unix/reverse_tclsh'
+                          ],
+                          dynamic_size: false,
+                          modules_pathname: modules_pathname,
+                          reference_name: 'cmd/unix/reverse_tclsh'
   end
 
   context 'cmd/unix/reverse_zsh' do

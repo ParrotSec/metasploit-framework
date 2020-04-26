@@ -402,6 +402,22 @@ class RPC_Module < RPC_Base
     res
   end
 
+  # Returns the currently running module stats in each state.
+  #
+  # @return [Hash] Running module stats that contain the following keys:
+  #  * 'waiting' [Array<string>] The uuids of modules waiting to be kicked off.
+  #  * 'running' [Array<string>] The uuids of modules currently in progress.
+  #  * 'results' [Array<string>] The uuids of module run/check results.
+  # @exampleHere's how you would use this from the client:
+  #  rpc.call('module.running_stats')
+  def rpc_running_stats
+    {
+        "waiting" => self.job_status_tracker.waiting_ids,
+        "running" => self.job_status_tracker.running_ids,
+        "results" => self.job_status_tracker.result_ids
+    }
+  end
+
 
   # Returns the module's datastore options.
   #
@@ -468,6 +484,7 @@ class RPC_Module < RPC_Base
   #  rpc.call('module.execute', 'exploit', 'multi/handler', opts)
   def rpc_execute(mtype, mname, opts)
     mod = _find_module(mtype,mname)
+
     case mtype
       when 'exploit'
         _run_exploit(mod, opts)
@@ -498,7 +515,7 @@ class RPC_Module < RPC_Base
     when 'exploit'
       _check_exploit(mod, opts)
     when 'auxiliary'
-      _run_auxiliary(mod, opts)
+      _check_auxiliary(mod, opts)
     else
       error(500, "Invalid Module Type: #{mtype}")
     end
@@ -507,7 +524,7 @@ class RPC_Module < RPC_Base
   # TODO: expand these to take a list of UUIDs or stream with event data if
   # required for performance
   def rpc_results(uuid)
-    if r = self.framework.results[uuid]
+    if (r = self.job_status_tracker.result(uuid))
       if r[:error]
         {"status" => "errored", "error" => r[:error]}
       else
@@ -521,9 +538,9 @@ class RPC_Module < RPC_Base
           {"status" => "completed", "result" => r[:result]}
         end
       end
-    elsif self.framework.running.include? uuid
+    elsif self.job_status_tracker.running? uuid
       {"status" => "running"}
-    elsif self.framework.ready.include? uuid
+    elsif self.job_status_tracker.waiting? uuid
       {"status" => "ready"}
     else
       error(404, "Results not found for module instance #{uuid}")
@@ -531,7 +548,7 @@ class RPC_Module < RPC_Base
   end
 
   def rpc_ack(uuid)
-    {"success" => !!self.framework.results.delete(uuid)}
+    {"success" => !!self.job_status_tracker.ack(uuid)}
   end
 
   # Returns a list of executable format names.
@@ -702,11 +719,13 @@ private
 
     if mname !~ /^(exploit|payload|nop|encoder|auxiliary|post|evasion)\//
       mname = mtype + "/" + mname
+    elsif !mname.start_with?(mtype)
+      error(400, "Client provided module type '#{mtype}' did not match expected type for '#{mname}'")
     end
 
     mod = self.framework.modules.create(mname)
 
-    error(500, "Invalid Module") if not mod
+    error(500, "Invalid Module") unless mod
     mod
   end
 
@@ -724,11 +743,11 @@ private
   end
 
   def _run_auxiliary(mod, opts)
-    uuid, job = Msf::Simple::Auxiliary.run_simple(mod, {
+    uuid, job = Msf::Simple::Auxiliary.run_simple(mod,{
       'Action'   => opts['ACTION'],
       'RunAsJob' => true,
       'Options'  => opts
-    })
+    }, job_listener: self.job_status_tracker)
     {
       "job_id" => job,
       "uuid" => uuid
@@ -736,10 +755,10 @@ private
   end
 
   def _check_exploit(mod, opts)
-    uuid, job = Msf::Simple::Exploit.check_simple(mod, {
+    uuid, job = Msf::Simple::Exploit.check_simple(mod,{
         'RunAsJob' => true,
         'Options'  => opts
-    })
+    }, job_listener: self.job_status_tracker)
     {
       "job_id" => job,
       "uuid" => uuid
@@ -747,11 +766,11 @@ private
   end
 
   def _check_auxiliary(mod, opts)
-    uuid, job = Msf::Simple::Auxiliary.check_simple(mod, {
+    uuid, job = Msf::Simple::Auxiliary.check_simple(mod,{
         'Action'   => opts['ACTION'],
         'RunAsJob' => true,
         'Options'  => opts
-    })
+    }, job_listener: self.job_status_tracker)
     {
       "job_id" => job,
       "uuid" => uuid
