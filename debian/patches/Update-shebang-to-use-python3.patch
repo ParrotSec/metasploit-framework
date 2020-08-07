@@ -1,0 +1,139 @@
+From: Sophie Brun <sophie@offensive-security.com>
+Date: Thu, 14 May 2020 15:21:16 +0200
+Subject: Update shebang to use python3
+
+---
+ modules/auxiliary/admin/teradata/teradata_odbc_sql.py     | 2 +-
+ modules/auxiliary/dos/http/slowloris.py                   | 2 +-
+ modules/auxiliary/dos/tcp/claymore_dos.py                 | 2 +-
+ modules/auxiliary/gather/get_user_spns.py                 | 2 +-
+ modules/auxiliary/gather/office365userenum.py             | 2 +-
+ modules/auxiliary/scanner/http/onion_omega2_login.py      | 2 +-
+ modules/auxiliary/scanner/smb/impacket/dcomexec.py        | 2 +-
+ modules/auxiliary/scanner/smb/impacket/secretsdump.py     | 2 +-
+ modules/auxiliary/scanner/smb/impacket/wmiexec.py         | 2 +-
+ modules/auxiliary/scanner/teradata/teradata_odbc_login.py | 2 +-
+ modules/exploits/linux/smtp/haraka.py                     | 2 +-
+ modules/exploits/windows/smb/ms17_010_eternalblue_win8.py | 2 +-
+ 12 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/modules/auxiliary/admin/teradata/teradata_odbc_sql.py b/modules/auxiliary/admin/teradata/teradata_odbc_sql.py
+index cbba01e..826815a 100755
+--- a/modules/auxiliary/admin/teradata/teradata_odbc_sql.py
++++ b/modules/auxiliary/admin/teradata/teradata_odbc_sql.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # -*- coding: utf-8 -*-
+ #2018-05-09 14-15
+ 
+diff --git a/modules/auxiliary/dos/http/slowloris.py b/modules/auxiliary/dos/http/slowloris.py
+index 8a74cc2..0fe1caf 100755
+--- a/modules/auxiliary/dos/http/slowloris.py
++++ b/modules/auxiliary/dos/http/slowloris.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # Note, works with both python 2.7 and 3
+ 
+ import random
+diff --git a/modules/auxiliary/dos/tcp/claymore_dos.py b/modules/auxiliary/dos/tcp/claymore_dos.py
+index c95fe90..2a7b99e 100755
+--- a/modules/auxiliary/dos/tcp/claymore_dos.py
++++ b/modules/auxiliary/dos/tcp/claymore_dos.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # -*- coding: utf-8 -
+ # Note, works with both python 2.7 and 3
+ 
+diff --git a/modules/auxiliary/gather/get_user_spns.py b/modules/auxiliary/gather/get_user_spns.py
+index 12e65ee..964589b 100755
+--- a/modules/auxiliary/gather/get_user_spns.py
++++ b/modules/auxiliary/gather/get_user_spns.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # -*- coding: utf-8 -*-
+ 
+ import sys
+diff --git a/modules/auxiliary/gather/office365userenum.py b/modules/auxiliary/gather/office365userenum.py
+index 3e34f6a..c295304 100755
+--- a/modules/auxiliary/gather/office365userenum.py
++++ b/modules/auxiliary/gather/office365userenum.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python3
+ # -*- coding: utf-8 -*-
+ from __future__ import print_function
+ 
+diff --git a/modules/auxiliary/scanner/http/onion_omega2_login.py b/modules/auxiliary/scanner/http/onion_omega2_login.py
+index 842dd98..35a60ec 100755
+--- a/modules/auxiliary/scanner/http/onion_omega2_login.py
++++ b/modules/auxiliary/scanner/http/onion_omega2_login.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # -*- coding: utf-8 -*-
+ # 2019-03-27 05-55
+ 
+diff --git a/modules/auxiliary/scanner/smb/impacket/dcomexec.py b/modules/auxiliary/scanner/smb/impacket/dcomexec.py
+index 45848a7..9435440 100755
+--- a/modules/auxiliary/scanner/smb/impacket/dcomexec.py
++++ b/modules/auxiliary/scanner/smb/impacket/dcomexec.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # Copyright (c) 2003-2018 CORE Security Technologies
+ #
+ # This software is provided under under a slightly modified version
+diff --git a/modules/auxiliary/scanner/smb/impacket/secretsdump.py b/modules/auxiliary/scanner/smb/impacket/secretsdump.py
+index 41fd674..c2dd437 100755
+--- a/modules/auxiliary/scanner/smb/impacket/secretsdump.py
++++ b/modules/auxiliary/scanner/smb/impacket/secretsdump.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # Copyright (c) 2003-2018 CORE Security Technologies
+ #
+ # This software is provided under under a slightly modified version
+diff --git a/modules/auxiliary/scanner/smb/impacket/wmiexec.py b/modules/auxiliary/scanner/smb/impacket/wmiexec.py
+index 0bc5df3..30ca71e 100755
+--- a/modules/auxiliary/scanner/smb/impacket/wmiexec.py
++++ b/modules/auxiliary/scanner/smb/impacket/wmiexec.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # Copyright (c) 2003-2018 CORE Security Technologies
+ #
+ # This software is provided under under a slightly modified version
+diff --git a/modules/auxiliary/scanner/teradata/teradata_odbc_login.py b/modules/auxiliary/scanner/teradata/teradata_odbc_login.py
+index ed12cf1..31a21d7 100755
+--- a/modules/auxiliary/scanner/teradata/teradata_odbc_login.py
++++ b/modules/auxiliary/scanner/teradata/teradata_odbc_login.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # -*- coding: utf-8 -*-
+ #2018-05-29 08-49
+ 
+diff --git a/modules/exploits/linux/smtp/haraka.py b/modules/exploits/linux/smtp/haraka.py
+index 0892cb2..bc6a619 100755
+--- a/modules/exploits/linux/smtp/haraka.py
++++ b/modules/exploits/linux/smtp/haraka.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ # Vendor Homepage: https://haraka.github.io/
+ # Software Link: https://github.com/haraka/Haraka
+diff --git a/modules/exploits/windows/smb/ms17_010_eternalblue_win8.py b/modules/exploits/windows/smb/ms17_010_eternalblue_win8.py
+index 7302ad9..e3a12da 100755
+--- a/modules/exploits/windows/smb/ms17_010_eternalblue_win8.py
++++ b/modules/exploits/windows/smb/ms17_010_eternalblue_win8.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ import sys
+ import socket

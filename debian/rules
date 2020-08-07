@@ -15,6 +15,10 @@ override_dh_auto_configure:
 	# Do nothing
 
 override_dh_auto_build:
+ifeq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),amd64 i386))
+	patch -p0 <debian/oci8-gemspec.patch
+endif
+
 	# Build binary gems
 	bundle install --without development test --path vendor/bundle
 	bundle config --local frozen true
@@ -34,10 +38,14 @@ override_dh_shlibdeps:
 	dh_shlibdeps --exclude=/data/ --exclude=/modules/
 
 override_dh_makeshlibs:
-	dh_makeshlibs --exclude=/data/
+	dh_makeshlibs --exclude=/data/ --exclude=/metasploit_payloads-mettle
 
 override_dh_strip:
 	dh_strip --exclude=/data/ --exclude=/modules/ --exclude=/vendor/bundle/
 
 override_dh_compress:
 	dh_compress --exclude=/modules/
+
+override_dh_dwz:
+	# do nothing: it fails because of multiple errors on bundle's
+	# binaries or other binaries

@@ -41,7 +41,7 @@ module Auxiliary
   # 	Whether or not the exploit should be run in the context of a background
   # 	job.
   #
-  def self.run_simple(omod, opts = {}, &block)
+  def self.run_simple(omod, opts = {}, job_listener: Msf::Simple::NoopJobListener.instance, &block)
 
     # Clone the module to prevent changes to the original instance
     mod = omod.replicant
@@ -69,8 +69,8 @@ module Auxiliary
     end
 
     run_uuid = Rex::Text.rand_text_alphanumeric(24)
-    mod.framework.job_state_tracker.waiting run_uuid
-    ctx = [mod, run_uuid]
+    job_listener.waiting run_uuid
+    ctx = [mod, run_uuid, job_listener]
     if(mod.passive? or opts['RunAsJob'])
       mod.job_id = mod.framework.jobs.start_bg_job(
         "Auxiliary: #{mod.refname}",
@@ -108,7 +108,7 @@ module Auxiliary
   #
   # 	The local output through which data can be displayed.
   #
-  def self.check_simple(mod, opts)
+  def self.check_simple(mod, opts, job_listener: Msf::Simple::NoopJobListener.instance)
     Msf::Simple::Framework.simplify_module(mod, false)
 
     mod._import_extra_options(opts)
@@ -116,14 +116,18 @@ module Auxiliary
       mod.init_ui(opts['LocalInput'], opts['LocalOutput'])
     end
 
+    unless mod.has_check?
+      # Bail out early if the module doesn't have check
+      raise ::NoMethodError.new(Msf::Exploit::CheckCode::Unsupported.message, 'check')
+    end
+
     # Validate the option container state so that options will
     # be normalized
     mod.validate
 
-
     run_uuid = Rex::Text.rand_text_alphanumeric(24)
-    mod.framework.job_state_tracker.waiting run_uuid
-    ctx = [mod, run_uuid]
+    job_listener.waiting run_uuid
+    ctx = [mod, run_uuid, job_listener]
 
     if opts['RunAsJob']
       mod.job_id = mod.framework.jobs.start_bg_job(
@@ -131,7 +135,7 @@ module Auxiliary
         ctx,
         Proc.new do |ctx_|
           self.job_run_proc(ctx_) do |m|
-            m.has_check? ? m.check : Msf::Exploit::CheckCode::Unsupported
+            m.check
           end
         end,
         Proc.new { |ctx_| self.job_cleanup_proc(ctx_) }
@@ -141,7 +145,7 @@ module Auxiliary
     else
       # Run check if it exists
       result = self.job_run_proc(ctx) do |m|
-        m.has_check? ? m.check : Msf::Exploit::CheckCode::Unsupported
+        m.check
       end
       self.job_cleanup_proc(ctx)
 
@@ -165,15 +169,16 @@ protected
   def self.job_run_proc(ctx, &block)
     mod = ctx[0]
     run_uuid = ctx[1]
+    job_listener = ctx[2]
     begin
-      mod.setup
-      mod.framework.events.on_module_run(mod)
       begin
-        mod.framework.job_state_tracker.start run_uuid
+        job_listener.start run_uuid
+        mod.setup
+        mod.framework.events.on_module_run(mod)
         result = block.call(mod)
-        mod.framework.job_state_tracker.completed(run_uuid, result)
+        job_listener.completed(run_uuid, result, mod)
       rescue ::Exception => e
-        mod.framework.job_state_tracker.failed(run_uuid, e)
+        job_listener.failed(run_uuid, e, mod)
         raise
       end
     rescue Msf::Auxiliary::Complete
@@ -211,9 +216,7 @@ protected
         end
       end
 
-      elog("Auxiliary failed: #{e.class} #{e}", 'core', LEV_0)
-      dlog("Call stack:\n#{$@.join("\n")}", 'core', LEV_3)
-
+      elog('Auxiliary failed', error: e)
       mod.cleanup
 
     end

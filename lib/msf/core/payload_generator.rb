@@ -48,6 +48,12 @@ module Msf
     # @!attribute  secname
     #   @return [String] The name of the new section within the generated Windows binary
     attr_accessor :secname
+    # @!attribute  servicename
+    #   @return [String] The name of the service to be associated with the generated Windows binary
+    attr_accessor :servicename
+    # @!attribute  sub_method
+    #   @return [Boolean] Whether or not this binary needs the x86 sub_method applied or not.
+    attr_accessor :sub_method
     # @!attribute  format
     #   @return [String] The format you want the payload returned in
     attr_accessor :format
@@ -133,6 +139,8 @@ module Msf
       @datastore  = opts.fetch(:datastore, {})
       @encoder    = opts.fetch(:encoder, '')
       @secname    = opts.fetch(:secname, '')
+      @servicename = opts.fetch(:servicename, '')
+      @sub_method = opts.fetch(:sub_method, false)
       @format     = opts.fetch(:format, 'raw')
       @iterations = opts.fetch(:iterations, 1)
       @keep       = opts.fetch(:keep, false)
@@ -257,9 +265,9 @@ module Msf
     # @return [String] The encoded shellcode
     def encode_payload(shellcode)
       shellcode = shellcode.dup
-      encoder_list = get_encoders
+      encoder_list = get_encoders(shellcode)
       if encoder_list.empty?
-        cli_print "No encoder or badchars specified, outputting raw payload"
+        cli_print "No encoder specified, outputting raw payload"
         return shellcode
       end
 
@@ -302,6 +310,14 @@ module Msf
       end
       unless secname.blank?
         opts[:secname]       = secname
+      end
+      unless servicename.blank?
+        opts[:servicename] = servicename
+      end
+      if sub_method.nil?
+        opts[:sub_method] = false
+      else
+        opts[:sub_method] = sub_method
       end
       opts
     end
@@ -384,6 +400,9 @@ module Msf
         encoded_payload = raw_payload
         gen_payload = raw_payload
       elsif payload.start_with? "android/" and not template.blank?
+        if payload.start_with? "android/meterpreter_"
+          raise PayloadGeneratorError, "Stageless Android payloads (e.g #{payload}) are not compatible with injection (-x)"
+        end
         cli_print "Using APK template: #{template}"
         apk_backdoor = ::Msf::Payload::Apk.new
         raw_payload = apk_backdoor.backdoor_apk(template, generate_raw_payload)
@@ -464,7 +483,7 @@ module Msf
     # This method returns an array of encoders that either match the
     # encoders selected by the user, or match the arch selected.
     # @return [Array<Msf::Encoder>] An array of potential encoders to use
-    def get_encoders
+    def get_encoders(buf)
       encoders = []
       if encoder.present?
         # Allow comma separated list of encoders so users can choose several
@@ -483,6 +502,16 @@ module Msf
         end
         encoders.sort_by { |my_encoder| my_encoder.rank }.reverse
       elsif !badchars.empty? && !badchars.nil?
+        badchars_present = false
+        badchars.each_byte do |bad|
+          badchars_present = true if buf.index(bad.chr(Encoding::ASCII_8BIT))
+        end
+
+        unless badchars_present
+          cli_print "No badchars present in payload, skipping automatic encoding"
+          return []
+        end
+
         framework.encoders.each_module_ranked('Arch' => [arch], 'Platform' => platform_list) do |name, mod|
           e = framework.encoders.create(name)
           e.datastore.import_options_from_hash(datastore)

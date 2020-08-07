@@ -116,7 +116,7 @@ class MsftidyDoc
   def check_start_with_vuln_app
     unless @lines.first =~ /^## Vulnerable Application$/
       warn('Docs should start with ## Vulnerable Application')
-    end 
+    end
   end
 
   def has_h2_headings
@@ -126,6 +126,7 @@ class MsftidyDoc
     has_options = false
     has_bad_description = false
     has_bad_intro = false
+    has_bad_scenario_sub = false
 
     @lines.each do |line|
       if line =~ /^## Vulnerable Application$/
@@ -157,6 +158,11 @@ class MsftidyDoc
         has_bad_intro = true
         next
       end
+
+      if line =~ /### Version and OS$/
+        has_bad_scenario_sub = true
+        next
+      end
     end
 
     unless has_vulnerable_application
@@ -182,6 +188,10 @@ class MsftidyDoc
     if has_bad_intro
       warn('Intro/Introduction should be within Vulnerable Application, or an H3 sub-section of Vulnerable Application')
     end
+
+    if has_bad_scenario_sub
+      warn('Scenario sub-sections should include the vulnerable application version and OS tested on in an H3, not just ### Version and OS')
+    end
   end
 
   def check_newline_eof
@@ -200,17 +210,48 @@ class MsftidyDoc
   def line_checks
     idx = 0
     in_codeblock = false
+    in_options = false
 
     @lines.each do |ln|
       idx += 1
 
-      if ln.scan(/```/).length.odd?
-        in_codeblock = !in_codeblock
+      tback = ln.scan(/```/)
+      if tback.length > 0
+        if tback.length.even?
+          warn("Should use single backquotes (`) for single line literals instead of triple backquotes (```)", idx)
+        else
+          in_codeblock = !in_codeblock
+        end
+
+        if ln =~ /^\s+```/
+          warn("Code blocks using triple backquotes (```) should not be indented", idx)
+        end
       end
 
+      if ln =~ /## Options/
+        in_options = true
+      end
+
+      if ln =~ /## Scenarios/ || (in_options && ln =~ /$\s*## /) # we're not in options anymore
+        # we set a hard false here because there isn't a guarantee options exists
+        in_options = false
+      end
+
+      if in_options && ln =~ /^\s*\*\*[a-z]+\*\*$/i # catch options in old format like **command** instead of ### comand
+        warn("Options should use ### instead of bolds (**)", idx)
+      end
+
+      # this will catch either bold or h2/3 universal options.  Defaults aren't needed since they're not unique to this exploit
+      if in_options && ln =~ /^\s*[\*#]{2,3}\s*(rhost|rhosts|rport|lport|lhost|srvhost|srvport|ssl|uripath|session|proxies|payload)\*{0,2}$/i
+        warn('Universal options such as rhost(s), rport, lport, lhost, srvhost, srvport, ssl, uripath, session, proxies, payload can be removed.', idx)
+      end
       # find spaces at EOL not in a code block which is ``` or starts with four spaces
       if !in_codeblock && ln =~ /[ \t]$/ && !(ln =~ /^    /)
         warn("Spaces at EOL", idx)
+      end
+
+      if ln =~ /Example steps in this format/
+        warn("Instructional text not removed", idx)
       end
 
       if ln =~ /^# /
@@ -218,7 +259,7 @@ class MsftidyDoc
       end
 
       l = 140
-      if ln.length > l && !in_codeblock
+      if ln.rstrip.length > l && !in_codeblock
         warn("Line too long (#{ln.length}).  Consider a newline (which resolves to a space in markdown) to break it up around #{l} characters.", idx)
       end
 

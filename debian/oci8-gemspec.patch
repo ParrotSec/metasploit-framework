@@ -1,0 +1,12 @@
+--- metasploit-framework.gemspec	2020-05-05 14:50:12.465297688 +0200
++++ metasploit-framework.gemspec	2020-05-05 14:55:06.537686342 +0200
+@@ -215,5 +215,9 @@
+ 
+   # Earlier than latest Faraday gem is used to prevent upstream Octokit errors
+   spec.add_runtime_dependency 'faraday'
++  
++  # Add missing gem oci8 only for amd64 and i386 (oracle packages are only
++  # available for these oachitectures in Kali)
++  spec.add_runtime_dependency 'ruby-oci8'
+ 
+ end

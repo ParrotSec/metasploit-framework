@@ -1,0 +1,30 @@
+From: Sophie Brun <sophie@offensive-security.com>
+Date: Wed, 24 Jun 2020 09:23:54 +0200
+Subject: Force reline version to libruby reline version
+
+Last-Update: 2020-06-24
+
+Description: Force reline version to 0.1.3 because it's the default version
+shipped by ruby 2.7. If we don't force the version, bundler installs the
+latest available version of reline gem version 0.1.4 and it will
+breaks msfdb init (see https://bugs.kali.org/view.php?id=6517)
+---
+ metasploit-framework.gemspec | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/metasploit-framework.gemspec b/metasploit-framework.gemspec
+index ffd5ea3..c3551db 100644
+--- a/metasploit-framework.gemspec
++++ b/metasploit-framework.gemspec
+@@ -211,6 +211,11 @@ Gem::Specification.new do |spec|
+   spec.add_runtime_dependency 'hrr_rb_ssh', '0.3.0.pre2'
+   # Needed for irb internal command
+   spec.add_runtime_dependency 'irb'
++  # Force reline version to 0.1.3 because it's the default version shipped
++  # by ruby 2.7. If we don't force the version, bundler installs the
++  # latest available version of reline gem version 0.1.4 and it will
++  # breaks msfdb init (see https://bugs.kali.org/view.php?id=6517)
++  spec.add_runtime_dependency 'reline', '0.1.3'
+ 
+   # AWS enumeration modules
+   spec.add_runtime_dependency 'aws-sdk-s3'

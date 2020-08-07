@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    metasploit-framework (5.0.77)
+    metasploit-framework (5.0.101)
       actionpack (~> 4.2.6)
       activerecord (~> 4.2.6)
       activesupport (~> 4.2.6)
@@ -11,28 +11,31 @@ PATH
       bcrypt (= 3.1.12)
       bcrypt_pbkdf
       bit-struct
+      bson
       concurrent-ruby (= 1.0.5)
       dnsruby
       ed25519
       em-http-request
       eventmachine
       faker
-      faraday (<= 0.17.0)
+      faraday
       faye-websocket
       filesize
       hrr_rb_ssh (= 0.3.0.pre2)
+      irb
       jsobfu
       json
       metasm
       metasploit-concern (~> 2.0.0)
       metasploit-credential (~> 3.0.0)
       metasploit-model (~> 2.0.4)
-      metasploit-payloads (= 1.3.84)
+      metasploit-payloads (= 1.4.4)
       metasploit_data_models (~> 3.0.10)
-      metasploit_payloads-mettle (= 0.5.16)
+      metasploit_payloads-mettle (= 0.5.21)
       mqtt
       msgpack
       nessus_rest
+      net-ldap
       net-ssh
       network_interface
       nexpose
@@ -68,7 +71,7 @@ PATH
       rex-text
       rex-zip
       ruby-macho
-      ruby_smb
+      ruby_smb (~> 1.1)
       rubyntlm
       rubyzip
       sinatra
@@ -86,27 +89,27 @@ GEM
   remote: https://rubygems.org/
   specs:
     Ascii85 (1.0.3)
-    actionpack (4.2.11.1)
-      actionview (= 4.2.11.1)
-      activesupport (= 4.2.11.1)
+    actionpack (4.2.11.3)
+      actionview (= 4.2.11.3)
+      activesupport (= 4.2.11.3)
       rack (~> 1.6)
       rack-test (~> 0.6.2)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    actionview (4.2.11.1)
-      activesupport (= 4.2.11.1)
+    actionview (4.2.11.3)
+      activesupport (= 4.2.11.3)
       builder (~> 3.1)
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    activemodel (4.2.11.1)
-      activesupport (= 4.2.11.1)
+    activemodel (4.2.11.3)
+      activesupport (= 4.2.11.3)
       builder (~> 3.1)
-    activerecord (4.2.11.1)
-      activemodel (= 4.2.11.1)
-      activesupport (= 4.2.11.1)
+    activerecord (4.2.11.3)
+      activemodel (= 4.2.11.3)
+      activesupport (= 4.2.11.3)
       arel (~> 6.0)
-    activesupport (4.2.11.1)
+    activesupport (4.2.11.3)
       i18n (~> 0.7)
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
@@ -117,45 +120,47 @@ GEM
     arel (6.0.4)
     arel-helpers (2.11.0)
       activerecord (>= 3.1.0, < 7)
-    aws-eventstream (1.0.3)
-    aws-partitions (1.275.0)
-    aws-sdk-core (3.90.1)
-      aws-eventstream (~> 1.0, >= 1.0.2)
+    ast (2.4.1)
+    aws-eventstream (1.1.0)
+    aws-partitions (1.344.0)
+    aws-sdk-core (3.104.2)
+      aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-ec2 (1.144.0)
-      aws-sdk-core (~> 3, >= 3.71.0)
+    aws-sdk-ec2 (1.178.0)
+      aws-sdk-core (~> 3, >= 3.99.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-iam (1.33.0)
-      aws-sdk-core (~> 3, >= 3.71.0)
+    aws-sdk-iam (1.43.0)
+      aws-sdk-core (~> 3, >= 3.99.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-kms (1.29.0)
-      aws-sdk-core (~> 3, >= 3.71.0)
+    aws-sdk-kms (1.36.0)
+      aws-sdk-core (~> 3, >= 3.99.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.60.2)
-      aws-sdk-core (~> 3, >= 3.83.0)
+    aws-sdk-s3 (1.75.0)
+      aws-sdk-core (~> 3, >= 3.104.1)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
-    aws-sigv4 (1.1.0)
-      aws-eventstream (~> 1.0, >= 1.0.2)
+    aws-sigv4 (1.2.1)
+      aws-eventstream (~> 1, >= 1.0.2)
     bcrypt (3.1.12)
     bcrypt_pbkdf (1.0.1)
-    bindata (2.4.5)
+    bindata (2.4.8)
     bit-struct (0.16)
+    bson (4.10.0)
     builder (3.2.4)
-    byebug (11.1.1)
-    coderay (1.1.2)
+    byebug (11.1.3)
+    coderay (1.1.3)
     concurrent-ruby (1.0.5)
     cookiejar (0.3.3)
     crass (1.0.6)
     daemons (1.3.1)
-    diff-lcs (1.3)
+    diff-lcs (1.4.4)
     dnsruby (1.61.3)
       addressable (~> 2.5)
     docile (1.3.2)
     ed25519 (1.2.4)
-    em-http-request (1.1.5)
+    em-http-request (1.1.6)
       addressable (>= 2.3.4)
       cookiejar (!= 0.3.1)
       em-socksify (>= 0.3)
@@ -165,14 +170,14 @@ GEM
       eventmachine (>= 1.0.0.beta.4)
     erubis (2.7.0)
     eventmachine (1.2.7)
-    factory_bot (5.1.1)
+    factory_bot (5.2.0)
       activesupport (>= 4.2.0)
-    factory_bot_rails (5.1.1)
-      factory_bot (~> 5.1.0)
+    factory_bot_rails (5.2.0)
+      factory_bot (~> 5.2.0)
       railties (>= 4.2.0)
     faker (2.2.1)
       i18n (>= 0.8)
-    faraday (0.17.0)
+    faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     faye-websocket (0.10.9)
       eventmachine (>= 0.12.0)
@@ -185,13 +190,17 @@ GEM
     http_parser.rb (0.6.0)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
+    io-console (0.5.6)
+    irb (1.2.4)
+      reline (>= 0.0.1)
     jmespath (1.4.0)
     jsobfu (0.4.2)
       rkelly-remix
-    json (2.3.0)
-    loofah (2.4.0)
+    json (2.3.1)
+    loofah (2.6.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
+    memory_profiler (0.9.14)
     metasm (1.0.4)
     metasploit-concern (2.0.5)
       activemodel (~> 4.2.6)
@@ -211,7 +220,7 @@ GEM
       activemodel (~> 4.2.6)
       activesupport (~> 4.2.6)
       railties (~> 4.2.6)
-    metasploit-payloads (1.3.84)
+    metasploit-payloads (1.4.4)
     metasploit_data_models (3.0.10)
       activerecord (~> 4.2.6)
       activesupport (~> 4.2.6)
@@ -222,26 +231,30 @@ GEM
       postgres_ext
       railties (~> 4.2.6)
       recog (~> 2.0)
-    metasploit_payloads-mettle (0.5.16)
-    method_source (0.9.2)
+    metasploit_payloads-mettle (0.5.21)
+    method_source (1.0.0)
     mini_portile2 (2.4.0)
-    minitest (5.14.0)
+    minitest (5.14.1)
     mqtt (0.5.0)
     msgpack (1.3.3)
     multipart-post (2.1.1)
     nessus_rest (0.1.6)
-    net-ssh (5.2.0)
+    net-ldap (0.16.2)
+    net-ssh (6.1.0)
     network_interface (0.0.2)
     nexpose (7.2.1)
-    nokogiri (1.10.8)
+    nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
-    octokit (4.16.0)
+    octokit (4.18.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
     openssl-ccm (1.2.2)
     openvas-omp (0.0.4)
     packetfu (1.1.13)
       pcaprub
+    parallel (1.19.2)
+    parser (2.7.1.4)
+      ast (~> 2.4.1)
     patch_finder (1.0.2)
     pcaprub (0.13.0)
     pdf-reader (2.4.0)
@@ -256,13 +269,13 @@ GEM
       activerecord (~> 4.0)
       arel (>= 4.0.1)
       pg_array_parser (~> 0.0.9)
-    pry (0.12.2)
-      coderay (~> 1.1.0)
-      method_source (~> 0.9.0)
-    pry-byebug (3.8.0)
+    pry (0.13.1)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
+    pry-byebug (3.9.0)
       byebug (~> 11.0)
-      pry (~> 0.10)
-    public_suffix (4.0.3)
+      pry (~> 0.13.0)
+    public_suffix (4.0.5)
     rack (1.6.13)
     rack-protection (1.5.5)
       rack
@@ -276,16 +289,20 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.3.0)
       loofah (~> 2.3)
-    railties (4.2.11.1)
-      actionpack (= 4.2.11.1)
-      activesupport (= 4.2.11.1)
+    railties (4.2.11.3)
+      actionpack (= 4.2.11.3)
+      activesupport (= 4.2.11.3)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
+    rainbow (3.0.0)
     rake (13.0.1)
     rb-readline (0.5.5)
-    recog (2.3.6)
+    recog (2.3.12)
       nokogiri
     redcarpet (3.5.0)
+    regexp_parser (1.7.1)
+    reline (0.1.4)
+      io-console (~> 0.5)
     rex-arch (0.1.13)
       rex-text
     rex-bin_tools (0.1.6)
@@ -299,7 +316,7 @@ GEM
       metasm
       rex-arch
       rex-text
-    rex-exploitation (0.1.22)
+    rex-exploitation (0.1.24)
       jsobfu
       metasm
       rex-arch
@@ -323,55 +340,69 @@ GEM
       metasm
       rex-core
       rex-text
-    rex-socket (0.1.21)
+    rex-socket (0.1.23)
       rex-core
     rex-sslscan (0.1.5)
       rex-core
       rex-socket
       rex-text
     rex-struct2 (0.1.2)
-    rex-text (0.2.24)
+    rex-text (0.2.27)
     rex-zip (0.1.3)
       rex-text
+    rexml (3.2.4)
     rkelly-remix (0.0.7)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
       rspec-expectations (~> 3.9.0)
       rspec-mocks (~> 3.9.0)
-    rspec-core (3.9.1)
-      rspec-support (~> 3.9.1)
-    rspec-expectations (3.9.0)
+    rspec-core (3.9.2)
+      rspec-support (~> 3.9.3)
+    rspec-expectations (3.9.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
     rspec-mocks (3.9.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
-    rspec-rails (3.9.0)
-      actionpack (>= 3.0)
-      activesupport (>= 3.0)
-      railties (>= 3.0)
-      rspec-core (~> 3.9.0)
-      rspec-expectations (~> 3.9.0)
-      rspec-mocks (~> 3.9.0)
-      rspec-support (~> 3.9.0)
+    rspec-rails (4.0.1)
+      actionpack (>= 4.2)
+      activesupport (>= 4.2)
+      railties (>= 4.2)
+      rspec-core (~> 3.9)
+      rspec-expectations (~> 3.9)
+      rspec-mocks (~> 3.9)
+      rspec-support (~> 3.9)
     rspec-rerun (1.1.0)
       rspec (~> 3.0)
-    rspec-support (3.9.2)
+    rspec-support (3.9.3)
+    rubocop (0.88.0)
+      parallel (~> 1.10)
+      parser (>= 2.7.1.1)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.7)
+      rexml
+      rubocop-ast (>= 0.1.0, < 1.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 1.4.0, < 2.0)
+    rubocop-ast (0.2.0)
+      parser (>= 2.7.0.1)
     ruby-macho (2.2.0)
+    ruby-prof (1.4.1)
+    ruby-progressbar (1.10.1)
     ruby-rc4 (0.1.5)
     ruby_smb (1.1.0)
       bindata
       rubyntlm
       windows_error
     rubyntlm (0.6.2)
-    rubyzip (2.2.0)
+    rubyzip (2.3.0)
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
     simplecov (0.18.2)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
-    simplecov-html (0.12.0)
+    simplecov-html (0.12.2)
     sinatra (1.4.8)
       rack (~> 1.5)
       rack-protection (~> 1.4)
@@ -388,21 +419,22 @@ GEM
     tilt (2.0.10)
     timecop (0.9.1)
     ttfunk (1.6.2.1)
-    tzinfo (1.2.6)
+    tzinfo (1.2.7)
       thread_safe (~> 0.1)
-    tzinfo-data (1.2019.3)
+    tzinfo-data (1.2020.1)
       tzinfo (>= 1.0.0)
+    unicode-display_width (1.7.0)
     warden (1.2.7)
       rack (>= 1.0)
-    websocket-driver (0.7.1)
+    websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.4)
+    websocket-extensions (0.1.5)
     windows_error (0.1.2)
     xdr (2.0.0)
       activemodel (>= 4.2.7)
       activesupport (>= 4.2.7)
     xmlrpc (0.3.0)
-    yard (0.9.24)
+    yard (0.9.25)
 
 PLATFORMS
   ruby
@@ -410,6 +442,7 @@ PLATFORMS
 DEPENDENCIES
   factory_bot_rails
   fivemat
+  memory_profiler
   metasploit-framework!
   octokit
   pry-byebug
@@ -417,7 +450,9 @@ DEPENDENCIES
   redcarpet
   rspec-rails
   rspec-rerun
-  simplecov
+  rubocop
+  ruby-prof
+  simplecov (= 0.18.2)
   sqlite3 (~> 1.3.0)
   swagger-blocks
   timecop

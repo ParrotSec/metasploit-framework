@@ -1,0 +1,25 @@
+From: Sophie Brun <sophie@offensive-security.com>
+Date: Fri, 13 Mar 2020 12:03:10 +0100
+Subject: remove-bundler-version
+
+Bug-Kali: https://bugs.kali.org/view.php?id=6110
+Last-Update: 2020-02-18
+
+Remove bundler version in Gemfile.lock to be compatible with Kali bundler
+version.
+Last-Update: 2020-02-18
+---
+ Gemfile.lock | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/Gemfile.lock b/Gemfile.lock
+index 0ceca75..74d75b5 100644
+--- a/Gemfile.lock
++++ b/Gemfile.lock
+@@ -457,6 +457,3 @@ DEPENDENCIES
+   swagger-blocks
+   timecop
+   yard
+-
+-BUNDLED WITH
+-   1.17.3

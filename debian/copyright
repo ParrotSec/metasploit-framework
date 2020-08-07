@@ -15,9 +15,17 @@ License: BSD-3-clause
 # Last updated: 2013-Nov-04
 #
 
-Files: data/john.conf
-Copyright: 1996-2011 Solar Designer.
+Files: data/jtr/*
+Copyright: 1996-2013 Solar Designer.
 License: GPL-2+
+
+Files: data/jtr/dumb*.conf
+Copyright: 2012-2018 magnum
+License: Public-License
+ This  software is Copyright (c) 2012-2018 magnum, and it is hereby
+ released to the general public under the following terms:
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted.
 
 Files: external/source/exploits/IE11SandboxEscapes/*
 Copyright: James Forshaw, 2014

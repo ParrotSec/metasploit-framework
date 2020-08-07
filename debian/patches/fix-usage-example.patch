@@ -1,30 +1,30 @@
-Description: Change usage example
-Author: Sophie Brun <sophie@freexian.com>
+From: Sophie Brun <sophie@freexian.com>
+Date: Fri, 13 Mar 2020 12:03:10 +0100
+Subject: Change usage example
+
+Last-Update: 2018-01-30
+
 Last-Update: 2018-01-30
 ---
-This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
---- a/tools/exploit/pattern_create.rb
-+++ b/tools/exploit/pattern_create.rb
-@@ -22,7 +22,7 @@ module PatternCreate
-     def self.parse(args)
-       options = {}
-       parser = OptionParser.new do |opt|
--        opt.banner = "Usage: #{__FILE__} [options]\nExample: #{__FILE__} -l 50 -s ABC,def,123\nAd1Ad2Ad3Ae1Ae2Ae3Af1Af2Af3Bd1Bd2Bd3Be1Be2Be3Bf1Bf"
-+        opt.banner = "Usage: msf-pattern_create [options]\nExample: msf-pattern_create -l 50 -s ABC,def,123\nAd1Ad2Ad3Ae1Ae2Ae3Af1Af2Af3Bd1Bd2Bd3Be1Be2Be3Bf1Bf"
-         opt.separator ''
-         opt.separator 'Options:'
-         opt.on('-l', '--length <length>', Integer, "The length of the pattern") do |len|
---- a/tools/exploit/pattern_offset.rb
-+++ b/tools/exploit/pattern_offset.rb
-@@ -22,7 +22,7 @@ module PatternOffset
-     def self.parse(args)
-       options = {}
-       parser = OptionParser.new do |opt|
--        opt.banner = "Usage: #{__FILE__} [options]\nExample: #{__FILE__} -q Aa3A\n[*] Exact match at offset 9"
-+        opt.banner = "Usage: msf-pattern_offset [options]\nExample: msf-pattern_offset -q Aa3A\n[*] Exact match at offset 9"
-         opt.separator ''
-         opt.separator 'Options:'
- 
+ tools/exploit/egghunter.rb         | 2 +-
+ tools/exploit/exe2vba.rb           | 2 +-
+ tools/exploit/exe2vbs.rb           | 2 +-
+ tools/exploit/find_badchars.rb     | 2 +-
+ tools/exploit/java_deserializer.rb | 2 +-
+ tools/exploit/jsobfu.rb            | 2 +-
+ tools/exploit/metasm_shell.rb      | 2 +-
+ tools/exploit/pattern_create.rb    | 2 +-
+ tools/exploit/pattern_offset.rb    | 2 +-
+ tools/exploit/pdf2xdp.rb           | 2 +-
+ tools/exploit/virustotal.rb        | 2 +-
+ tools/password/halflm_second.rb    | 2 +-
+ tools/password/hmac_sha1_crack.rb  | 2 +-
+ tools/password/md5_lookup.rb       | 2 +-
+ tools/recon/makeiplist.rb          | 2 +-
+ 15 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/tools/exploit/egghunter.rb b/tools/exploit/egghunter.rb
+index eb8c2ad..fbf3f17 100755
 --- a/tools/exploit/egghunter.rb
 +++ b/tools/exploit/egghunter.rb
 @@ -21,7 +21,7 @@ module Egghunter
@@ -36,6 +36,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
          opt.separator ''
          opt.separator 'Specific options:'
  
+diff --git a/tools/exploit/exe2vba.rb b/tools/exploit/exe2vba.rb
+index 61cfb96..bc07f14 100755
 --- a/tools/exploit/exe2vba.rb
 +++ b/tools/exploit/exe2vba.rb
 @@ -24,7 +24,7 @@ require 'rex'
@@ -47,6 +49,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
    exit
  end
  
+diff --git a/tools/exploit/exe2vbs.rb b/tools/exploit/exe2vbs.rb
+index 3b0c360..6abd511 100755
 --- a/tools/exploit/exe2vbs.rb
 +++ b/tools/exploit/exe2vbs.rb
 @@ -23,7 +23,7 @@ require 'rex'
@@ -58,6 +62,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
    exit
  end
  
+diff --git a/tools/exploit/find_badchars.rb b/tools/exploit/find_badchars.rb
+index 6cd3376..d19bb3d 100755
 --- a/tools/exploit/find_badchars.rb
 +++ b/tools/exploit/find_badchars.rb
 @@ -33,7 +33,7 @@ $args = Rex::Parser::Arguments.new(
@@ -69,6 +75,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
    exit
  end
  
+diff --git a/tools/exploit/java_deserializer.rb b/tools/exploit/java_deserializer.rb
+index 2c62a02..1125a1f 100755
 --- a/tools/exploit/java_deserializer.rb
 +++ b/tools/exploit/java_deserializer.rb
 @@ -142,7 +142,7 @@ if __FILE__ == $PROGRAM_NAME
@@ -80,6 +88,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  
      opts.on("-aID", "--array=ID", "Print detailed information about content array") do |id|
        options[:array] = id
+diff --git a/tools/exploit/jsobfu.rb b/tools/exploit/jsobfu.rb
+index d30d72a..bd554b1 100755
 --- a/tools/exploit/jsobfu.rb
 +++ b/tools/exploit/jsobfu.rb
 @@ -21,7 +21,7 @@ module Jsobfu
@@ -91,6 +101,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
          opt.separator ''
          opt.separator 'Specific options:'
  
+diff --git a/tools/exploit/metasm_shell.rb b/tools/exploit/metasm_shell.rb
+index 784717c..8083091 100755
 --- a/tools/exploit/metasm_shell.rb
 +++ b/tools/exploit/metasm_shell.rb
 @@ -42,7 +42,7 @@ require 'metasm'
@@ -102,6 +114,34 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
    exit
  end
  
+diff --git a/tools/exploit/pattern_create.rb b/tools/exploit/pattern_create.rb
+index e63306f..a239438 100755
+--- a/tools/exploit/pattern_create.rb
++++ b/tools/exploit/pattern_create.rb
+@@ -22,7 +22,7 @@ module PatternCreate
+     def self.parse(args)
+       options = {}
+       parser = OptionParser.new do |opt|
+-        opt.banner = "Usage: #{__FILE__} [options]\nExample: #{__FILE__} -l 50 -s ABC,def,123\nAd1Ad2Ad3Ae1Ae2Ae3Af1Af2Af3Bd1Bd2Bd3Be1Be2Be3Bf1Bf"
++        opt.banner = "Usage: msf-pattern_create [options]\nExample: msf-pattern_create -l 50 -s ABC,def,123\nAd1Ad2Ad3Ae1Ae2Ae3Af1Af2Af3Bd1Bd2Bd3Be1Be2Be3Bf1Bf"
+         opt.separator ''
+         opt.separator 'Options:'
+         opt.on('-l', '--length <length>', Integer, "The length of the pattern") do |len|
+diff --git a/tools/exploit/pattern_offset.rb b/tools/exploit/pattern_offset.rb
+index 3ff8c30..58f9c7c 100755
+--- a/tools/exploit/pattern_offset.rb
++++ b/tools/exploit/pattern_offset.rb
+@@ -22,7 +22,7 @@ module PatternOffset
+     def self.parse(args)
+       options = {}
+       parser = OptionParser.new do |opt|
+-        opt.banner = "Usage: #{__FILE__} [options]\nExample: #{__FILE__} -q Aa3A\n[*] Exact match at offset 9"
++        opt.banner = "Usage: msf-pattern_offset [options]\nExample: msf-pattern_offset -q Aa3A\n[*] Exact match at offset 9"
+         opt.separator ''
+         opt.separator 'Options:'
+ 
+diff --git a/tools/exploit/pdf2xdp.rb b/tools/exploit/pdf2xdp.rb
+index 63a8275..ad905e2 100755
 --- a/tools/exploit/pdf2xdp.rb
 +++ b/tools/exploit/pdf2xdp.rb
 @@ -15,7 +15,7 @@ pdf = ARGV.shift
@@ -113,6 +153,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
    exit 1
  end
  
+diff --git a/tools/exploit/virustotal.rb b/tools/exploit/virustotal.rb
+index e50467b..2cebbad 100755
 --- a/tools/exploit/virustotal.rb
 +++ b/tools/exploit/virustotal.rb
 @@ -289,7 +289,7 @@ class OptsConsole
@@ -124,9 +166,11 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  
        opts.separator ""
        opts.separator "Specific options:"
+diff --git a/tools/password/halflm_second.rb b/tools/password/halflm_second.rb
+index eb3d44d..3198b18 100755
 --- a/tools/password/halflm_second.rb
 +++ b/tools/password/halflm_second.rb
-@@ -24,7 +24,7 @@ $:.unshift(ENV['MSF_LOCAL_LIB']) if ENV[
+@@ -24,7 +24,7 @@ $:.unshift(ENV['MSF_LOCAL_LIB']) if ENV['MSF_LOCAL_LIB']
  require 'rex'
  
  def usage
@@ -135,6 +179,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
    exit
  end
  
+diff --git a/tools/password/hmac_sha1_crack.rb b/tools/password/hmac_sha1_crack.rb
+index 243e78e..f8708ca 100755
 --- a/tools/password/hmac_sha1_crack.rb
 +++ b/tools/password/hmac_sha1_crack.rb
 @@ -28,7 +28,7 @@ require 'rex'
@@ -146,6 +192,8 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
    $stderr.puts("The format of hash file is <identifier>:<hex-salt>:<hash>\n\n")
    exit
  end
+diff --git a/tools/password/md5_lookup.rb b/tools/password/md5_lookup.rb
+index 95a71da..412fc0d 100755
 --- a/tools/password/md5_lookup.rb
 +++ b/tools/password/md5_lookup.rb
 @@ -272,7 +272,7 @@ module Md5LookupUtility
@@ -157,9 +205,11 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
          opt.separator ''
          opt.separator 'Specific options:'
  
+diff --git a/tools/recon/makeiplist.rb b/tools/recon/makeiplist.rb
+index 4d38f6f..85765fa 100755
 --- a/tools/recon/makeiplist.rb
 +++ b/tools/recon/makeiplist.rb
-@@ -34,7 +34,7 @@ class OptsConsole
+@@ -33,7 +33,7 @@ class OptsConsole
  
      opts = OptionParser.new do |opts|
        opts.banner = %Q|This script takes a list of ranges and converts it to a per line IP list.
@@ -168,4 +218,3 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  
        opts.separator ""
        opts.separator "Specific options:"
-

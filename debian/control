@@ -1,10 +1,11 @@
 Source: metasploit-framework
 Section: net
 Priority: optional
-Maintainer: ParrotOS Dev Team
-Uploaders: Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>, disrupt_tre_flow <disrupt_the_flow@parrotsec.org>
+XSBC-Original-Maintainer: Kali Developers <devel@kali.org>
+Maintainer: Parrot Dev Team <team@parrotsec.org>
+Uploaders: Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>
 Build-Depends:
-  debhelper (>= 10),
+  debhelper-compat (= 12),
 # Dependencies needed to fetch and build the gems in a bundle
   ruby-dev,
   bundler,
@@ -17,12 +18,15 @@ Build-Depends:
   libxml2-dev,
   libxslt-dev,
   libffi-dev,
+  oracle-instantclient-basic [amd64 i386],
+  oracle-instantclient-devel (>= 19.3.0.0.0-0kali2) [amd64 i386],
+  oracle-instantclient-sqlplus [amd64 i386],
   ruby-json (>= 1.8.3),
   zlib1g-dev,
-Standards-Version: 4.3.0
+Standards-Version: 4.4.0
 Homepage: https://www.metasploit.com/
-Vcs-Git: git@git.parrotsec.org:security-tools/metasploit-framework.git
-Vcs-Browser: https://nest.parrotsec.org/security-tools/metasploit-framework.git
+Vcs-Git: https://nest.parrotsec.org/packages/tools/metasploit-framework.git
+Vcs-Browser: https://nest.parrotsec.org/packages/tools/metasploit-framework
 
 Package: metasploit-framework
 Architecture: any
@@ -38,11 +42,11 @@ Depends:
   wget,
 # For our own msfdb
   openssl,
-# Generic dependencies
+# Generic dependencies 
   ${misc:Depends},
   ${shlibs:Depends},
   ruby-json (>= 1.8.3),
-Suggests: default-jdk, clamav, clamav-daemon, armitage
+Suggests: java7-runtime-headless, clamav, clamav-daemon
 Description: Framework for exploit development and vulnerability research
  The Metasploit Framework is an open source platform that supports
  vulnerability research, exploit development, and the creation of custom

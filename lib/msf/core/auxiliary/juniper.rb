@@ -33,6 +33,7 @@ module Auxiliary::Juniper
       workspace_id: myworkspace.id,
       origin_type: :service,
       service_name: '',
+      private_type: :nonreplayable_hash,
       module_fullname: self.fullname,
       status: Metasploit::Model::Login::Status::UNTRIED
     }
@@ -50,7 +51,6 @@ module Auxiliary::Juniper
       cred = credential_data.dup
       cred[:username] = admin_name
       cred[:private_data] = admin_hash
-      cred[:private_type] = :nonreplayable_hash
       create_credential_and_login(cred)
     end
 
@@ -70,12 +70,11 @@ module Auxiliary::Juniper
       cred[:username] = user_name
       cred[:jtr_format] = 'sha1'
       cred[:private_data] = user_hash
-      cred[:private_type] = :nonreplayable_hash
       create_credential_and_login(cred)
     end
 
     # snmp
-    # Example lines: 
+    # Example lines:
     # set snmp community "sales" Read-Write Trap-on traffic version v1
     config.scan(/set snmp community "(?<snmp_community>[a-z0-9]+)" (?<snmp_permissions>Read-Write|Read-Only)/i).each do |result|
       snmp_community = result[0].strip
@@ -111,7 +110,6 @@ module Auxiliary::Juniper
       cred[:private_data] = ppp_hash
       cred[:service_name] = 'PPTP'
       cred[:port] = 1723
-      cred[:private_type] = :nonreplayable_hash
       create_credential_and_login(cred)
     end
 
@@ -151,6 +149,7 @@ module Auxiliary::Juniper
       protocol: 'tcp',
       workspace_id: myworkspace.id,
       origin_type: :service,
+      private_type: :nonreplayable_hash,
       service_name: '',
       module_fullname: self.fullname,
       status: Metasploit::Model::Login::Status::UNTRIED
@@ -176,7 +175,6 @@ module Auxiliary::Juniper
       cred[:username] = 'root'
       cred[:jtr_format] = jtr_format
       cred[:private_data] = root_hash
-      cred[:private_type] = :nonreplayable_hash
       create_credential_and_login(cred)
     end
 
@@ -193,7 +191,6 @@ module Auxiliary::Juniper
       cred[:username] = user_name
       cred[:jtr_format] = jtr_format
       cred[:private_data] = user_hash
-      cred[:private_type] = :nonreplayable_hash
       create_credential_and_login(cred)
     end
 
@@ -214,7 +211,7 @@ module Auxiliary::Juniper
       cred[:private_type] = :password
       cred[:service_name] = 'snmp'
       create_credential_and_login(cred)
-    end    
+    end
 
     config.scan(/radius-server \{[\s]+(?<radius_server>[0-9\.]{7,15}) secret "(?<radius_hash>[^"]+)";/i).each do |result|
       radius_hash = result[1].strip
@@ -225,7 +222,6 @@ module Auxiliary::Juniper
       cred[:port] = 1812
       cred[:protocol] = 'udp'
       cred[:private_data] = radius_hash
-      cred[:private_type] = :nonreplayable_hash
       cred[:service_name] = 'radius'
       create_credential_and_login(cred)
     end
@@ -239,7 +235,6 @@ module Auxiliary::Juniper
       cred[:private_data] = ppp_hash
       cred[:service_name] = 'pptp'
       cred[:port] = 1723
-      cred[:private_type] = :nonreplayable_hash
       create_credential_and_login(cred)
     end
 

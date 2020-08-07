@@ -1,20 +1,30 @@
-Description: Add missing dependencies in gemspec
- With new bundler (>=1.16.1) msfdb init fails because of missing
- dependencies: rspec-core and rspec-rerun (required in Rakefile). Add them
- in the gemspec to fix this issue.
-Author: Sophie Brun <sophie@freexian.com>
+From: Sophie Brun <sophie@freexian.com>
+Date: Fri, 13 Mar 2020 12:03:10 +0100
+Subject: Add missing dependencies in gemspec
+
+Last-Update: 2018-03-26
+
+With new bundler (>=1.16.1) msfdb init fails because of missing
+dependencies: rspec-core and rspec-rerun (required in Rakefile). Add them
+in the gemspec to fix this issue.
 Last-Update: 2018-03-26
 ---
-This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+ metasploit-framework.gemspec | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/metasploit-framework.gemspec b/metasploit-framework.gemspec
+index 4c47ca1..ffd5ea3 100644
 --- a/metasploit-framework.gemspec
 +++ b/metasploit-framework.gemspec
-@@ -112,6 +112,10 @@ Gem::Specification.new do |spec|
+@@ -118,6 +118,12 @@ Gem::Specification.new do |spec|
    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.3.0')
      spec.add_runtime_dependency 'xmlrpc'
    end
 +  # This is for Rakefile
 +  spec.add_runtime_dependency 'rspec-core'
 +  spec.add_runtime_dependency 'rspec-rerun'
++  # required by config/application.rb (needed for Rakefile)
++  spec.add_runtime_dependency 'rails'
 +
  
    #

@@ -42,7 +42,7 @@ class Console::CommandDispatcher::Stdapi::Fs
   @@upload_opts = Rex::Parser::Arguments.new(
     "-h" => [ false, "Help banner" ],
     "-r" => [ false, "Upload recursively" ])
-  
+
   #
   # Options for the ls command
   #
@@ -712,6 +712,7 @@ class Console::CommandDispatcher::Stdapi::Fs
         return 0
       when nil
         path = val
+        path = client.fs.file.expand_path(path) if path =~ PATH_EXPAND_REGEX
       end
     }
 
