@@ -42,7 +42,7 @@ class Client
 
     # XXX: This info should all be controlled by ClientRequest
     self.config_types = {
-      'uri_encode_mode'        => ['hex-normal', 'hex-all', 'hex-random', 'u-normal', 'u-random', 'u-all'],
+      'uri_encode_mode'        => ['hex-normal', 'hex-all', 'hex-random', 'hex-noslashes', 'u-normal', 'u-random', 'u-all'],
       'uri_encode_count'       => 'integer',
       'uri_full_url'           => 'bool',
       'pad_method_uri_count'   => 'integer',
@@ -93,7 +93,7 @@ class Client
       # config.
 
       if(typ == 'bool')
-        val = (val =~ /^(t|y|1)/i ? true : false || val === true)
+        val = (val == true || val.to_s =~ /^(t|y|1)/i)
       end
 
       if(typ == 'integer')

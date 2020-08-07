@@ -44,7 +44,7 @@ module Auxiliary::Brocade
 
     login_object
   end
-  
+
 
   def brocade_config_eater(thost, tport, config)
     # this is for brocade type devices.
@@ -57,6 +57,7 @@ module Auxiliary::Brocade
       protocol: 'tcp',
       workspace_id: myworkspace.id,
       origin_type: :service,
+      private_type: :nonreplayable_hash,
       service_name: '',
       module_fullname: self.fullname,
       status: Metasploit::Model::Login::Status::UNTRIED
@@ -81,7 +82,6 @@ module Auxiliary::Brocade
         cred = credential_data.dup
         cred[:username] = 'enable'
         cred[:private_data] = admin_hash
-        cred[:private_type] = :nonreplayable_hash
         create_credential_and_login(cred)
       end
     end
@@ -98,13 +98,12 @@ module Auxiliary::Brocade
         cred = credential_data.dup
         cred[:username] = user_name
         cred[:private_data] = user_hash
-        cred[:private_type] = :nonreplayable_hash
         create_credential_and_login(cred)
       end
     end
 
     # snmp
-    # Example lines: 
+    # Example lines:
     # snmp-server community 1 $Si2^=d rw
     # these at times look base64 encoded, which they may be, but are also encrypted
     config.scan(/snmp-server community (?<snmp_id>[\d]+) (?<snmp_community>.+) (?<snmp_permissions>rw|ro)/i).each do |result|
@@ -117,7 +116,6 @@ module Auxiliary::Brocade
         cred[:port] = 161
         cred[:service_name] = 'snmp'
         cred[:private_data] = snmp_community
-        cred[:private_type] = :nonreplayable_hash
         create_credential_and_login(cred)
       end
     end
