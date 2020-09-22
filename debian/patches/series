@@ -1,6 +1,0 @@
-drop-installation-msfupdate.patch
-fix-usage-example.patch
-add-missing-dependencies.patch
-change-bundler-version.patch
-Update-shebang-to-use-python3.patch
-force-reline-version.patch
