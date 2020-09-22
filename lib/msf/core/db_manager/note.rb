@@ -132,8 +132,11 @@ module Msf::DBManager::Note
     if addr and not host
       host = get_host(:workspace => wspace, :host => addr)
     end
-    if host and (opts[:port] and proto)
-      service = get_service(wspace, host, proto, opts[:port])
+    if host and opts[:port]
+      # only one result can be returned, as the +port+ field restricts potential results to a single service
+      service = services(:workspace => wspace,
+                         :hosts => {address: host},
+                         :port => opts[:port]).first
     elsif opts[:service] and opts[:service].kind_of? ::Mdm::Service
       service = opts[:service]
     end
@@ -147,7 +150,7 @@ module Msf::DBManager::Note
     conditions[:service_id] = service[:id] if service
     conditions[:vuln_id] = opts[:vuln_id]
 
-    case mode
+    case mode.to_sym
     when :unique
       note      = wspace.notes.where(conditions).first_or_initialize
       note.data = data
