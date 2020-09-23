@@ -1,3 +1,9 @@
+metasploit-framework (6.0.7-0parrot1) rolling-testing; urgency=medium
+
+  * Upstream new version
+
+ -- Nong Hoang "dmknght" Tu <dmknght@parrotsec.org>  Wed, 23 Sep 2020 17:34:48 +0700
+
 metasploit-framework (6.0.0-0parrot1) rolling-testing; urgency=medium
 
   * Import new Upstream release.
