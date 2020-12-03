@@ -200,6 +200,12 @@ module Metasploit
             '1411'
           when 'ssha512'
             '1711'
+          when 'mscash'
+              '1100'
+          when 'mscash2'
+              '2100'
+          when 'Raw-MD5u'
+              '30'
           else
             nil
           end
