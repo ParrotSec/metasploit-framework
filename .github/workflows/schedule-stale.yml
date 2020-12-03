@@ -1,6 +1,6 @@
 on:
   schedule:
-    - cron: "0 15 * * *"
+    - cron: "0 15 * * 1-5"
 name: Stale Bot workflow
 jobs:
   build:
@@ -14,7 +14,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           days-before-stale: 30
           days-before-close: 30
-          operations-per-run: 25
+          operations-per-run: 50
           stale-issue-message: |
             Hi!
 
