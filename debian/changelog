@@ -1,3 +1,9 @@
+metasploit-framework (6.0.22-1) rolling-testing; urgency=medium
+
+  * New upstream version 6.0.22
+
+ -- Nong Hoang Tu <dmknght@parrotsec.org>  Fri, 18 Dec 2020 14:58:31 +0000
+
 metasploit-framework (6.0.18-1) rolling-testing; urgency=medium
 
   * New upstream version 6.0.18
