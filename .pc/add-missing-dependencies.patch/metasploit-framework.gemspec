@@ -119,12 +119,6 @@ Gem::Specification.new do |spec|
   if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.3.0')
     spec.add_runtime_dependency 'xmlrpc'
   end
-  # This is for Rakefile
-  spec.add_runtime_dependency 'rspec-core'
-  spec.add_runtime_dependency 'rspec-rerun'
-  # required by config/application.rb (needed for Rakefile)
-  spec.add_runtime_dependency 'rails'
-
 
   #
   # File Parsing Libraries
