@@ -14,8 +14,7 @@ Subject: Update shebang to use python3
  modules/auxiliary/scanner/smb/impacket/wmiexec.py         | 2 +-
  modules/auxiliary/scanner/teradata/teradata_odbc_login.py | 2 +-
  modules/exploits/linux/smtp/haraka.py                     | 2 +-
- modules/exploits/windows/smb/ms17_010_eternalblue_win8.py | 2 +-
- 12 files changed, 12 insertions(+), 12 deletions(-)
+ 11 files changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/modules/auxiliary/admin/teradata/teradata_odbc_sql.py b/modules/auxiliary/admin/teradata/teradata_odbc_sql.py
 index cbba01e..826815a 100755
@@ -127,13 +126,4 @@ index 0892cb2..bc6a619 100755
  
  # Vendor Homepage: https://haraka.github.io/
  # Software Link: https://github.com/haraka/Haraka
-diff --git a/modules/exploits/windows/smb/ms17_010_eternalblue_win8.py b/modules/exploits/windows/smb/ms17_010_eternalblue_win8.py
-index 7302ad9..e3a12da 100755
---- a/modules/exploits/windows/smb/ms17_010_eternalblue_win8.py
-+++ b/modules/exploits/windows/smb/ms17_010_eternalblue_win8.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- 
- import sys
- import socket
+
