@@ -24,7 +24,7 @@ Last-Update: 2018-01-30
  15 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/tools/exploit/egghunter.rb b/tools/exploit/egghunter.rb
-index eb8c2ad..fbf3f17 100755
+index 6c626c2..4b528e4 100755
 --- a/tools/exploit/egghunter.rb
 +++ b/tools/exploit/egghunter.rb
 @@ -21,7 +21,7 @@ module Egghunter
@@ -89,7 +89,7 @@ index 2c62a02..1125a1f 100755
      opts.on("-aID", "--array=ID", "Print detailed information about content array") do |id|
        options[:array] = id
 diff --git a/tools/exploit/jsobfu.rb b/tools/exploit/jsobfu.rb
-index d30d72a..bd554b1 100755
+index 3bdbf8a..276a547 100755
 --- a/tools/exploit/jsobfu.rb
 +++ b/tools/exploit/jsobfu.rb
 @@ -21,7 +21,7 @@ module Jsobfu
@@ -154,10 +154,10 @@ index 63a8275..ad905e2 100755
  end
  
 diff --git a/tools/exploit/virustotal.rb b/tools/exploit/virustotal.rb
-index e50467b..2cebbad 100755
+index 5d91aeb..a26d0eb 100755
 --- a/tools/exploit/virustotal.rb
 +++ b/tools/exploit/virustotal.rb
-@@ -289,7 +289,7 @@ class OptsConsole
+@@ -288,7 +288,7 @@ class OptsConsole
      options = {}
  
      opts = OptionParser.new do |opts|
@@ -193,10 +193,10 @@ index 243e78e..f8708ca 100755
    exit
  end
 diff --git a/tools/password/md5_lookup.rb b/tools/password/md5_lookup.rb
-index 95a71da..412fc0d 100755
+index 1c0b919..2c3bc68 100755
 --- a/tools/password/md5_lookup.rb
 +++ b/tools/password/md5_lookup.rb
-@@ -272,7 +272,7 @@ module Md5LookupUtility
+@@ -271,7 +271,7 @@ module Md5LookupUtility
      def self.get_parsed_options
        options = {}
        parser = OptionParser.new do |opt|
@@ -218,3 +218,4 @@ index 4d38f6f..85765fa 100755
  
        opts.separator ""
        opts.separator "Specific options:"
+

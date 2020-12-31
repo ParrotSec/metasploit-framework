@@ -13,10 +13,10 @@ Last-Update: 2018-03-26
  1 file changed, 6 insertions(+)
 
 diff --git a/metasploit-framework.gemspec b/metasploit-framework.gemspec
-index 4c47ca1..ffd5ea3 100644
+index 06d6b19..514b7c6 100644
 --- a/metasploit-framework.gemspec
 +++ b/metasploit-framework.gemspec
-@@ -118,6 +118,12 @@ Gem::Specification.new do |spec|
+@@ -119,6 +119,12 @@ Gem::Specification.new do |spec|
    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.3.0')
      spec.add_runtime_dependency 'xmlrpc'
    end
@@ -29,3 +29,4 @@ index 4c47ca1..ffd5ea3 100644
  
    #
    # File Parsing Libraries
+
