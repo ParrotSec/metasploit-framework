@@ -1,3 +1,9 @@
+metasploit-framework (6.0.27-parrot1) rolling-testing; urgency=medium
+
+  * Remove gbp.conf
+
+ -- Nong Hoang Tu <dmknght@parrotsec.org>  Fri, 22 Jan 2021 16:12:04 +0700
+
 metasploit-framework (6.0.27-parrot0) rolling-testing; urgency=medium
 
   * Upstream latest update (fix issue during automation update)
