@@ -1,3 +1,10 @@
+metasploit-framework (6.0.27-parrot0) rolling-testing; urgency=medium
+
+  * Upstream latest update (fix issue during automation update)
+  * New upstream version 6.0.27
+
+ -- Nong Hoang Tu <dmknght@parrotsec.org>  Fri, 22 Jan 2021 09:07:58 +0000
+
 metasploit-framework (6.0.23-0parrot1) rolling-testing; urgency=medium
 
   * Import new upstream version 6.0.23.
