@@ -1,3 +1,10 @@
+metasploit-framework (6.0.27-parrot2) rolling-testing; urgency=medium
+
+  * Add launchers and shell scripts
+  * Add more info in sections for parrot team
+
+ -- Nong Hoang Tu <dmknght@parrotsec.org>  Sat, 23 Jan 2021 12:11:35 +0700
+
 metasploit-framework (6.0.27-parrot1) rolling-testing; urgency=medium
 
   * Remove gbp.conf
