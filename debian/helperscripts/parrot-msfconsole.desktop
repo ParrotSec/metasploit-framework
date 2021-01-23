@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=metasploit framework
+Comment=Metasploit framework (CLI)
+Encoding=UTF-8
+Exec=menuexec msfc
+Icon=parrot-metasploit.png
+StartupNotify=false
+Terminal=true
+Type=Application
+Categories=04-01-metasploit-framework;
+X-Parrot-Package=metasploit-framework

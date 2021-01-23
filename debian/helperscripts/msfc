@@ -1,0 +1,6 @@
+#!/bin/bash
+gksudo service postgresql start
+gksudo msfdb init
+gksudo msfdb start
+msfd
+msfconsole

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=msfvenom
+Comment=Metasploit framework standalone payload and shellcode generator
+Encoding=UTF-8
+Exec=menuexec "msfvenom -h"
+Icon=parrot-mpc.png
+StartupNotify=false
+Terminal=true
+Type=Application
+Categories=04-01-metasploit-framework;04-04-payload-generator;
+X-Parrot-Package=metasploit-framework
