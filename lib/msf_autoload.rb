@@ -7,18 +7,31 @@ require 'zeitwerk'
 # Correct namespacing to remove the custom inflector (or reduce it's complexity)
 # Correct namespacing to cut down on inflector overrides
 # Make the necessary changes to reduce/remove the ignored/collapsed files and folders
+#
+# I don't know why these are needed in `lib/msf/util/dot_net_deserialization/types.rb`
+#   require 'msf/util/dot_net_deserialization/types/primitives'
+#   require 'msf/util/dot_net_deserialization/types/general'
+#   require 'msf/util/dot_net_deserialization/types/record_values'
 ###
 
 class TempInflector < Zeitwerk::Inflector
   def camelize(basename, abspath)
-    if basename == 'osx' && abspath.end_with?('lib/msf/core/payload/osx', 'lib/msf/core/payload/osx.rb')
+    if basename == 'osx' && abspath.end_with?("#{__dir__}/msf/core/payload/osx", "#{__dir__}/msf/core/payload/osx.rb")
       'Osx'
-    elsif basename == 'exe' && abspath.end_with?('lib/msf/core/exe', 'lib/msf/core/exe.rb')
+    elsif basename == 'exe' && abspath.end_with?("#{__dir__}/msf/core/exe", "#{__dir__}/msf/core/exe.rb")
       'Exe'
-    elsif basename == 'json' && abspath.end_with?('lib/msf/base/serializer/json.rb')
+    elsif basename == 'json' && abspath.end_with?("#{__dir__}/msf/base/serializer/json.rb")
       'Json'
-    elsif basename == 'powershell' && abspath.end_with?('lib/msf/base/sessions/powershell.rb')
+    elsif basename == 'powershell' && abspath.end_with?("#{__dir__}/msf/base/sessions/powershell.rb")
       'PowerShell'
+    elsif basename == 'ui' && abspath.end_with?("#{__dir__}/msf/core/module/ui", "#{__dir__}/msf/core/module/ui.rb", "#{__dir__}/rex/post/ui", "#{__dir__}/rex/post/ui.rb", "#{__dir__}/rex/post/meterpreter/extensions/stdapi/ui.rb")
+      'UI'
+    elsif basename == 'ssh' && abspath.end_with?("#{__dir__}/rex/proto/ssh")
+      'Ssh'
+    elsif basename == 'http' && abspath.end_with?("#{__dir__}/rex/proto/http")
+      'Http'
+    elsif basename == 'rftransceiver' && abspath.end_with?("#{__dir__}/rex/post/hwbridge/ui/console/command_dispatcher/rftransceiver.rb")
+      'RFtransceiver'
     else
       super
     end
@@ -26,10 +39,9 @@ class TempInflector < Zeitwerk::Inflector
 end
 
 loader = Zeitwerk::Loader.new
-loader.push_dir("#{__dir__}/msf/core/", namespace: Msf)
+loader.push_dir("#{__dir__}/msf/", namespace: Msf)
+loader.push_dir("#{__dir__}/rex/", namespace: Rex)
 loader.push_dir("#{__dir__}/../app/validators/")
-loader.push_dir("#{__dir__}/msf/base/", namespace: Msf)
-
 
 loader.ignore(
   "#{__dir__}/msf/core/constants.rb",
@@ -37,8 +49,13 @@ loader.ignore(
   "#{__dir__}/msf/core/rpc/json/error.rb",
   "#{__dir__}/msf/core/rpc/json/v2_0/",
   "#{__dir__}/msf/core/modules/external/ruby/metasploit.rb",
-  "#{__dir__}/msf/core/rpc/v10/constants.rb"
-)
+  "#{__dir__}/msf/core/rpc/v10/constants.rb",
+  "#{__dir__}/msf/core.rb",
+  "#{__dir__}/msf/base.rb",
+  "#{__dir__}/rex/post/",
+  "#{__dir__}/rex/post.rb",
+  "#{__dir__}/rex/proto/ssh/hrr_rb_ssh.rb"
+  )
 
 loader.collapse(
   "#{__dir__}/msf/core",
@@ -48,12 +65,13 @@ loader.collapse(
   "#{__dir__}/msf/core/payload/linux/x64",
   "#{__dir__}/msf/core/web_services/servlet",
   "#{__dir__}/msf/base",
+  "#{__dir__}/msf/ui/console/command_dispatcher/db",
+  "#{__dir__}/rex/parser/fs"
 )
 
 loader.inflector = TempInflector.new
 loader.inflector.inflect(
   'opt_http_rhost_url' => 'OptHTTPRhostURL',
-  'ui' => 'UI',
   'uuid' => 'UUID',
   'db_manager' => 'DBManager',
   'ci' => 'CI',
@@ -157,6 +175,7 @@ loader.inflector.inflect(
   'cli' => 'CLI',
   'sqlitei' => 'SQLitei',
   'mysqli' => 'MySQLi',
+  'postgresqli' => 'PostgreSQLi',
   'ssh' => 'SSH',
   'winrm' => 'WinRM',
   'smb' => 'SMB',
@@ -223,6 +242,42 @@ loader.inflector.inflect(
   'hwbridge' => 'HWBridge',
   'vncinject_options' => 'VncInjectOptions',
   'vncinject' => 'VncInject',
+  'json_hash_file' => 'JSONHashFile',
+  'ndr' => 'NDR',
+  'ci_document' => 'CIDocument',
+  'fusionvm_document' => 'FusionVMDocument',
+  'group_policy_preferences' => 'GPP',
+  'ip360_aspl_xml' => 'IP360ASPLXMLStreamParser',
+  'ip360_xml' => 'IP360XMLStreamParser',
+  'nessus_xml' => 'NessusXMLStreamParser',
+  'netsparker_xml' => 'NetSparkerXMLStreamParser',
+  'nexpose_xml' => 'NexposeXMLStreamParser',
+  'nmap_xml' => 'NmapXMLStreamParser',
+  'openvas_document' => 'OpenVASDocument',
+  'retina_xml' => 'RetinaXMLStreamParser',
+  'graphml' => 'GraphML',
+  'apple_backup_manifestdb' => 'AppleBackupManifestDB',
+  'winscp' => 'WinSCP',
+  'acpp' => 'ACPP',
+  'tftp' => 'TFTP',
+  'ipmi' => 'IPMI',
+  'channel_auth_reply' => 'Channel_Auth_Reply',
+  'open_session_reply' => 'Open_Session_Reply',
+  'rakp2' => 'RAKP2',
+  'pjl' => 'PJL',
+  'dhcp' => 'DHCP',
+  'addp' => 'ADDP',
+  'rfb' => 'RFB',
+  'io' => 'IO',
+  'ntfs' => 'NTFS',
+  'bitlocker' => 'BITLOCKER',
+  'adb' => 'ADB',
+  'drda' => 'DRDA',
+  'tlv' => 'TLV',
+  'svcctl' => 'SVCCTL',
+  'wdscp' => 'WDSCP',
+  'appapi' => 'AppApi',
+  'uds_errors' => 'UDSErrors'
   )
 
 loader.setup # ready!
