@@ -48,7 +48,8 @@ Depends:
   ${misc:Depends},
   ${shlibs:Depends},
   ruby-json (>= 1.8.3),
-Suggests: java7-runtime-headless, clamav, clamav-daemon
+Suggests: default-jdk, clamav, clamav-daemon
+Conflicts: parrot-menu (<= 2:2021.02.19)
 Description: Framework for exploit development and vulnerability research
  The Metasploit Framework is an open source platform that supports
  vulnerability research, exploit development, and the creation of custom

@@ -2,7 +2,7 @@
 Name=metasploit framework
 Comment=Metasploit framework (CLI)
 Encoding=UTF-8
-Exec=menuexec msfc
+Exec=menuexec msfconsole-start
 Icon=parrot-metasploit.png
 StartupNotify=false
 Terminal=true

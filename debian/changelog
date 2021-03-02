@@ -1,3 +1,9 @@
+metasploit-framework (6.0.32-0parrot2) rolling; urgency=medium
+
+  * Solve conflict with parrot-menu.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Tue, 02 Mar 2021 11:16:13 +0100
+
 metasploit-framework (6.0.32-0parrot1) rolling; urgency=medium
 
   * Import new Upstream release.
