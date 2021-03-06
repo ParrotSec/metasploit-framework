@@ -2,7 +2,7 @@
 Name=msfvenom
 Comment=Metasploit framework standalone payload and shellcode generator
 Encoding=UTF-8
-Exec=menuexec "msfvenom -h"
+Exec=pentestexec "msfvenom -h"
 Icon=parrot-mpc.png
 StartupNotify=false
 Terminal=true
