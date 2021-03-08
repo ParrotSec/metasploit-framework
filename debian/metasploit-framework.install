@@ -9,3 +9,4 @@ debian/helperscripts/*.desktop usr/share/applications/
 debian/helperscripts/msfc usr/bin/
 debian/helperscripts/msfstart usr/bin/
 debian/helperscripts/msfstop usr/bin/
+debian/helperscripts/msfconsole-start usr/bin/
