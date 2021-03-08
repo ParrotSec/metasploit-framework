@@ -1,3 +1,10 @@
+metasploit-framework (6.0.32-0parrot3) rolling-testing; urgency=medium
+
+  * Change permission of launcher to normal user
+  * Fix missing msfconsole-start
+
+ -- Nong Hoang Tu <dmknght@parrotsec.org>  Mon, 08 Mar 2021 22:23:32 +0700
+
 metasploit-framework (6.0.32-0parrot2) rolling; urgency=medium
 
   * Solve conflict with parrot-menu.
