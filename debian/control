@@ -25,7 +25,7 @@ Build-Depends:
   oracle-instantclient-sqlplus [amd64 i386],
   ruby-json (>= 1.8.3),
   zlib1g-dev,
-Standards-Version: 4.5.0
+Standards-Version: 4.5.1
 Homepage: https://www.metasploit.com/
 Vcs-Git: https://nest.parrotsec.org/packages/tools/metasploit-framework.git
 Vcs-Browser: https://nest.parrotsec.org/packages/tools/metasploit-framework
