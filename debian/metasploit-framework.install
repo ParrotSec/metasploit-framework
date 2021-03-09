@@ -6,7 +6,6 @@ debian/extra/ruby usr/share/metasploit-framework/
 debian/extra/msfdb usr/share/metasploit-framework/
 debian/script-* usr/share/metasploit-framework/
 debian/helperscripts/*.desktop usr/share/applications/
-debian/helperscripts/msfc usr/bin/
 debian/helperscripts/msfstart usr/bin/
 debian/helperscripts/msfstop usr/bin/
 debian/helperscripts/msfconsole-start usr/bin/
