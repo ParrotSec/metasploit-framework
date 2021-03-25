@@ -1,3 +1,9 @@
+metasploit-framework (6.0.36-parrot1) rolling; urgency=medium
+
+  * Rebuild metasploit package.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Thu, 25 Mar 2021 02:03:48 +0100
+
 metasploit-framework (6.0.36-parrot0) rolling-testing; urgency=medium
 
   * New upstream version 6.0.36
