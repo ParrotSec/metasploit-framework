@@ -1,8 +1,8 @@
-metasploit-framework (6.0.37-0parrot1) rolling; urgency=medium
+metasploit-framework (6.0.37-parrot0) rolling-testing; urgency=medium
 
-  * 
+  * New upstream version 6.0.37
 
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sat, 27 Mar 2021 18:52:12 +0100
+ -- Nong Hoang Tu <dmknght@parrotsec.org>  Fri, 26 Mar 2021 19:31:33 +0700
 
 metasploit-framework (6.0.36-parrot1) rolling; urgency=medium
 
