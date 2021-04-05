@@ -1,6 +1,12 @@
+metasploit-framework (6.0.38-0parrot1) rolling; urgency=medium
+
+  * Import new upstream package.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Mon, 05 Apr 2021 03:08:48 +0200
+
 metasploit-framework (6.0.37-0parrot1) rolling; urgency=medium
 
-  * 
+  * Import new upstream package.
 
  -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sat, 27 Mar 2021 18:52:12 +0100
 
