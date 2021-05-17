@@ -1,3 +1,9 @@
+metasploit-framework (6.0.44-0parrot2) rolling; urgency=medium
+
+  * Import new upstream release.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Mon, 17 May 2021 11:54:49 +0200
+
 metasploit-framework (6.0.41-0parrot1) rolling; urgency=medium
 
   * Import new upstream release.
