@@ -2,6 +2,17 @@
 
 module Msf::Post::Common
 
+  def initialize(info = {})
+    super(update_info(
+      info,
+      'Compat' => { 'Meterpreter' => { 'Commands' => %w{
+        stdapi_sys_config_getenv
+        stdapi_sys_process_close
+        stdapi_sys_process_execute
+      } } }
+    ))
+  end
+
   def clear_screen
     Gem.win_platform? ? (system "cls") : (system "clear")
   end
@@ -28,14 +39,6 @@ module Msf::Post::Common
 
   def peer
     "#{rhost}:#{rport}"
-  end
-
-  #
-  # Checks if the remote system has a process with ID +pid+
-  #
-  def has_pid?(pid)
-    pid_list = get_processes.collect { |e| e['pid'] }
-    pid_list.include?(pid)
   end
 
   #
@@ -69,7 +72,7 @@ module Msf::Post::Common
   #
   # Returns a (possibly multi-line) String.
   #
-  def cmd_exec(cmd, args=nil, time_out=15)
+  def cmd_exec(cmd, args=nil, time_out=15, opts = {})
     case session.type
     when /meterpreter/
       #
@@ -95,7 +98,12 @@ module Msf::Post::Common
       end
 
       session.response_timeout = time_out
-      o = session.sys.process.capture_output(cmd, args, {'Hidden' => true, 'Channelized' => true, 'Subshell' => true }, time_out)
+      opts = {
+        'Hidden' => true,
+        'Channelized' => true,
+        'Subshell' => true
+      }.merge(opts)
+      o = session.sys.process.capture_output(cmd, args, opts, time_out)
     when /powershell/
       if args.nil? || args.empty?
         o = session.shell_command("#{cmd}", time_out)
@@ -208,41 +216,11 @@ module Msf::Post::Common
       # https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/if
       cmd_exec("cmd /c where /q #{cmd} & if not errorlevel 1 echo true").to_s.include? 'true'
     else
-      cmd_exec("command -v #{cmd} && echo true").to_s.include? 'true'
+      cmd_exec("command -v #{cmd} || which #{cmd} && echo true").to_s.split("\n")[-1] == 'true'
     end
   rescue
     raise "Unable to check if command `#{cmd}' exists"
   end
 
-  def get_processes
-    if session.type == 'meterpreter'
-      return session.sys.process.get_processes.map {|p| p.slice('name', 'pid')}
-    end
-    processes = []
-    if session.platform == 'windows'
-      tasklist = cmd_exec('tasklist').split("\n")
-      4.times { tasklist.delete_at(0) }
-      tasklist.each do |p|
-        properties = p.split
-        process = {}
-        process['name'] = properties[0]
-        process['pid'] = properties[1].to_i
-        processes.push(process)
-      end
-      # adding manually because this is common for all windows I think and splitting for this was causing problem for other processes.
-      processes.prepend({ 'name' => '[System Process]', 'pid' => 0 })
-    else
-      ps_aux = cmd_exec('ps aux').split("\n")
-      ps_aux.delete_at(0)
-      ps_aux.each do |p|
-        properties = p.split
-        process = {}
-        process['name'] = properties[10].gsub(/\[|\]/,"")
-        process['pid'] = properties[1].to_i
-        processes.push(process)
-      end
-    end
-    return processes
-  end
 
 end

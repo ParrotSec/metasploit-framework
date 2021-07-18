@@ -33,11 +33,12 @@ module System
       version = read_file('/etc/system-release').gsub(/\n|\\n|\\l/,'').strip
       if version.include? 'CentOS'
         system_data[:distro] = 'centos'
-        system_data[:version] = version
+      elsif version.include? 'Fedora'
+        system_data[:distro] = 'fedora'
       else
         system_data[:distro] = 'amazon'
-        system_data[:version] = version
       end
+      system_data[:version] = version
 
     # Alpine
     elsif etc_files.include?('alpine-release')
@@ -225,27 +226,6 @@ module System
     command_exists? 'gcc'
   rescue
     raise 'Unable to check for gcc'
-  end
-
-  #
-  # Gets the process id(s) of `program`
-  # @return [Array]
-  #
-  def pidof(program)
-    pids = []
-    full = cmd_exec('ps aux').to_s
-    full.split("\n").each do |pid|
-      pids << pid.split(' ')[1].to_i if pid.include? program
-    end
-    pids
-  end
-
-  #
-  # Gets the uid of a pid
-  # @return [String]
-  #
-  def pid_uid(pid)
-    read_file("/proc/#{pid}/status").to_s
   end
 
   #
