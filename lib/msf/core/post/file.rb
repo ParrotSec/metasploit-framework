@@ -1,8 +1,29 @@
 # -*- coding: binary -*-
 #
 require 'rex/post/meterpreter/extensions/stdapi/command_ids'
+require 'rex/post/file_stat'
 
 module Msf::Post::File
+
+  include Msf::Post::Common
+
+  def initialize(info = {})
+    super(update_info(
+      info,
+      'Compat' => { 'Meterpreter' => { 'Commands' => %w{
+        core_channel_*
+        stdapi_fs_chdir
+        stdapi_fs_delete_dir
+        stdapi_fs_delete_file
+        stdapi_fs_file_expand_path
+        stdapi_fs_file_move
+        stdapi_fs_getwd
+        stdapi_fs_ls
+        stdapi_fs_mkdir
+        stdapi_fs_stat
+      } } }
+    ))
+  end
 
   #
   # Change directory in the remote session to +path+, which may be relative or
@@ -160,18 +181,8 @@ module Msf::Post::File
   #
   # @param path [String] Remote filename to check
   def setuid?(path)
-    if session.type == 'meterpreter'
-      stat = session.fs.file.stat(path) rescue nil
-      return false unless stat
-      return stat.setuid?
-    else
-      if session.platform != 'windows'
-        f = session.shell_command_token("test -u \"#{path}\" && echo true")
-      end
-      return false if f.nil? || f.empty?
-      return false unless f =~ /true/
-      true
-    end
+    stat = stat(path)
+    stat.setuid?
   end
 
   #
@@ -335,9 +346,9 @@ module Msf::Post::File
       return _read_file_meterpreter(file_name)
     end
 
-    return nil unless session.type == 'shell'
+    return unless %w[shell powershell].include?(session.type)
 
-    if session.platform == 'windows'
+    if session.platform == 'windows' || session.platform == 'win'
       return session.shell_command_token("type \"#{file_name}\"")
     end
 
@@ -353,8 +364,6 @@ module Msf::Post::File
 
   # Platform-agnostic file write. Writes given object content to a remote file.
   #
-  # NOTE: *This is not binary-safe on Windows shell sessions!*
-  #
   # @param file_name [String] Remote file name to write
   # @param data [String] Contents to put in the file
   # @return [void]
@@ -365,23 +374,23 @@ module Msf::Post::File
       fd.close
     elsif session.respond_to? :shell_command_token
       if session.platform == 'windows'
-        session.shell_command_token("echo #{data} > \"#{file_name}\"")
+        if _can_echo?(data)
+          return _win_ansi_write_file(file_name, data)
+        else
+          return _win_bin_write_file(file_name, data)
+        end
       else
-        _write_file_unix_shell(file_name, data)
+        return _write_file_unix_shell(file_name, data)
       end
     end
-    true
   end
 
   #
   # Platform-agnostic file append. Appends given object content to a remote file.
-  # Returns Boolean true if successful
-  #
-  # NOTE: *This is not binary-safe on Windows shell sessions!*
   #
   # @param file_name [String] Remote file name to write
   # @param data [String] Contents to put in the file
-  # @return [void]
+  # @return bool
   def append_file(file_name, data)
     if session.type == "meterpreter"
       fd = session.fs.file.new(file_name, "ab")
@@ -389,9 +398,13 @@ module Msf::Post::File
       fd.close
     elsif session.respond_to? :shell_command_token
       if session.platform == 'windows'
-        session.shell_command_token("<nul set /p=\"#{data}\" >> \"#{file_name}\"")
+        if _can_echo?(data)
+          return _win_ansi_append_file(file_name, data)
+        else
+          return _win_bin_append_file(file_name, data)
+        end
       else
-        _write_file_unix_shell(file_name, data, true)
+        return _write_file_unix_shell(file_name, data)
       end
     end
     true
@@ -508,7 +521,38 @@ module Msf::Post::File
   alias :move_file :rename_file
   alias :mv_file :rename_file
 
+  #
+  # Copy a remote file.
+  #
+  # @param src_file [String] Remote source file name to copy
+  # @param dst_file [String] The name for the remote destination file
+  def copy_file(src_file, dst_file)
+    if session.type == "meterpreter"
+      return (session.fs.file.cp(src_file, dst_file).result == 0)
+    else
+      if session.platform == 'windows'
+        cmd_exec(%Q|copy /y "#{src_file}" "#{dst_file}"|) =~ /copied/
+      else
+        cmd_exec(%Q|cp -f "#{src_file}" "#{dst_file}"|).empty?
+      end
+    end
+  end
+  alias :cp_file :copy_file
+
 protected
+
+  # Checks to see if there are non-ansi or newline characters in a given string
+  #
+  # @param data [String] String to check for non-ansi or newline chars
+  # @return bool
+  def _can_echo?(data)
+    data.each_char do |char|
+      unless char.ascii_only? || char == '\n' || char == '"'
+        return false
+      end
+    end
+    return true
+  end
 
   #
   # Meterpreter-specific file read.  Returns contents of remote file
@@ -536,6 +580,88 @@ protected
   ensure
     fd.close if fd
   end
+  # Windows ANSI file write for shell sessions. Writes given object content to a remote file.
+  #
+  # NOTE: *This is not binary-safe on Windows shell sessions!*
+  #
+  # @param file_name [String] Remote file name to write
+  # @param data [String] Contents to put in the file
+  # @param chunk_size [int] max size for the data chunk to write at a time
+  # @return [void]
+  def _win_ansi_write_file(file_name, data, chunk_size = 5000)
+    start_index = 0
+    write_length =[chunk_size, data.length].min
+    session.shell_command_token("echo | set /p=\"#{data[0, write_length]}\"> \"#{file_name}\"")
+    if data.length > write_length
+      # just use append to finish the rest
+      _win_ansi_append_file(file_name, data[write_length, data.length], chunk_size)
+    end
+  end
+
+  # Windows ansi file append for shell sessions. Writes given object content to a remote file.
+  #
+  # NOTE: *This is not binary-safe on Windows shell sessions!*
+  #
+  # @param file_name [String] Remote file name to write
+  # @param data [String] Contents to put in the file
+  # @param chunk_size [int] max size for the data chunk to write at a time
+  # @return [void]
+  def _win_ansi_append_file(file_name, data, chunk_size = 5000)
+    start_index = 0
+    write_length =[chunk_size, data.length].min
+    while start_index < data.length
+      begin
+        session.shell_command_token("<nul set /p=\"#{data[start_index, write_length]}\" >> \"#{file_name}\"")
+        start_index = start_index + write_length
+        write_length = [chunk_size, data.length - start_index].min
+      rescue ::Exception => e
+        print_error("Exception while running #{__method__.to_s}: #{e.to_s}")
+        file_rm(file_name)
+      end
+    end
+  end
+
+  # Windows binary file write for shell sessions. Writes given object content to a remote file.
+  #
+  # @param file_name [String] Remote file name to write
+  # @param data [String] Contents to put in the file
+  # @param chunk_size [int] max size for the data chunk to write at a time
+  # @return [void]
+  def _win_bin_write_file(file_name, data, chunk_size = 5000)
+    b64_data = Base64.strict_encode64(data)
+    b64_filename = "#{file_name}.b64"
+    begin
+      _win_ansi_write_file(b64_filename, b64_data, chunk_size)
+      cmd_exec("certutil -decode #{b64_filename} #{file_name}")
+    rescue ::Exception => e
+      print_error("Exception while running #{__method__.to_s}: #{e.to_s}")
+    ensure
+      file_rm(b64_filename)
+    end
+  end
+
+  # Windows binary file append for shell sessions. Appends given object content to a remote file.
+  #
+  # @param file_name [String] Remote file name to write
+  # @param data [String] Contents to put in the file
+  # @param chunk_size [int] max size for the data chunk to write at a time
+  # @return [void]
+  def _win_bin_append_file(file_name, data, chunk_size = 5000)
+    b64_data = Base64.strict_encode64(data)
+    b64_filename = "#{file_name}.b64"
+    tmp_filename = "#{file_name}.tmp"
+    begin
+      _win_ansi_write_file(b64_filename, b64_data, chunk_size)
+      cmd_exec("certutil -decode #{b64_filename} #{tmp_filename}")
+      cmd_exec("copy /b #{file_name}+#{tmp_filename} #{file_name}")
+    rescue ::Exception => e
+      print_error("Exception while running #{__method__.to_s}: #{e.to_s}")
+    ensure
+      file_rm(b64_filename)
+      file_rm(tmp_filename)
+    end
+  end
+
 
   #
   # Write +data+ to the remote file +file_name+.
@@ -692,4 +818,41 @@ protected
 
     line_max
   end
+
+  def stat(filename)
+    if session.type == 'meterpreter'
+      return session.fs.file.stat(filename)
+    else
+      raise NotImplementedError if session.platform == 'windows'
+      raise "`stat' command doesn't exist on target system" unless command_exists?('stat')
+      return FileStat.new(filename, session)
+    end
+  end
+
+
+  class FileStat < Rex::Post::FileStat
+
+    attr_accessor :stathash
+
+    def initialize(filename, session)
+      data = session.shell_command_token("stat --format='%d,%i,%h,%u,%g,%t,%s,%B,%o,%X,%Y,%Z,%f' '#{filename}'").to_s.chomp
+      raise 'format argument of stat command not behaving as expected' unless data =~ /(\d+,){12}\w+/
+      data = data.split(",")
+      @stathash = Hash.new
+      @stathash['st_dev'] = data[0].to_i
+      @stathash['st_ino'] = data[1].to_i
+      @stathash['st_nlink'] = data[2].to_i
+      @stathash['st_uid'] = data[3].to_i
+      @stathash['st_gid'] = data[4].to_i
+      @stathash['st_rdev'] = data[5].to_i
+      @stathash['st_size'] = data[6].to_i
+      @stathash['st_blksize'] = data[7].to_i
+      @stathash['st_blocks'] = data[8].to_i
+      @stathash['st_atime'] = data[9].to_i
+      @stathash['st_mtime'] = data[10].to_i
+      @stathash['st_ctime'] = data[11].to_i
+      @stathash['st_mode'] = data[12].to_i(16) #stat command returns hex value of mode"
+    end
+  end
+
 end
