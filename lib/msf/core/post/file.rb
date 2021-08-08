@@ -8,21 +8,27 @@ module Msf::Post::File
   include Msf::Post::Common
 
   def initialize(info = {})
-    super(update_info(
-      info,
-      'Compat' => { 'Meterpreter' => { 'Commands' => %w{
-        core_channel_*
-        stdapi_fs_chdir
-        stdapi_fs_delete_dir
-        stdapi_fs_delete_file
-        stdapi_fs_file_expand_path
-        stdapi_fs_file_move
-        stdapi_fs_getwd
-        stdapi_fs_ls
-        stdapi_fs_mkdir
-        stdapi_fs_stat
-      } } }
-    ))
+    super(
+      update_info(
+        info,
+          'Compat' => {
+            'Meterpreter' => {
+              'Commands' => %w[
+                core_channel_*
+                stdapi_fs_chdir
+                stdapi_fs_delete_dir
+                stdapi_fs_delete_file
+                stdapi_fs_file_expand_path
+                stdapi_fs_file_move
+                stdapi_fs_getwd
+                stdapi_fs_ls
+                stdapi_fs_mkdir
+                stdapi_fs_stat
+              ]
+            }
+          }
+        )
+      )
   end
 
   #
@@ -34,9 +40,12 @@ module Msf::Post::File
     e_path = expand_path(path) rescue path
     if session.type == "meterpreter"
       session.fs.dir.chdir(e_path)
+    elsif session.type == 'powershell'
+      cmd_exec("Set-Location -Path \"#{e_path}\"")
     else
       session.shell_command_token("cd \"#{e_path}\"")
     end
+    nil
   end
 
   #
@@ -49,6 +58,8 @@ module Msf::Post::File
   def pwd
     if session.type == "meterpreter"
       return session.fs.dir.getwd
+    elsif session.type == 'powershell'
+      return cmd_exec('(Get-Location).Path').strip
     else
       if session.platform == 'windows'
         # XXX: %CD% only exists on XP and newer, figure something out for NT4
@@ -105,6 +116,8 @@ module Msf::Post::File
     if session.type == 'meterpreter'
       # behave like mkdir -p and don't throw an error if the directory exists
       result = session.fs.dir.mkdir(path) unless directory?(path)
+    elsif session.type == 'powershell'
+      result = cmd_exec("New-Item \"#{path}\" -itemtype directory")
     else
       if session.platform == 'windows'
         result = cmd_exec("mkdir \"#{path}\"")
@@ -126,6 +139,8 @@ module Msf::Post::File
       stat = session.fs.file.stat(path) rescue nil
       return false unless stat
       return stat.directory?
+    elsif session.type == 'powershell'
+      return cmd_exec("Test-Path -Path \"#{path}\" -PathType Container").include?('True')
     else
       if session.platform == 'windows'
         f = cmd_exec("cmd.exe /C IF exist \"#{path}\\*\" ( echo true )")
@@ -145,6 +160,8 @@ module Msf::Post::File
   def expand_path(path)
     if session.type == "meterpreter"
       return session.fs.file.expand_path(path)
+    elsif session.type == 'powershell'
+      return cmd_exec("[Environment]::ExpandEnvironmentVariables(\"#{path}\")")
     else
       return cmd_exec("echo #{path}")
     end
@@ -159,6 +176,8 @@ module Msf::Post::File
       stat = session.fs.file.stat(path) rescue nil
       return false unless stat
       return stat.file?
+    elsif session.type == 'powershell'
+      return cmd_exec("Test-Path \"#{path}\" -PathType leaf")&.include?("True")
     else
       if session.platform == 'windows'
         f = cmd_exec("cmd.exe /C IF exist \"#{path}\" ( echo true )")
@@ -245,6 +264,8 @@ module Msf::Post::File
     if session.type == 'meterpreter'
       stat = session.fs.file.stat(path) rescue nil
       return !!(stat)
+    elsif session.type == 'powershell'
+      return cmd_exec("Test-Path \"#{path}\"")&.include?("True")
     else
       if session.platform == 'windows'
         f = cmd_exec("cmd.exe /C IF exist \"#{path}\" ( echo true )")
@@ -348,7 +369,10 @@ module Msf::Post::File
 
     return unless %w[shell powershell].include?(session.type)
 
-    if session.platform == 'windows' || session.platform == 'win'
+    if session.type == 'powershell'
+      return cmd_exec("Get-Content \"#{file_name}\"")
+    end
+    if session.platform == 'windows'
       return session.shell_command_token("type \"#{file_name}\"")
     end
 
@@ -469,7 +493,9 @@ module Msf::Post::File
   def rm_f(*remote_files)
     remote_files.each do |remote|
       if session.type == "meterpreter"
-        session.fs.file.delete(remote) if exist?(remote)
+        session.fs.file.delete(remote) if file?(remote)
+      elsif session.type == 'powershell'
+        cmd_exec("Remove-Item \"#{remote}\" -Force") if file?(remote)
       else
         if session.platform == 'windows'
           cmd_exec("del /q /f \"#{remote}\"")
@@ -490,6 +516,8 @@ module Msf::Post::File
     remote_dirs.each do |remote|
       if session.type == "meterpreter"
         session.fs.dir.rmdir(remote) if exist?(remote)
+      elsif session.type == 'powershell'
+        cmd_exec("Remove-Item -Path \"#{remote}\" -Force -Recurse")
       else
         if session.platform == 'windows'
           cmd_exec("rd /s /q \"#{remote}\"")
@@ -526,14 +554,23 @@ module Msf::Post::File
   #
   # @param src_file [String] Remote source file name to copy
   # @param dst_file [String] The name for the remote destination file
+  # @return [Boolean] Return true on success and false on failure
   def copy_file(src_file, dst_file)
+    return false if directory?(dst_file) or directory?(src_file)
+    verification_token = Rex::Text.rand_text_alpha_upper(8)
     if session.type == "meterpreter"
-      return (session.fs.file.cp(src_file, dst_file).result == 0)
+      begin
+        return (session.fs.file.cp(src_file, dst_file).result == 0)
+      rescue Rex::Post::Meterpreter::RequestError => e # when the source file is not present meterpreter will raise an error
+        return false
+      end
+    elsif session.type == 'powershell'
+      cmd_exec("Copy-Item \"#{src_file}\" -Destination \"#{dst_file}\"; if($?){echo #{verification_token}}").include?(verification_token)
     else
       if session.platform == 'windows'
-        cmd_exec(%Q|copy /y "#{src_file}" "#{dst_file}"|) =~ /copied/
+        cmd_exec(%Q|copy /y "#{src_file}" "#{dst_file}" & if not errorlevel 1 echo #{verification_token}|).include?(verification_token)
       else
-        cmd_exec(%Q|cp -f "#{src_file}" "#{dst_file}"|).empty?
+        cmd_exec(%Q|cp -f "#{src_file}" "#{dst_file}" && echo #{verification_token}|).include?(verification_token)
       end
     end
   end
