@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=metasploit framework
-Comment=Metasploit framework (CLI)
+Name=Metasploit-Framework's console
+Comment=Start Metasploit's interpreter
 Encoding=UTF-8
 Exec=menuexec msfconsole-start
 Icon=parrot-metasploit.png
