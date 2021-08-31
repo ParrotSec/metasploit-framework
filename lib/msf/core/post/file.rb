@@ -1,8 +1,35 @@
 # -*- coding: binary -*-
 #
 require 'rex/post/meterpreter/extensions/stdapi/command_ids'
+require 'rex/post/file_stat'
 
 module Msf::Post::File
+
+  include Msf::Post::Common
+
+  def initialize(info = {})
+    super(
+      update_info(
+        info,
+          'Compat' => {
+            'Meterpreter' => {
+              'Commands' => %w[
+                core_channel_*
+                stdapi_fs_chdir
+                stdapi_fs_delete_dir
+                stdapi_fs_delete_file
+                stdapi_fs_file_expand_path
+                stdapi_fs_file_move
+                stdapi_fs_getwd
+                stdapi_fs_ls
+                stdapi_fs_mkdir
+                stdapi_fs_stat
+              ]
+            }
+          }
+        )
+      )
+  end
 
   #
   # Change directory in the remote session to +path+, which may be relative or
@@ -13,9 +40,12 @@ module Msf::Post::File
     e_path = expand_path(path) rescue path
     if session.type == "meterpreter"
       session.fs.dir.chdir(e_path)
+    elsif session.type == 'powershell'
+      cmd_exec("Set-Location -Path \"#{e_path}\"")
     else
       session.shell_command_token("cd \"#{e_path}\"")
     end
+    nil
   end
 
   #
@@ -28,11 +58,13 @@ module Msf::Post::File
   def pwd
     if session.type == "meterpreter"
       return session.fs.dir.getwd
+    elsif session.type == 'powershell'
+      return cmd_exec('(Get-Location).Path').strip
     else
       if session.platform == 'windows'
         # XXX: %CD% only exists on XP and newer, figure something out for NT4
         # and 2k
-        return session.shell_command_token("echo %CD%")
+        return session.shell_command_token("echo %CD%").to_s.strip
       else
         if command_exists?("pwd")
           return session.shell_command_token("pwd").to_s.strip
@@ -52,8 +84,14 @@ module Msf::Post::File
       return session.fs.dir.entries(directory)
     end
 
+    if session.type == 'powershell'
+      dir = session.shell_command_token("Get-ChildItem \"#{directory}\" | Format-Table Name").split(/[\r\n]+/)
+      dir.slice!(0..2) if dir.length > 2
+      return dir
+    end
+
     if session.platform == 'windows'
-      return session.shell_command_token("dir #{directory}").split(/[\r\n]+/)
+      return session.shell_command_token("dir /b \"#{directory}\"")&.split(/[\r\n]+/)
     end
 
     if command_exists?('ls')
@@ -84,6 +122,8 @@ module Msf::Post::File
     if session.type == 'meterpreter'
       # behave like mkdir -p and don't throw an error if the directory exists
       result = session.fs.dir.mkdir(path) unless directory?(path)
+    elsif session.type == 'powershell'
+      result = cmd_exec("New-Item \"#{path}\" -itemtype directory")
     else
       if session.platform == 'windows'
         result = cmd_exec("mkdir \"#{path}\"")
@@ -105,6 +145,8 @@ module Msf::Post::File
       stat = session.fs.file.stat(path) rescue nil
       return false unless stat
       return stat.directory?
+    elsif session.type == 'powershell'
+      return cmd_exec("Test-Path -Path \"#{path}\" -PathType Container").include?('True')
     else
       if session.platform == 'windows'
         f = cmd_exec("cmd.exe /C IF exist \"#{path}\\*\" ( echo true )")
@@ -124,6 +166,8 @@ module Msf::Post::File
   def expand_path(path)
     if session.type == "meterpreter"
       return session.fs.file.expand_path(path)
+    elsif session.type == 'powershell'
+      return cmd_exec("[Environment]::ExpandEnvironmentVariables(\"#{path}\")")
     else
       return cmd_exec("echo #{path}")
     end
@@ -138,6 +182,8 @@ module Msf::Post::File
       stat = session.fs.file.stat(path) rescue nil
       return false unless stat
       return stat.file?
+    elsif session.type == 'powershell'
+      return cmd_exec("Test-Path \"#{path}\" -PathType leaf")&.include?("True")
     else
       if session.platform == 'windows'
         f = cmd_exec("cmd.exe /C IF exist \"#{path}\" ( echo true )")
@@ -160,18 +206,8 @@ module Msf::Post::File
   #
   # @param path [String] Remote filename to check
   def setuid?(path)
-    if session.type == 'meterpreter'
-      stat = session.fs.file.stat(path) rescue nil
-      return false unless stat
-      return stat.setuid?
-    else
-      if session.platform != 'windows'
-        f = session.shell_command_token("test -u \"#{path}\" && echo true")
-      end
-      return false if f.nil? || f.empty?
-      return false unless f =~ /true/
-      true
-    end
+    stat = stat(path)
+    stat.setuid?
   end
 
   #
@@ -221,9 +257,20 @@ module Msf::Post::File
   # @return [Boolean] true if +path+ exists and is readable
   #
   def readable?(path)
+    verification_token = Rex::Text::rand_text_alpha(8)
+    return false unless exists?(path)
+    if session.type == 'powershell'
+      unless directory?(path)
+        return cmd_exec("[System.IO.File]::OpenRead(\"#{path}\");if($?){echo\
+          #{verification_token}}").include?(verification_token)
+      else
+        return cmd_exec("[System.IO.Directory]::GetFiles('#{path}'); if($?) {echo #{verification_token}}").include?(verification_token)
+      end
+    end
+
     raise "`readable?' method does not support Windows systems" if session.platform == 'windows'
 
-    cmd_exec("test -r '#{path}' && echo true").to_s.include? 'true'
+    cmd_exec("test -r '#{path}' && echo #{verification_token}").to_s.include?(verification_token)
   end
 
   #
@@ -234,6 +281,8 @@ module Msf::Post::File
     if session.type == 'meterpreter'
       stat = session.fs.file.stat(path) rescue nil
       return !!(stat)
+    elsif session.type == 'powershell'
+      return cmd_exec("Test-Path \"#{path}\"")&.include?("True")
     else
       if session.platform == 'windows'
         f = cmd_exec("cmd.exe /C IF exist \"#{path}\" ( echo true )")
@@ -335,7 +384,11 @@ module Msf::Post::File
       return _read_file_meterpreter(file_name)
     end
 
-    return nil unless session.type == 'shell'
+    return unless %w[shell powershell].include?(session.type)
+
+    if session.type == 'powershell'
+      return _read_file_powershell(file_name)
+    end
 
     if session.platform == 'windows'
       return session.shell_command_token("type \"#{file_name}\"")
@@ -353,8 +406,6 @@ module Msf::Post::File
 
   # Platform-agnostic file write. Writes given object content to a remote file.
   #
-  # NOTE: *This is not binary-safe on Windows shell sessions!*
-  #
   # @param file_name [String] Remote file name to write
   # @param data [String] Contents to put in the file
   # @return [void]
@@ -365,23 +416,23 @@ module Msf::Post::File
       fd.close
     elsif session.respond_to? :shell_command_token
       if session.platform == 'windows'
-        session.shell_command_token("echo #{data} > \"#{file_name}\"")
+        if _can_echo?(data)
+          return _win_ansi_write_file(file_name, data)
+        else
+          return _win_bin_write_file(file_name, data)
+        end
       else
-        _write_file_unix_shell(file_name, data)
+        return _write_file_unix_shell(file_name, data)
       end
     end
-    true
   end
 
   #
   # Platform-agnostic file append. Appends given object content to a remote file.
-  # Returns Boolean true if successful
-  #
-  # NOTE: *This is not binary-safe on Windows shell sessions!*
   #
   # @param file_name [String] Remote file name to write
   # @param data [String] Contents to put in the file
-  # @return [void]
+  # @return bool
   def append_file(file_name, data)
     if session.type == "meterpreter"
       fd = session.fs.file.new(file_name, "ab")
@@ -389,9 +440,13 @@ module Msf::Post::File
       fd.close
     elsif session.respond_to? :shell_command_token
       if session.platform == 'windows'
-        session.shell_command_token("<nul set /p=\"#{data}\" >> \"#{file_name}\"")
+        if _can_echo?(data)
+          return _win_ansi_append_file(file_name, data)
+        else
+          return _win_bin_append_file(file_name, data)
+        end
       else
-        _write_file_unix_shell(file_name, data, true)
+        return _write_file_unix_shell(file_name, data)
       end
     end
     true
@@ -456,7 +511,9 @@ module Msf::Post::File
   def rm_f(*remote_files)
     remote_files.each do |remote|
       if session.type == "meterpreter"
-        session.fs.file.delete(remote) if exist?(remote)
+        session.fs.file.delete(remote) if file?(remote)
+      elsif session.type == 'powershell'
+        cmd_exec("Remove-Item \"#{remote}\" -Force") if file?(remote)
       else
         if session.platform == 'windows'
           cmd_exec("del /q /f \"#{remote}\"")
@@ -477,6 +534,8 @@ module Msf::Post::File
     remote_dirs.each do |remote|
       if session.type == "meterpreter"
         session.fs.dir.rmdir(remote) if exist?(remote)
+      elsif session.type == 'powershell'
+        cmd_exec("Remove-Item -Path \"#{remote}\" -Force -Recurse")
       else
         if session.platform == 'windows'
           cmd_exec("rd /s /q \"#{remote}\"")
@@ -490,25 +549,102 @@ module Msf::Post::File
   alias :dir_rm :rm_rf
 
   #
-  # Rename a remote file.
+  # Renames a remote file. If the new file path is a directory, the file will be
+  # moved into that directory with the same name.
   #
   # @param old_file [String] Remote file name to move
   # @param new_file [String] The new name for the remote file
+  # @return [Boolean] Return true on success and false on failure
   def rename_file(old_file, new_file)
+
+    verification_token = Rex::Text.rand_text_alphanumeric(8)
     if session.type == "meterpreter"
-      return (session.fs.file.mv(old_file, new_file).result == 0)
-    else
-      if session.platform == 'windows'
-        cmd_exec(%Q|move /y "#{old_file}" "#{new_file}"|) =~ /moved/
-      else
-        cmd_exec(%Q|mv -f "#{old_file}" "#{new_file}"|).empty?
+      begin
+        new_file = new_file + session.fs.file.separator + session.fs.file.basename(old_file) if directory?(new_file)
+        return (session.fs.file.mv(old_file, new_file).result == 0)
+      rescue Rex::Post::Meterpreter::RequestError => e
+        return false
       end
+    elsif session.type == 'powershell'
+      cmd_exec("Move-Item \"#{old_file}\" \"#{new_file}\" -Force; if($?){echo #{verification_token}}").include?(verification_token)
+    elsif session.platform == 'windows'
+      return false unless file?(old_file) # adding this because when the old_file is not present it hangs for a while, should be removed after this issue is fixed.
+      cmd_exec(%Q|move #{directory?(new_file) ? "" : "/y"} "#{old_file}" "#{new_file}" & if not errorlevel 1 echo #{verification_token}|).include?(verification_token)
+    else
+      cmd_exec(%Q|mv #{directory? ? "" : "-f"} "#{old_file}" "#{new_file}" && echo #{verification_token}|).include?(verification_token)
     end
   end
   alias :move_file :rename_file
   alias :mv_file :rename_file
 
+  #
+  #
+  # Copy a remote file.
+  #
+  # @param src_file [String] Remote source file name to copy
+  # @param dst_file [String] The name for the remote destination file
+  # @return [Boolean] Return true on success and false on failure
+  def copy_file(src_file, dst_file)
+    return false if directory?(dst_file) or directory?(src_file)
+    verification_token = Rex::Text.rand_text_alpha_upper(8)
+    if session.type == "meterpreter"
+      begin
+        return (session.fs.file.cp(src_file, dst_file).result == 0)
+      rescue Rex::Post::Meterpreter::RequestError => e # when the source file is not present meterpreter will raise an error
+        return false
+      end
+    elsif session.type == 'powershell'
+      cmd_exec("Copy-Item \"#{src_file}\" -Destination \"#{dst_file}\"; if($?){echo #{verification_token}}").include?(verification_token)
+    else
+      if session.platform == 'windows'
+        cmd_exec(%Q|copy /y "#{src_file}" "#{dst_file}" & if not errorlevel 1 echo #{verification_token}|).include?(verification_token)
+      else
+        cmd_exec(%Q|cp -f "#{src_file}" "#{dst_file}" && echo #{verification_token}|).include?(verification_token)
+      end
+    end
+  end
+  alias :cp_file :copy_file
+
 protected
+
+  def _read_file_powershell(filename)
+    data = ''
+    offset = 0
+    chunk_size = 65536
+    loop do
+      chunk = _read_file_powershell_fragment(filename, chunk_size, offset)
+      break if chunk.nil?
+      data << chunk
+      offset += chunk_size
+      break if chunk.length < chunk_size
+    end
+    return data
+  end
+
+  def _read_file_powershell_fragment(filename, chunk_size, offset=0)
+    b64_data= cmd_exec("$mstream = [System.IO.MemoryStream]::new();\
+      $gzipstream = [System.IO.Compression.GZipStream]::new($mstream, [System.IO.Compression.CompressionMode]::Compress);\
+      $get_bytes = [System.IO.File]::ReadAllBytes(\"#{filename}\")[#{offset}..#{offset + chunk_size -1}];\
+      $gzipstream.Write($get_bytes, 0 , $get_bytes.Length);\
+      $gzipstream.Close();\
+      [Convert]::ToBase64String($mstream.ToArray())")
+    return nil if b64_data.empty?
+    uncompressed_fragment = Zlib::GzipReader.new(StringIO.new(Base64.decode64(b64_data))).read
+    return uncompressed_fragment
+  end
+
+  # Checks to see if there are non-ansi or newline characters in a given string
+  #
+  # @param data [String] String to check for non-ansi or newline chars
+  # @return bool
+  def _can_echo?(data)
+    data.each_char do |char|
+      unless char.ascii_only? || char == '\n' || char == '"'
+        return false
+      end
+    end
+    return true
+  end
 
   #
   # Meterpreter-specific file read.  Returns contents of remote file
@@ -536,6 +672,88 @@ protected
   ensure
     fd.close if fd
   end
+  # Windows ANSI file write for shell sessions. Writes given object content to a remote file.
+  #
+  # NOTE: *This is not binary-safe on Windows shell sessions!*
+  #
+  # @param file_name [String] Remote file name to write
+  # @param data [String] Contents to put in the file
+  # @param chunk_size [int] max size for the data chunk to write at a time
+  # @return [void]
+  def _win_ansi_write_file(file_name, data, chunk_size = 5000)
+    start_index = 0
+    write_length =[chunk_size, data.length].min
+    session.shell_command_token("echo | set /p=\"#{data[0, write_length]}\"> \"#{file_name}\"")
+    if data.length > write_length
+      # just use append to finish the rest
+      _win_ansi_append_file(file_name, data[write_length, data.length], chunk_size)
+    end
+  end
+
+  # Windows ansi file append for shell sessions. Writes given object content to a remote file.
+  #
+  # NOTE: *This is not binary-safe on Windows shell sessions!*
+  #
+  # @param file_name [String] Remote file name to write
+  # @param data [String] Contents to put in the file
+  # @param chunk_size [int] max size for the data chunk to write at a time
+  # @return [void]
+  def _win_ansi_append_file(file_name, data, chunk_size = 5000)
+    start_index = 0
+    write_length =[chunk_size, data.length].min
+    while start_index < data.length
+      begin
+        session.shell_command_token("<nul set /p=\"#{data[start_index, write_length]}\" >> \"#{file_name}\"")
+        start_index = start_index + write_length
+        write_length = [chunk_size, data.length - start_index].min
+      rescue ::Exception => e
+        print_error("Exception while running #{__method__.to_s}: #{e.to_s}")
+        file_rm(file_name)
+      end
+    end
+  end
+
+  # Windows binary file write for shell sessions. Writes given object content to a remote file.
+  #
+  # @param file_name [String] Remote file name to write
+  # @param data [String] Contents to put in the file
+  # @param chunk_size [int] max size for the data chunk to write at a time
+  # @return [void]
+  def _win_bin_write_file(file_name, data, chunk_size = 5000)
+    b64_data = Base64.strict_encode64(data)
+    b64_filename = "#{file_name}.b64"
+    begin
+      _win_ansi_write_file(b64_filename, b64_data, chunk_size)
+      cmd_exec("certutil -decode #{b64_filename} #{file_name}")
+    rescue ::Exception => e
+      print_error("Exception while running #{__method__.to_s}: #{e.to_s}")
+    ensure
+      file_rm(b64_filename)
+    end
+  end
+
+  # Windows binary file append for shell sessions. Appends given object content to a remote file.
+  #
+  # @param file_name [String] Remote file name to write
+  # @param data [String] Contents to put in the file
+  # @param chunk_size [int] max size for the data chunk to write at a time
+  # @return [void]
+  def _win_bin_append_file(file_name, data, chunk_size = 5000)
+    b64_data = Base64.strict_encode64(data)
+    b64_filename = "#{file_name}.b64"
+    tmp_filename = "#{file_name}.tmp"
+    begin
+      _win_ansi_write_file(b64_filename, b64_data, chunk_size)
+      cmd_exec("certutil -decode #{b64_filename} #{tmp_filename}")
+      cmd_exec("copy /b #{file_name}+#{tmp_filename} #{file_name}")
+    rescue ::Exception => e
+      print_error("Exception while running #{__method__.to_s}: #{e.to_s}")
+    ensure
+      file_rm(b64_filename)
+      file_rm(tmp_filename)
+    end
+  end
+
 
   #
   # Write +data+ to the remote file +file_name+.
@@ -692,4 +910,41 @@ protected
 
     line_max
   end
+
+  def stat(filename)
+    if session.type == 'meterpreter'
+      return session.fs.file.stat(filename)
+    else
+      raise NotImplementedError if session.platform == 'windows'
+      raise "`stat' command doesn't exist on target system" unless command_exists?('stat')
+      return FileStat.new(filename, session)
+    end
+  end
+
+
+  class FileStat < Rex::Post::FileStat
+
+    attr_accessor :stathash
+
+    def initialize(filename, session)
+      data = session.shell_command_token("stat --format='%d,%i,%h,%u,%g,%t,%s,%B,%o,%X,%Y,%Z,%f' '#{filename}'").to_s.chomp
+      raise 'format argument of stat command not behaving as expected' unless data =~ /(\d+,){12}\w+/
+      data = data.split(",")
+      @stathash = Hash.new
+      @stathash['st_dev'] = data[0].to_i
+      @stathash['st_ino'] = data[1].to_i
+      @stathash['st_nlink'] = data[2].to_i
+      @stathash['st_uid'] = data[3].to_i
+      @stathash['st_gid'] = data[4].to_i
+      @stathash['st_rdev'] = data[5].to_i
+      @stathash['st_size'] = data[6].to_i
+      @stathash['st_blksize'] = data[7].to_i
+      @stathash['st_blocks'] = data[8].to_i
+      @stathash['st_atime'] = data[9].to_i
+      @stathash['st_mtime'] = data[10].to_i
+      @stathash['st_ctime'] = data[11].to_i
+      @stathash['st_mode'] = data[12].to_i(16) #stat command returns hex value of mode"
+    end
+  end
+
 end
