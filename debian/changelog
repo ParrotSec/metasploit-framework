@@ -1,3 +1,9 @@
+metasploit-framework (6.1.2-0parrot1) lts-updates; urgency=medium
+
+  * Import new Upstream release.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Tue, 31 Aug 2021 19:22:42 +0200
+
 metasploit-framework (6.1.1-0parrot2) rolling; urgency=medium
 
   * Change launcher names
