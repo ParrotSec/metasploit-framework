@@ -10,12 +10,12 @@ afm, 0.2.2, MIT
 arel-helpers, 2.12.1, MIT
 ast, 2.4.2, MIT
 aws-eventstream, 1.2.0, "Apache 2.0"
-aws-partitions, 1.508.0, "Apache 2.0"
-aws-sdk-core, 3.121.1, "Apache 2.0"
-aws-sdk-ec2, 1.265.0, "Apache 2.0"
-aws-sdk-iam, 1.61.0, "Apache 2.0"
-aws-sdk-kms, 1.48.0, "Apache 2.0"
-aws-sdk-s3, 1.103.0, "Apache 2.0"
+aws-partitions, 1.520.0, "Apache 2.0"
+aws-sdk-core, 3.121.3, "Apache 2.0"
+aws-sdk-ec2, 1.273.0, "Apache 2.0"
+aws-sdk-iam, 1.62.0, "Apache 2.0"
+aws-sdk-kms, 1.50.0, "Apache 2.0"
+aws-sdk-s3, 1.104.0, "Apache 2.0"
 aws-sigv4, 1.4.0, "Apache 2.0"
 bcrypt, 3.1.16, MIT
 bcrypt_pbkdf, 1.1.0, MIT
@@ -67,7 +67,7 @@ io-console, 0.5.9, "ruby, Simplified BSD"
 irb, 1.3.6, "ruby, Simplified BSD"
 jmespath, 1.4.0, "Apache 2.0"
 jsobfu, 0.4.2, "New BSD"
-json, 2.5.1, ruby
+json, 2.6.1, ruby
 little-plugger, 1.1.4, MIT
 logging, 2.3.0, MIT
 loofah, 2.12.0, MIT
@@ -75,11 +75,11 @@ memory_profiler, 1.0.0, MIT
 metasm, 1.0.5, LGPL-2.1
 metasploit-concern, 4.0.3, "New BSD"
 metasploit-credential, 5.0.5, "New BSD"
-metasploit-framework, 6.1.9, "New BSD"
+metasploit-framework, 6.1.13, "New BSD"
 metasploit-model, 4.0.3, "New BSD"
-metasploit-payloads, 2.0.58, "3-clause (or ""modified"") BSD"
+metasploit-payloads, 2.0.60, "3-clause (or ""modified"") BSD"
 metasploit_data_models, 5.0.4, "New BSD"
-metasploit_payloads-mettle, 1.0.13, "3-clause (or ""modified"") BSD"
+metasploit_payloads-mettle, 1.0.15, "3-clause (or ""modified"") BSD"
 method_source, 1.0.0, MIT
 mini_portile2, 2.6.1, MIT
 minitest, 5.14.4, MIT
@@ -110,8 +110,8 @@ pg, 1.2.3, "Simplified BSD"
 pry, 0.13.1, MIT
 pry-byebug, 3.9.0, MIT
 public_suffix, 4.0.6, MIT
-puma, 5.5.0, "New BSD"
-racc, 1.5.2, "ruby, Simplified BSD"
+puma, 5.5.2, "New BSD"
+racc, 1.6.0, "ruby, Simplified BSD"
 rack, 2.2.3, MIT
 rack-protection, 2.1.0, MIT
 rack-test, 1.1.0, MIT
@@ -134,12 +134,12 @@ rex-java, 0.1.6, "New BSD"
 rex-mime, 0.1.6, "New BSD"
 rex-nop, 0.1.2, "New BSD"
 rex-ole, 0.1.7, "New BSD"
-rex-powershell, 0.1.93, "New BSD"
+rex-powershell, 0.1.94, "New BSD"
 rex-random_identifier, 0.1.8, "New BSD"
 rex-registry, 0.1.4, "New BSD"
 rex-rop_builder, 0.1.4, "New BSD"
-rex-socket, 0.1.33, "New BSD"
-rex-sslscan, 0.1.6, "New BSD"
+rex-socket, 0.1.34, "New BSD"
+rex-sslscan, 0.1.7, "New BSD"
 rex-struct2, 0.1.3, "New BSD"
 rex-text, 0.2.37, "New BSD"
 rex-zip, 0.1.4, "New BSD"
@@ -152,7 +152,7 @@ rspec-mocks, 3.10.2, MIT
 rspec-rails, 5.0.2, MIT
 rspec-rerun, 1.1.0, MIT
 rspec-support, 3.10.2, MIT
-rubocop, 1.22.0, MIT
+rubocop, 1.22.3, MIT
 rubocop-ast, 1.12.0, MIT
 ruby-macho, 2.5.1, MIT
 ruby-prof, 1.4.2, "Simplified BSD"
@@ -176,7 +176,7 @@ tilt, 2.0.10, MIT
 timecop, 0.9.4, MIT
 ttfunk, 1.7.0, "Nonstandard, GPL-2.0, GPL-3.0"
 tzinfo, 2.0.4, MIT
-tzinfo-data, 1.2021.2, MIT
+tzinfo-data, 1.2021.5, MIT
 unf, 0.1.4, "2-clause BSDL"
 unf_ext, 0.0.8, MIT
 unicode-display_width, 2.1.0, MIT
@@ -185,9 +185,10 @@ warden, 1.2.9, MIT
 webrick, 1.7.0, "ruby, Simplified BSD"
 websocket-driver, 0.7.5, "Apache 2.0"
 websocket-extensions, 0.1.5, "Apache 2.0"
+win32api, 0.1.0, unknown
 windows_error, 0.1.2, BSD
 winrm, 2.3.6, "Apache 2.0"
 xdr, 3.0.2, "Apache 2.0"
 xmlrpc, 0.3.2, "ruby, Simplified BSD"
 yard, 0.9.26, MIT
-zeitwerk, 2.4.2, MIT
+zeitwerk, 2.5.1, MIT
