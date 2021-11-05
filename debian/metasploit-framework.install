@@ -4,7 +4,6 @@ msf* usr/share/metasploit-framework
 debian/msfupdate usr/share/metasploit-framework
 debian/extra/ruby usr/share/metasploit-framework/
 debian/extra/msfdb usr/share/metasploit-framework/
-debian/script-* usr/share/metasploit-framework/
 debian/helper-scripts/*.desktop usr/share/applications/
 debian/helper-scripts/msfstart usr/bin/
 debian/helper-scripts/msfstop usr/bin/
