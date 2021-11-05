@@ -1,3 +1,15 @@
+metasploit-framework (6.1.13-0parrot1) rolling-testing; urgency=medium
+
+  [ Lorenzo Palinuro Faletra ]
+  * New upstream version 6.1.9
+
+  [ Nong Hoang Tu ]
+  * New upstream URL to update
+  * Move launchers to parrot-menu
+  * New upstream version 6.1.13
+
+ -- Nong Hoang Tu <dmknght@parrotsec.org>  Fri, 05 Nov 2021 18:55:49 +0700
+
 metasploit-framework (6.1.2-0parrot1) lts-updates; urgency=medium
 
   * Import new Upstream release.
