@@ -1,3 +1,9 @@
+metasploit-framework (6.1.15-0parrot2) rolling; urgency=medium
+
+  * Move launchers to parrot menu
+
+ -- Nong Hoang Tu <dmknght@parrotsec.org>  Sat, 20 Nov 2021 19:47:02 +0700
+
 metasploit-framework (6.1.15-0parrot1) rolling-testing; urgency=medium
 
   * New upstream version 6.1.15
