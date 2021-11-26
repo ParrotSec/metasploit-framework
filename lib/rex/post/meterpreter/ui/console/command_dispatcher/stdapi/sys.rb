@@ -368,11 +368,14 @@ class Console::CommandDispatcher::Stdapi::Sys
       if raw && !use_pty
         print_warning('Note: To use the fully interactive shell you must use a pty, i.e. %grnshell -it%clr')
         return false
-      end
-      if use_pty && pty_shell(sh_path, raw: raw)
+      elsif use_pty && pty_shell(sh_path, raw: raw)
         return true
       end
 
+      if client.framework.features.enabled?(Msf::FeatureManager::FULLY_INTERACTIVE_SHELLS) && !raw && !use_pty
+        print_line('This Meterpreter supports %grnshell -it%clr to start a fully interactive TTY.')
+        print_line('This will increase network traffic.')
+      end
       cmd_execute('-f', '/bin/sh', '-c', '-i')
     else
       # Then this is a multi-platform meterpreter (e.g., php or java), which
@@ -395,7 +398,16 @@ class Console::CommandDispatcher::Stdapi::Sys
   #
   def pty_shell(sh_path, raw: false)
     args = ['-p']
-    args << '-r' if raw
+
+    if raw
+      args << '-r' if raw
+      if client.commands.include?(Extensions::Stdapi::COMMAND_ID_STDAPI_SYS_PROCESS_SET_TERM_SIZE)
+        print_line("Terminal size will be synced automatically.")
+      else
+        print_line("You may want to set the correct terminal size manually.")
+        print_line("Example: `stty rows {rows} cols {columns}`")
+      end
+    end
     sh_path = client.fs.file.exist?(sh_path) ? sh_path : '/bin/sh'
 
     # Python Meterpreter calls pty.openpty() - No need for other methods
