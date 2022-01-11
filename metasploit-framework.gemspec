@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   # only do a git ls-files if the .git folder exists and we have a git binary in PATH
   if File.directory?(File.join(File.dirname(__FILE__), ".git")) && Msf::Util::Helper.which("git")
     spec.files         = `git ls-files`.split($/).reject { |file|
-      file =~ /^external/
+      file =~ /^external|^docs/
     }
   end
   spec.bindir = '.'
@@ -140,7 +140,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'net-ssh'
   spec.add_runtime_dependency 'ed25519' # Adds ed25519 keys for net-ssh
   spec.add_runtime_dependency 'bcrypt_pbkdf'
-  spec.add_runtime_dependency 'ruby_smb', '~> 2.0'
+  spec.add_runtime_dependency 'ruby_smb', '~> 3.0'
   spec.add_runtime_dependency 'net-ldap'
   spec.add_runtime_dependency 'winrm'
 
@@ -212,6 +212,8 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'irb'
   # Lock reline version until Fiddle concerns are addressed
   spec.add_runtime_dependency 'reline', '0.2.5'
+  # Temporarily pin reline's dependency io-console which no longer supports Ruby 2.5
+  spec.add_runtime_dependency 'io-console', '0.5.9'
 
   # AWS enumeration modules
   spec.add_runtime_dependency 'aws-sdk-s3'
@@ -222,8 +224,8 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'faye-websocket'
   spec.add_runtime_dependency 'eventmachine'
 
-  # Earlier than latest Faraday gem is used to prevent upstream Octokit errors
-  spec.add_runtime_dependency 'faraday'
+  # Temporarily pinned until Ruby 2.5 support is dropped from framework
+  spec.add_runtime_dependency 'faraday', '1.8.0'
 
   # Required for windows terminal colors as of Ruby 3.0
   spec.add_runtime_dependency 'win32api'
