@@ -10,13 +10,18 @@ minormax-rubyversion=$(shell echo $$(( $(minor-rubyversion) + 1 )) )
 override_dh_clean:
 	dh_clean --exclude=external/serialport/README.orig
 	rm -rf vendor/bundle
+	# remove Gemfile.lock to avoid conflict / issues when we modify
+	# the required versions in gemspec and to remove the Bundler
+	# version specification (see
+	# https://bugs.kali.org/view.php?id=6110)
+	rm Gemfile.lock
 
 override_dh_auto_configure:
 	# Do nothing
 
 override_dh_auto_build:
 ifeq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),amd64 i386))
-	patch -p0 <debian/oci8-gemspec.patch
+	patch -p1 <debian/oci8-gemspec.patch
 endif
 
 	# Build binary gems

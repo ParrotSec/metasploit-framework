@@ -146,7 +146,21 @@ test_windows_meterpreter() {
 	if [ "$arch" == 'amd64' ] || [ "$arch" == 'arm64' ] && [ $(dpkg -s wine32 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
 
 	    echo "Installing wine32 package..."
-	    dpkg --add-architecture i386 && apt-get update && apt-get -y install wine32
+	    dpkg --add-architecture i386
+	    apt-get update
+
+	    # Install might fail, typically when the test was triggered by another
+	    # package, and this package also happens to be in the dependency tree
+	    # of wine32. What happens in this case is that:
+	    # - the amd64 version of the package is taken from kali-dev, as it's
+	    #   pinned by autopkgtest.
+	    # - however the i386 version that we're trying to install now, as a
+	    #   dependency of wine32, is not pinned and comes from kali-rolling.
+	    # This leads to a fatal "uninstallable" scenario, apt can't cope
+	    # with that. This is know to happen for at least: openssl, curl.
+	    # So we handle that "gracefully" here by skipping the test if wine32
+	    # is not installable.
+	    apt-get -y install wine32 || exit 77
 
 	fi
 

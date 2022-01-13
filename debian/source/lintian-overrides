@@ -6,3 +6,4 @@ source-contains-prebuilt-windows-binary data/*
 # We don't care about external/* it's not used
 ancient-libtool external/*
 source-contains-prebuilt-windows-binary external/source/*
+source-is-missing external/source/flash_detector/bin/*

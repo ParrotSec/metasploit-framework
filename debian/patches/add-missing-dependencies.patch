@@ -1,0 +1,28 @@
+From: Sophie Brun <sophie@offensive-security.com>
+Date: Fri, 13 Mar 2020 12:03:10 +0100
+Subject: Add missing dependencies in gemspec
+
+With new bundler (>=1.16.1) msfdb init fails because of missing
+dependencies: rspec-core and rspec-rerun (required in Rakefile). Add them
+in the gemspec to fix this issue.
+Last-Update: 2021-07-16
+---
+ metasploit-framework.gemspec | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/metasploit-framework.gemspec b/metasploit-framework.gemspec
+index 7d9fd56..6684251 100644
+--- a/metasploit-framework.gemspec
++++ b/metasploit-framework.gemspec
+@@ -122,6 +122,11 @@ Gem::Specification.new do |spec|
+   spec.add_runtime_dependency 'http-cookie'
+    # Needed for some modules (polkit_auth_bypass.rb)
+   spec.add_runtime_dependency 'unix-crypt'
++  # This is for Rakefile
++  spec.add_runtime_dependency 'rspec-core'
++  spec.add_runtime_dependency 'rspec-rerun'
++  # required by config/application.rb (needed for Rakefile)
++  spec.add_runtime_dependency 'rails'
+ 
+   #
+   # File Parsing Libraries

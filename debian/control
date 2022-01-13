@@ -18,17 +18,19 @@ Build-Depends:
   libpq-dev,
   libsqlite3-dev,
   libxml2-dev,
-  libxslt1-dev,
+  libxslt-dev,
   libffi-dev,
   oracle-instantclient-basic [amd64 i386],
   oracle-instantclient-devel (>= 19.3.0.0.0-0kali2) [amd64 i386],
   oracle-instantclient-sqlplus [amd64 i386],
   ruby-json (>= 1.8.3),
+  shared-mime-info,
   zlib1g-dev,
 Standards-Version: 4.5.1
 Homepage: https://www.metasploit.com/
 Vcs-Git: https://nest.parrotsec.org/packages/tools/metasploit-framework.git
 Vcs-Browser: https://nest.parrotsec.org/packages/tools/metasploit-framework
+
 
 Package: metasploit-framework
 Architecture: any
@@ -42,16 +44,16 @@ Depends:
   curl,
   git,
   wget,
+  python3,
+  rake,
 # For our own msfdb
   openssl,
 # Generic dependencies 
   ${misc:Depends},
   ${shlibs:Depends},
   ruby-json (>= 1.8.3),
-  rake,
-  python3
-Suggests: default-jdk, clamav, clamav-daemon
 Conflicts: parrot-menu (<= 2:2021.02.19)
+Suggests: java7-runtime-headless, default-jdk, clamav, clamav-daemon
 Description: Framework for exploit development and vulnerability research
  The Metasploit Framework is an open source platform that supports
  vulnerability research, exploit development, and the creation of custom

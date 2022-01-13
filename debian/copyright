@@ -16,7 +16,7 @@ License: BSD-3-clause
 #
 
 Files: data/jtr/*
-Copyright: 1996-2013 Solar Designer.
+Copyright: 1996-2013, 2019 Solar Designer.
 License: GPL-2+
 
 Files: data/jtr/dumb*.conf

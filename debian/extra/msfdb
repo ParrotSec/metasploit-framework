@@ -5,7 +5,7 @@ METASPLOIT_BASEDIR=/usr/share/metasploit-framework
 DB_CONF=${METASPLOIT_BASEDIR}/config/database.yml
 DB_NAME=msf
 DB_USER=msf
-DB_PORT=5432
+DB_PORT="${PGPORT:-5432}"
 PG_SERVICE=postgresql
 
 ## Bash Colour output
@@ -14,23 +14,33 @@ GREEN="\033[01;32m"
 YELLOW="\033[01;33m"
 RESET="\033[00m"
 
+if echo "$DB_PORT" | grep -q '[^0-9]' || [ $DB_PORT -lt 1 ] || [ $DB_PORT -gt 65535 ]; then
+  echo -e "${RED}[-]${RESET} Error: invalid port number, should be between 1 and 65535" 1>&2
+  exit 1
+fi
+
 pw_gen() {
   openssl rand -base64 32
 }
 
 pg_cmd() {
-  su - postgres -c "$*"
+  local command
+  local command_args
+  command="$1"
+  command_args="${@:2}"
+  shift
+  su - postgres -c "$command -p $DB_PORT $command_args"
 }
 
 db_exists() {
-  if pg_cmd "psql -lqt" | cut -d \| -f 1 | grep -qw $1; then
+  if pg_cmd psql -lqt | cut -d \| -f 1 | grep -qw $1; then
     return 0
   fi
   return 1
 }
 
 user_exists() {
-  if echo "SELECT usename FROM pg_user;" | pg_cmd "psql -qt postgres" | grep -qw $1; then
+  if echo "SELECT usename FROM pg_user;" | pg_cmd psql -qt postgres | grep -qw $1; then
     return 0
   fi
   return 1
@@ -192,6 +202,12 @@ usage() {
   PROG="$(basename $0)"
   echo
   echo "Manage the metasploit framework database"
+  echo
+  echo "You can use an specific port number for the"
+  echo "PostgreSQL connection setting the PGPORT variable"
+  echo "in the current shell."
+  echo
+  echo "Example: PGPORT=5433 ${PROG} init"
   echo
   echo "  ${PROG} init     # start and initialize the database"
   echo "  ${PROG} reinit   # delete and reinitialize the database"

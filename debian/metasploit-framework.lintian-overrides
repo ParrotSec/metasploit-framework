@@ -15,6 +15,7 @@ windows-devel-file-in-package usr/share/metasploit-framework/data/*
 executable-jar-without-main-class usr/share/metasploit-framework/data/*
 missing-manifest usr/share/metasploit-framework/data/*
 executable-not-elf-or-script usr/share/metasploit-framework/data/*
+library-not-linked-against-libc usr/share/metasploit-framework/data/exploits/*
 
 # Also ignore everything in the ruby bundle
 arch-dependent-file-in-usr-share usr/share/metasploit-framework/vendor/bundle/*
@@ -39,6 +40,8 @@ unusual-interpreter usr/share/metasploit-framework/vendor/bundle/* *
 missing-dep-for-interpreter rackup => ruby-rack *
 wrong-path-for-interpreter usr/share/metasploit-framework/vendor/bundle/* *
 interpreter-not-absolute usr/share/metasploit-framework/vendor/bundle/* *
+package-installs-ieee-data usr/share/metasploit-framework/vendor/bundle/*
+shell-script-fails-syntax-check usr/share/metasploit-framework/vendor/bundle/*
 
 # The executable jars are a mistake
 missing-dep-on-jarwrapper
