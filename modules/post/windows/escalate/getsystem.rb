@@ -21,12 +21,19 @@ class MetasploitModule < Msf::Post
         'License' => MSF_LICENSE,
         'Author' => 'hdm',
         'Platform' => [ 'win' ],
-        'SessionTypes' => [ 'meterpreter' ]
+        'SessionTypes' => [ 'meterpreter' ],
+        'Compat' => {
+          'Meterpreter' => {
+            'Commands' => %w[
+              priv_elevate_getsystem
+            ]
+          }
+        }
       )
     )
 
     register_options([
-      OptInt.new('TECHNIQUE', [false, "Specify a particular technique to use (1-4), otherwise try them all", 0])
+      OptInt.new('TECHNIQUE', [false, "Specify a particular technique to use (1-5), otherwise try them all", 0])
     ])
   end
 

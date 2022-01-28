@@ -27,7 +27,16 @@ class MetasploitModule < Msf::Post
           'Royce Davis "r3dy" <rdavis[at]accuvant.com>'
         ],
         'Platform' => 'win',
-        'SessionTypes' => [ 'meterpreter' ]
+        'SessionTypes' => [ 'meterpreter' ],
+        'Compat' => {
+          'Meterpreter' => {
+            'Commands' => %w[
+              stdapi_railgun_api
+              stdapi_railgun_memread
+              stdapi_sys_config_getuid
+            ]
+          }
+        }
       )
     )
 
@@ -61,7 +70,7 @@ class MetasploitModule < Msf::Post
         datastore['DOMAIN'] = user.split('\\')[0]
       end
 
-      if @domain_controll.nil? and datastore['ENUM_GROUPS']
+      if @domain_controller.nil? and datastore['ENUM_GROUPS']
         @dc_error = false
 
         # Uses DC which applied policy since it would be a DC this device normally talks to
