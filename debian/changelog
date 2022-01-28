@@ -1,3 +1,9 @@
+metasploit-framework (6.1.27-0parrot1) parrot-updates; urgency=medium
+
+  * Import new upstream version 6.1.27.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 28 Jan 2022 14:48:36 +0100
+
 metasploit-framework (6.1.24-0parrot2) parrot-updates; urgency=medium
 
   * Sync with Kali changes.
