@@ -1,3 +1,9 @@
+metasploit-framework (6.1.29-0parrot1) parrot-updates; urgency=medium
+
+  * New upstream version 6.1.29
+
+ -- Nong Hoang Tu <dmknght@parrotsec.org>  Thu, 17 Feb 2022 01:33:43 +0700
+
 metasploit-framework (6.1.27-0parrot1) parrot-updates; urgency=medium
 
   * Import new upstream version 6.1.27.
