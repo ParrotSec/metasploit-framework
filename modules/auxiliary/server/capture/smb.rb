@@ -8,6 +8,7 @@ require 'ruby_smb/gss/provider/ntlm'
 require 'metasploit/framework/hashes/identify'
 
 class MetasploitModule < Msf::Auxiliary
+  include ::Msf::Exploit::Remote::SMB::Server
   include ::Msf::Exploit::Remote::SMB::Server::HashCapture
 
   def initialize
@@ -58,19 +59,7 @@ class MetasploitModule < Msf::Auxiliary
     deregister_options('SMBServerIdleTimeout')
   end
 
-  def run
-    @rsock = Rex::Socket::Tcp.create(
-      'LocalHost' => datastore['SRVHOST'],
-      'LocalPort' => datastore['SRVPORT'],
-      'Server' => true,
-      'Timeout' => datastore['TIMEOUT'],
-      'Context' =>
-        {
-          'Msf' => framework,
-          'MsfExploit' => self
-        }
-    )
-
+  def start_service(opts = {})
     ntlm_provider = HashCaptureNTLMProvider.new(
       listener: self
     )
@@ -80,39 +69,15 @@ class MetasploitModule < Msf::Auxiliary
     ntlm_provider.dns_hostname = datastore['SMBDomain']
     ntlm_provider.netbios_domain = datastore['SMBDomain']
     ntlm_provider.netbios_hostname = datastore['SMBDomain']
-
     validate_smb_hash_capture_datastore(datastore, ntlm_provider)
+    opts[:gss_provider] = ntlm_provider
 
-    server = RubySMB::Server.new(
-      server_sock: @rsock,
-      gss_provider: ntlm_provider
-    )
-
-    print_status("Server is running. Listening on #{datastore['SRVHOST']}:#{datastore['SRVPORT']}")
-
-    server.run do
-      print_line
-      print_good 'Received SMB connection on Auth Capture Server!'
-      true
-    end
+    super(opts)
   end
 
-  def on_ntlm_type3(address:, ntlm_type1:, ntlm_type2:, ntlm_type3:)
-    report_ntlm_type3(
-      address: address,
-      ntlm_type1: ntlm_type1,
-      ntlm_type2: ntlm_type2,
-      ntlm_type3: ntlm_type3
-    )
+  def on_client_connect(client)
+    print_good('Received SMB connection on Auth Capture Server!')
   end
 
-  def cleanup
-    begin
-      @rsock.close if @rsock
-    rescue StandardError => e
-      elog('Failed closing SMB server socket', error: e)
-    end
-
-    super
-  end
+  alias :run :exploit
 end

@@ -21,9 +21,10 @@ on:
     branches-ignore:
       - gh-pages
       - metakitty
+      - weekly-dependency-updates
   pull_request:
-    branches:
-      - '*'
+    branches-ignore:
+      - weekly-dependency-updates
 
 jobs:
   build:
@@ -66,6 +67,7 @@ jobs:
           - 2.6
           - 2.7
           - 3.0.3
+          - 3.1.1
         test_cmd:
           - bundle exec rake rspec-rerun:spec SPEC_OPTS="--tag content"
           - bundle exec rake rspec-rerun:spec SPEC_OPTS="--tag ~content"
