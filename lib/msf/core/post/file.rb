@@ -28,7 +28,6 @@ module Msf::Post::File
               stdapi_fs_mkdir
               stdapi_fs_separator
               stdapi_fs_stat
-              stdapi_railgun_api
             ]
           }
         }
@@ -708,37 +707,6 @@ module Msf::Post::File
 
     uncompressed_fragment = Zlib::GzipReader.new(StringIO.new(Base64.decode64(b64_data))).read
     return uncompressed_fragment
-  end
-
-  #
-  # Return a list of the Windows Drives
-  #
-  def get_drives
-    if session.platform != 'windows'
-      return false
-    end
-    drives = []
-    if session.type == "meterpreter" && session.railgun
-      bitmask = session.railgun.kernel32.GetLogicalDrives()["return"]
-      letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-      (0..25).each do |i|
-        label = letters[i,1]
-        rem = bitmask % (2**(i+1))
-        if rem > 0
-          drives << label
-          bitmask = bitmask - rem
-        end
-      end
-    else
-      disks = cmd_exec("wmic logicaldisk get caption").split("\r\n")
-      for disk in disks
-        if /([A-Z]):/ =~ disk
-          drives << disk[0]
-        end
-      end
-    end
-
-    drives
   end
 
 protected

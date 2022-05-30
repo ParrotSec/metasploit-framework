@@ -1625,7 +1625,7 @@ class Core
       end
     when 'killall'
       print_status("Killing all sessions...")
-      framework.sessions.each_sorted do |s|
+      framework.sessions.each_sorted.reverse_each do |s|
         session = framework.sessions.get(s)
         if session
           if session.respond_to?(:response_timeout)
@@ -1923,7 +1923,7 @@ class Core
         end
       end
 
-      framework.sessions.each { |_index, session| session.initialize_tlv_logging(datastore[name]) }
+      framework.sessions.each { |_index, session| session.initialize_tlv_logging(datastore[name]) if session.type.casecmp? 'meterpreter' }
     end
 
     print_line("#{name} => #{datastore[name]}")
