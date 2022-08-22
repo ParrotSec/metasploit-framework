@@ -311,14 +311,17 @@ protected
     subkeys = []
     reg_data_types = 'REG_SZ|REG_MULTI_SZ|REG_DWORD_BIG_ENDIAN|REG_DWORD|REG_BINARY|'
     reg_data_types << 'REG_DWORD_LITTLE_ENDIAN|REG_NONE|REG_EXPAND_SZ|REG_LINK|REG_FULL_RESOURCE_DESCRIPTOR'
+
     bslashes = key.count('\\')
+    bslashes = bslashes - 1 if key.ends_with?('\\')
+
     results = shell_registry_cmd("query \"#{key}\"", view)
-    unless results.include?('Error')
+    unless results.to_s.upcase.starts_with?('ERROR:')
       results.each_line do |line|
         # now let's keep the ones that have a count = bslashes+1
         # feels like there's a smarter way to do this but...
         if (line.count('\\') == bslashes+1 && !line.ends_with?('\\'))
-          #then it's a first level subkey
+          # then it's a first level subkey
           subkeys << line.split('\\').last.chomp # take & chomp the last item only
         end
       end
@@ -336,7 +339,7 @@ protected
     reg_data_types << 'REG_DWORD_LITTLE_ENDIAN|REG_NONE|REG_EXPAND_SZ|REG_LINK|REG_FULL_RESOURCE_DESCRIPTOR'
     # REG QUERY KeyName [/v ValueName | /ve] [/s]
     results = shell_registry_cmd("query \"#{key}\"", view)
-    unless results.include?('Error')
+    unless results.to_s.upcase.starts_with?('ERROR:')
       if values = results.scan(/^ +.*[#{reg_data_types}].*/)
         # yanked the lines with legit REG value types like REG_SZ
         # now let's parse out the names (first field basically)
@@ -365,19 +368,22 @@ protected
   #
   def shell_registry_getvalinfo(key, valname, view)
     key = normalize_key(key)
-    value = {}
-    value["Data"] = nil # defaults
-    value["Type"] = nil
+    value = {
+      'Data' => nil,
+      'Type' => nil
+    }
+
     # REG QUERY KeyName [/v ValueName | /ve] [/s]
     results = shell_registry_cmd("query \"#{key}\" /v \"#{valname}\"", view)
+
+    # pull out the interesting line (the one with the value name in it)
     if match_arr = /^ +#{valname}.*/i.match(results)
-      # pull out the interesting line (the one with the value name in it)
-      # and split it with ' ' yielding [valname,REGvaltype,REGdata]
-      split_arr = match_arr[0].split(' ')
-      value["Type"] = split_arr[1]
-      value["Data"] = split_arr[2]
-      # need to test to ensure all results can be parsed this way
+      # split with ' ' yielding [valname,REGvaltype,REGdata] and extract reg type
+      value['Type'] = match_arr[0].split[1]
+      # treat the remainder of the line after the reg type as the reg value
+      value['Data'] = match_arr[0].strip.scan(/#{value['Type']}\s+(.+)/).flatten.first
     end
+
     value
   end
 
@@ -661,8 +667,8 @@ protected
     else
       raise ArgumentError, "Cannot normalize unknown key: #{key}"
     end
-    print_status("Normalized #{key} to #{keys.join("\\")}") if $blab
-    return keys.join("\\")
+    # print_status("Normalized #{key} to #{keys.join("\\")}")
+    return keys.compact.join("\\")
   end
 
   #
