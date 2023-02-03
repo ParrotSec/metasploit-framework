@@ -31,29 +31,28 @@ on:
 jobs:
   # Ensures that the docs site builds successfully. Note that this workflow does not deploy the docs site.
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     timeout-minutes: 40
 
     strategy:
       fail-fast: true
       matrix:
         ruby:
-          - 2.7
+          - '2.7'
 
     name: Ruby ${{ matrix.ruby }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
+          ruby-version: '${{ matrix.ruby }}'
           bundler-cache: true
           working-directory: docs
 
       - name: build
         working-directory: docs
         run: |
-          bundle exec ruby build.rb
           bundle exec ruby build.rb --production
