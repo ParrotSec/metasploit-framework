@@ -1,5 +1,4 @@
 drop-installation-msfupdate.patch
 fix-usage-example.patch
-add-missing-dependencies.patch
 Remove-the-last-remaining-Python-2-script-killerbee_msfre.patch
 Add-missing-requirement-Readline.patch
