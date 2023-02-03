@@ -1,3 +1,9 @@
+metasploit-framework (6.3.1-0parrot2) parrot-updates; urgency=medium
+
+  * Remove old patch of missing dependencies
+
+ -- Nong Hoang Tu <dmknght@parrotsec.org>  Sat, 04 Feb 2023 02:20:58 +0700
+
 metasploit-framework (6.3.1-0parrot1) parrot-updates; urgency=medium
 
   * New upstream version 6.3.1
