@@ -59,7 +59,7 @@ module Msf
       return unless block_given?
 
       parse(@value, @datastore).each do |result|
-        block.call(result) if result.is_a?(Msf::DataStore)
+        block.call(result) if result.is_a?(Msf::DataStore) || result.is_a?(Msf::DataStoreWithFallbacks)
       end
 
       nil
@@ -93,7 +93,7 @@ module Msf
     # @return [Boolean] True if all items are valid, and there are at least some items present to iterate over. False otherwise.
     def valid?
       parsed_values = parse(@value, @datastore)
-      parsed_values.all? { |result| result.is_a?(Msf::DataStore) } && parsed_values.count > 0
+      parsed_values.all? { |result| result.is_a?(Msf::DataStore) || result.is_a?(Msf::DataStoreWithFallbacks) } && parsed_values.count > 0
     rescue StandardError => e
       elog('rhosts walker invalid', error: e)
       false
@@ -151,6 +151,8 @@ module Msf
               results << datastore.merge(overrides)
             end
           end
+        rescue ::Interrupt
+          raise
         rescue StandardError => e
           results << Msf::RhostsWalker::Error.new(value, cause: e)
         end
@@ -328,14 +330,14 @@ module Msf
 
     def set_hostname(datastore, result, hostname)
       hostname = Rex::Socket.is_ip_addr?(hostname) ? nil : hostname
-      result['RHOSTNAME'] = hostname if result['RHOSTNAME'].blank?
+      result['RHOSTNAME'] = hostname if datastore['RHOSTNAME'].blank?
       result['VHOST'] = hostname if datastore.options.include?('VHOST') && datastore['VHOST'].blank?
     end
 
     def set_username(datastore, result, username)
       # Preference setting application specific values first
       username_set = false
-      option_names = %w[SMBUser FtpUser Username user USERNAME username]
+      option_names = %w[SMBUser FtpUser Username user USER USERNAME username]
       option_names.each do |option_name|
         if datastore.options.include?(option_name)
           result[option_name] = username

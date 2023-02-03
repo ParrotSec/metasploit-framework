@@ -6,6 +6,7 @@
 require 'metasploit/framework/ntds/parser'
 
 class MetasploitModule < Msf::Post
+  include Msf::Post::Windows::Accounts
   include Msf::Post::Windows::Registry
   include Msf::Auxiliary::Report
   include Msf::Post::Windows::Priv
@@ -102,12 +103,10 @@ class MetasploitModule < Msf::Post
     database_file_path
   end
 
-  def domain_controller?
-    if ntds_location
-      file_exist?("#{ntds_location}\\ntds.dit")
-    else
-      false
-    end
+  def ntds_exists?
+    return false unless ntds_location
+
+    file_exist?("#{ntds_location}\\ntds.dit")
   end
 
   def ntds_location
@@ -130,24 +129,30 @@ class MetasploitModule < Msf::Post
   end
 
   def preconditions_met?
-    if is_admin?
-      print_status "Session has Admin privs"
-    else
-      print_error "This module requires Admin privs to run"
-      return false
-    end
-    if domain_controller?
-      print_status "Session is on a Domain Controller"
-    else
-      print_error "This does not appear to be an AD Domain Controller"
-      return false
-    end
-    unless session_compat?
+    unless is_admin?
+      print_error('This module requires Admin privs to run')
       return false
     end
 
-    load_extapi
-    return true
+    print_status('Session has Admin privs')
+
+    unless domain_controller?
+      print_error('Host does not appear to be an AD Domain Controller')
+      return false
+    end
+
+    print_status('Session is on a Domain Controller')
+
+    unless ntds_exists?
+      print_error('Could not locate ntds.dit file')
+      return false
+    end
+
+    unless session.commands.include?(Rex::Post::Meterpreter::Extensions::Extapi::COMMAND_ID_EXTAPI_NTDS_PARSE)
+      fail_with(Failure::BadConfig, 'Session does not support Meterpreter ExtAPI NTDS parser')
+    end
+
+    session_compat?
   end
 
   def repair_ntds(path = '')
