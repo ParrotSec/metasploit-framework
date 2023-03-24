@@ -114,7 +114,7 @@ class MetasploitModule < Msf::Post
   # and records and usernames as {Metasploit::Credential::Core}s in
   # the database.
   #
-  # @param [Array<Array<Hash>>] the LDAP query results to parse
+  # @param results [Array<Array<Hash>>] The LDAP query results to parse
   # @return [Rex::Text::Table] the table containing all the result data
   def parse_results(results)
     domain = datastore['DOMAIN'] || get_domain
@@ -157,7 +157,7 @@ class MetasploitModule < Msf::Post
     inner_filter << '(!(lockoutTime>=1))' if datastore['EXCLUDE_LOCKED']
     inner_filter << '(!(userAccountControl:1.2.840.113556.1.4.803:=2))' if datastore['EXCLUDE_DISABLED']
     inner_filter << "(memberof:1.2.840.113556.1.4.1941:=#{datastore['GROUP_MEMBER']})" if datastore['GROUP_MEMBER']
-    inner_filter << "(#{datastore['FILTER']})" if datastore['FILTER'] != ''
+    inner_filter << "(#{datastore['FILTER']})" unless datastore['FILTER'].blank?
     case datastore['UAC']
     when 'ANY'
     when 'NO_PASSWORD'
