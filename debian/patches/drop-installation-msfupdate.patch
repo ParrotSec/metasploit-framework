@@ -1,15 +1,6 @@
 From: Sophie Brun <sophie@offensive-security.com>
 Date: Fri, 13 Mar 2020 12:03:10 +0100
 Subject: Drop installation of msfupdate
-
-Bug: https://github.com/rapid7/metasploit-framework/issues/8448
-Bug-Kali: https://bugs.kali.org/view.php?id=4039
-Applied-Upstream: https://github.com/rapid7/metasploit-framework/commit/ab6b5f381d5ef71e75697b4b5044d3f52d8d797b
-Last-Update: 2019-12-13
-
-Since version 4.14.21 msfupdate doesn't work anymore for Kali (with apt).
-Upstream has already removed it for Kali in the git repository.
-Last-Update: 2019-12-13
 ---
  msfupdate | 315 --------------------------------------------------------------
  1 file changed, 315 deletions(-)

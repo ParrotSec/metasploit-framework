@@ -76,7 +76,7 @@ index a32b30f..7533129 100755
  end
  
 diff --git a/tools/exploit/java_deserializer.rb b/tools/exploit/java_deserializer.rb
-index cac0857..ab825eb 100755
+index 465c588..e83b3ff 100755
 --- a/tools/exploit/java_deserializer.rb
 +++ b/tools/exploit/java_deserializer.rb
 @@ -142,7 +142,7 @@ if __FILE__ == $PROGRAM_NAME
@@ -102,10 +102,10 @@ index be283b7..a743099 100755
          opt.separator 'Specific options:'
  
 diff --git a/tools/exploit/metasm_shell.rb b/tools/exploit/metasm_shell.rb
-index 0dd54c0..4d92185 100755
+index 3f46ffc..ecfe1c6 100755
 --- a/tools/exploit/metasm_shell.rb
 +++ b/tools/exploit/metasm_shell.rb
-@@ -41,7 +41,7 @@ require 'metasm'
+@@ -42,7 +42,7 @@ require 'metasm'
  @endianess = ""
  
  def usage

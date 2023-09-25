@@ -1,0 +1,39 @@
+From: Sophie Brun <sophie@offensive-security.com>
+Date: Thu, 20 Oct 2022 10:54:05 +0200
+Subject: Comment 'gem: debug' in Gemfile
+
+The DB init fails with:
+"
+[+] Creating initial database schema
+rake aborted!
+NoMethodError: undefined method `>' for nil:NilClass
+/usr/share/metasploit-framework/vendor/bundle/ruby/3.0.0/gems/zeitwerk-2.6.1/lib/zeitwerk/kernel.rb:35:in `require'
+/usr/share/metasploit-framework/vendor/bundle/ruby/3.0.0/gems/zeitwerk-2.6.1/lib/zeitwerk/kernel.rb:35:in `require'
+/usr/share/rubygems-integration/all/gems/bundler-2.3.15/lib/bundler/runtime.rb:60:in `block (2 levels) in require'
+/usr/share/rubygems-integration/all/gems/bundler-2.3.15/lib/bundler/runtime.rb:55:in `each'
+/usr/share/rubygems-integration/all/gems/bundler-2.3.15/lib/bundler/runtime.rb:55:in `block in require'
+/usr/share/rubygems-integration/all/gems/bundler-2.3.15/lib/bundler/runtime.rb:44:in `each'
+/usr/share/rubygems-integration/all/gems/bundler-2.3.15/lib/bundler/runtime.rb:44:in `require'
+/usr/share/rubygems-integration/all/gems/bundler-2.3.15/lib/bundler.rb:187:in `require'
+/usr/share/metasploit-framework/config/application.rb:13:in `<top (required)>'
+/usr/share/metasploit-framework/Rakefile:2:in `require'
+/usr/share/metasploit-framework/Rakefile:2:in `<top (required)>'
+/usr/share/metasploit-framework/vendor/bundle/ruby/3.0.0/gems/rake-13.0.6/exe/rake:27:in `<top (required)>'
+(See full trace by running task with --trace)"
+It's caused by the line 'gem: debug' even if we don't install or use the
+gem as it's in "development" group.
+---
+ Gemfile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/Gemfile
++++ b/Gemfile
+@@ -18,7 +18,7 @@
+   gem 'pry-byebug'
+   # Ruby Debugging Library - rebuilt and included by default from Ruby 3.1 onwards.
+   # Replaces the old lib/debug.rb and provides more features.
+-  gem 'debug', '>= 1.0.0'
++#  gem 'debug', '>= 1.0.0'
+   # module documentation
+   gem 'octokit'
+   # memory profiling

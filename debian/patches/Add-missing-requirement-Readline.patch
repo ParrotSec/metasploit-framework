@@ -7,11 +7,12 @@ Subject: Add missing requirement Readline
  1 file changed, 2 insertions(+)
 
 diff --git a/lib/rex/ui/text/shell/history_manager.rb b/lib/rex/ui/text/shell/history_manager.rb
-index 9722ec1..185d7ae 100644
+index cadd23855..10482c23e 100644
 --- a/lib/rex/ui/text/shell/history_manager.rb
 +++ b/lib/rex/ui/text/shell/history_manager.rb
-@@ -1,5 +1,7 @@
- # -*- coding: binary -*-
+@@ -2,6 +2,8 @@
+ 
+ require 'singleton'
  
 +require 'readline'
 +
