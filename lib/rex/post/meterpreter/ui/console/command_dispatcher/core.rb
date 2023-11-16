@@ -599,7 +599,7 @@ class Console::CommandDispatcher::Core
     if expressions.empty?
       print_status('Starting IRB shell...')
       print_status("You are in the \"client\" (session) object\n")
-      Rex::Ui::Text::Shell::HistoryManager.instance.with_context(name: :irb) do
+      framework.history_manager.with_context(name: :irb) do
         Rex::Ui::Text::IrbShell.new(client).run
       end
     else
@@ -639,7 +639,7 @@ class Console::CommandDispatcher::Core
     print_status("You are in the \"client\" (session) object\n")
 
     Pry.config.history_load = false
-    Rex::Ui::Text::Shell::HistoryManager.instance.with_context(history_file: Msf::Config.pry_history, name: :pry) do
+    client.framework.history_manager.with_context(history_file: Msf::Config.pry_history, name: :pry) do
       client.pry
     end
   end
@@ -1892,6 +1892,14 @@ protected
 
   def tab_complete_modules(str, words)
     tabs = []
+    module_metadata = Msf::Modules::Metadata::Cache.instance.get_metadata
+
+    tabs += module_metadata.filter_map do |m|
+      if m.type == 'post' || (m.type == 'exploit' && m.ref_name.match(%r{(multi|#{Regexp.escape(client.platform)})/local/}))
+        "#{m.type}/#{m.ref_name}"
+      end
+    end
+
     client.framework.modules.post.map do |name,klass|
       tabs << 'post/' + name
     end
@@ -1899,7 +1907,8 @@ protected
       grep(/(multi|#{Regexp.escape(client.platform)})\/local\//).each do |name|
       tabs << 'exploit/' + name
     end
-    return tabs.sort
+
+    tabs.uniq.sort
   end
 
   def tab_complete_channels
