@@ -410,7 +410,7 @@ Shell Banner:
 
   def cmd_download(*args)
     if args.length != 2
-      # no argumnets, just print help message
+      # no arguments, just print help message
       return cmd_download_help
     end
 
@@ -445,7 +445,7 @@ Shell Banner:
 
   def cmd_upload(*args)
     if args.length != 2
-      # no argumnets, just print help message
+      # no arguments, just print help message
       return cmd_upload_help
     end
 
@@ -464,9 +464,9 @@ Shell Banner:
       content = File.binread(src)
       result = _file_transfer.write_file(dst, content)
       print_good("File <#{dst}> upload finished") if result
-      print_error("Error occured while uploading <#{src}> to <#{dst}>") unless result
+      print_error("Error occurred while uploading <#{src}> to <#{dst}>") unless result
     rescue => e
-      print_error("Error occured while uploading <#{src}> to <#{dst}> - #{e.message}")
+      print_error("Error occurred while uploading <#{src}> to <#{dst}> - #{e.message}")
       elog(e)
       return
     end
@@ -546,7 +546,7 @@ Shell Banner:
     if expressions.empty?
       print_status('Starting IRB shell...')
       print_status("You are in the \"self\" (session) object\n")
-      Rex::Ui::Text::Shell::HistoryManager.instance.with_context(name: :irb) do
+      framework.history_manager.with_context(name: :irb) do
         Rex::Ui::Text::IrbShell.new(self).run
       end
     else
@@ -585,7 +585,7 @@ Shell Banner:
     print_status('Starting Pry shell...')
     print_status("You are in the \"self\" (session) object\n")
     Pry.config.history_load = false
-    Rex::Ui::Text::Shell::HistoryManager.instance.with_context(history_file: Msf::Config.pry_history, name: :pry) do
+    framework.history_manager.with_context(history_file: Msf::Config.pry_history, name: :pry) do
       self.pry
     end
   end
@@ -746,7 +746,7 @@ protected
   # shell_write instead of operating on rstream directly.
   def _interact
     framework.events.on_session_interact(self)
-    Rex::Ui::Text::Shell::HistoryManager.instance.with_context(name: self.type.to_sym) {
+    framework.history_manager.with_context(name: self.type.to_sym) {
       _interact_stream
     }
   end
@@ -797,7 +797,7 @@ protected
   end
 
   def _file_transfer
-    raise NotImplementedError.new('Session does not support file transfers.') if @session_type.ends_with?(':winpty')
+    raise NotImplementedError.new('Session does not support file transfers.') if session_type.ends_with?(':winpty')
 
     FileTransfer.new(self)
   end

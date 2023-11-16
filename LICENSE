@@ -49,6 +49,11 @@ Files: data/webcam/api.js
 Copyright: Copyright 2013 Muaz Khan<@muazkh>.
 License: MIT
 
+Files: data/wordlists/flask_secret_keys.txt
+Source: https://github.com/Paradoxis/Flask-Unsign-Wordlist/blob/v2023.34/flask_unsign_wordlist/wordlists/github.txt
+Copyright: Copyright (c) 2023 Luke Paris (Paradoxis)
+License: MIT
+
 Files: external/source/byakugan/*
 Copyright: Lurene Grenier, 2009
 License: BSD-3-clause
@@ -79,6 +84,13 @@ Purpose: This source file is necessary for users to create a stand-alone executa
 Files: exteneral/source/exploits/CVE-2022-26904/*
 Copyright: 2022 Abdelhamid Naceri
 License: MIT
+
+Files: external/source/exploits/CVE-2023-36874/*
+Copyright: 2023 Octoberfest7
+License: MIT
+Purpose: Library and error report file are required for calculating offsets to the correct
+         function calls to implement the exploit.  The heavily modified C main is necessary
+         to create and trigger the exploit.
 
 Files: external/source/exploits/drunkpotato/Common_Src_Files/spnegotokenhandler/*
 Copyright: 2011 Jon Bringhurst
