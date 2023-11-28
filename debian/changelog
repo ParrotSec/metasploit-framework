@@ -1,3 +1,10 @@
+metasploit-framework (6.3.44-0parrot1) lory-updates; urgency=medium
+
+  * replace gksudo with pkexec
+  * New upstream version 6.3.44
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Tue, 28 Nov 2023 17:56:41 +0100
+
 metasploit-framework (6.3.35-0parrot1) lory; urgency=medium
 
   * New upstream version 6.3.35
