@@ -5,6 +5,19 @@ metasploit-framework (6.3.44-0parrot1) lory-updates; urgency=medium
 
  -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Tue, 28 Nov 2023 17:56:41 +0100
 
+metasploit-framework (6.3.35-0parrot3) lory-updates; urgency=medium
+
+  * Update gemspec oci8 patch.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sat, 28 Oct 2023 08:54:39 +0200
+
+metasploit-framework (6.3.35-0parrot2) parrot-updates; urgency=medium
+
+  * Replace gksudo with pkexec.
+  * Rebuild for Debian 6.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sat, 28 Oct 2023 08:13:14 +0200
+
 metasploit-framework (6.3.35-0parrot1) lory; urgency=medium
 
   * New upstream version 6.3.35

@@ -1,12 +1,27 @@
+From 4734bc7e39bc789429589f912d1d2d9da4518587 Mon Sep 17 00:00:00 2001
+From: Sophie Brun <sophie@offensive-security.com>
+Date: Thu, 6 Apr 2023 14:20:27 +0200
+Subject: [PATCH] Fix patch
+
+---
+ metasploit-framework.gemspec | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/metasploit-framework.gemspec b/metasploit-framework.gemspec
+index 9f00a10c6..9a167f24d 100644
 --- a/metasploit-framework.gemspec
 +++ b/metasploit-framework.gemspec
-@@ -236,4 +236,9 @@ Gem::Specification.new do |spec|
-   spec.add_runtime_dependency 'win32api'
- 
-   spec.add_runtime_dependency 'zeitwerk'
+@@ -239,4 +239,9 @@ Gem::Specification.new do |spec|
+   # Do not use this to process untrusted PNG files! This is only to be used
+   # to generate PNG files, not to parse untrusted PNG files.
+   spec.add_runtime_dependency 'chunky_png'
 +
 +  # Add missing gem oci8 only for amd64 and i386 (oracle packages are only
 +  # available for these oachitectures in Kali)
 +  spec.add_runtime_dependency 'ruby-oci8'
 +
  end
+-- 
+2.39.2
+
+
