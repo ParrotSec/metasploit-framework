@@ -29,7 +29,8 @@ class Driver < Msf::Ui::Driver
     CommandDispatcher::Resource,
     CommandDispatcher::Db,
     CommandDispatcher::Creds,
-    CommandDispatcher::Developer
+    CommandDispatcher::Developer,
+    CommandDispatcher::DNS
   ]
 
   #
@@ -79,8 +80,16 @@ class Driver < Msf::Ui::Driver
 
     # Initialize attributes
 
-    # Defer loading of modules until paths from opts can be added below
-    framework_create_options = opts.merge('DeferModuleLoads' => true)
+    framework_create_options = opts.merge({ 'DeferModuleLoads' => true })
+
+    if Msf::FeatureManager.instance.enabled?(Msf::FeatureManager::DNS_FEATURE)
+      dns_resolver = Rex::Proto::DNS::CachedResolver.new
+      dns_resolver.extend(Rex::Proto::DNS::CustomNameserverProvider)
+      dns_resolver.load_config
+
+      # Defer loading of modules until paths from opts can be added below
+      framework_create_options = framework_create_options.merge({ 'CustomDnsResolver' => dns_resolver })
+    end
     self.framework = opts['Framework'] || Msf::Simple::Framework.create(framework_create_options)
 
     if self.framework.datastore['Prompt']
@@ -368,7 +377,13 @@ class Driver < Msf::Ui::Driver
 
     run_single("banner") unless opts['DisableBanner']
 
-    payloads_manifest_errors = framework.features.enabled?(::Msf::FeatureManager::METASPLOIT_PAYLOAD_WARNINGS) ? ::MetasploitPayloads.manifest_errors : []
+    payloads_manifest_errors = []
+    begin
+      payloads_manifest_errors = ::MetasploitPayloads.manifest_errors if framework.features.enabled?(::Msf::FeatureManager::METASPLOIT_PAYLOAD_WARNINGS)
+    rescue ::StandardError => e
+      $stderr.print('Could not verify the integrity of the Metasploit Payloads manifest')
+      elog(e)
+    end
 
     av_warning_message if (framework.eicar_corrupted? || payloads_manifest_errors.any?)
 

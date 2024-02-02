@@ -8,7 +8,7 @@ There are two main ports for SMB:
 - 445/TCP - Newer versions of SMB use this port, were NetBIOS is not used.
 
 Other terminology to be aware of:
-- SMB - Serer Message Blocks
+- SMB - Server Message Blocks
 - CIFS - Common Internet File System
 - Samba - A free software re-implementation of SMB, which is frequently found on unix-like systems
 
@@ -24,7 +24,7 @@ Metasploit has support for multiple SMB modules, including:
 There are more modules than listed here, for the full list of modules run the `search` command within msfconsole:
 
 ```msf
-msf6 > search mysql
+msf6 > search smb
 ```
 
 ### Lab Environment
