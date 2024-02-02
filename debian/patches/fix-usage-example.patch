@@ -23,11 +23,9 @@ Last-Update: 2018-01-30
  tools/recon/makeiplist.rb          | 2 +-
  15 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/tools/exploit/egghunter.rb b/tools/exploit/egghunter.rb
-index 4a5341b..fb64a8d 100755
 --- a/tools/exploit/egghunter.rb
 +++ b/tools/exploit/egghunter.rb
-@@ -20,7 +20,7 @@ module Egghunter
+@@ -20,7 +20,7 @@
      def self.parse(args)
        options = {}
        parser = OptionParser.new do |opt|
@@ -36,11 +34,9 @@ index 4a5341b..fb64a8d 100755
          opt.separator ''
          opt.separator 'Specific options:'
  
-diff --git a/tools/exploit/exe2vba.rb b/tools/exploit/exe2vba.rb
-index a4a5255..4b6f130 100755
 --- a/tools/exploit/exe2vba.rb
 +++ b/tools/exploit/exe2vba.rb
-@@ -23,7 +23,7 @@ $:.unshift(ENV['MSF_LOCAL_LIB']) if ENV['MSF_LOCAL_LIB']
+@@ -23,7 +23,7 @@
  require 'rex'
  
  def usage
@@ -49,11 +45,9 @@ index a4a5255..4b6f130 100755
    exit
  end
  
-diff --git a/tools/exploit/exe2vbs.rb b/tools/exploit/exe2vbs.rb
-index 71e415c..d9ad245 100755
 --- a/tools/exploit/exe2vbs.rb
 +++ b/tools/exploit/exe2vbs.rb
-@@ -22,7 +22,7 @@ $:.unshift(ENV['MSF_LOCAL_LIB']) if ENV['MSF_LOCAL_LIB']
+@@ -22,7 +22,7 @@
  require 'rex'
  
  def usage
@@ -62,11 +56,9 @@ index 71e415c..d9ad245 100755
    exit
  end
  
-diff --git a/tools/exploit/find_badchars.rb b/tools/exploit/find_badchars.rb
-index a32b30f..7533129 100755
 --- a/tools/exploit/find_badchars.rb
 +++ b/tools/exploit/find_badchars.rb
-@@ -33,7 +33,7 @@ $args = Rex::Parser::Arguments.new(
+@@ -33,7 +33,7 @@
    "-t" => [ true, "The format that the memory contents are in (empty to list)"         ])
  
  def usage
@@ -75,11 +67,9 @@ index a32b30f..7533129 100755
    exit
  end
  
-diff --git a/tools/exploit/java_deserializer.rb b/tools/exploit/java_deserializer.rb
-index 465c588..e83b3ff 100755
 --- a/tools/exploit/java_deserializer.rb
 +++ b/tools/exploit/java_deserializer.rb
-@@ -142,7 +142,7 @@ if __FILE__ == $PROGRAM_NAME
+@@ -142,7 +142,7 @@
  
    options = {}
    OptionParser.new do |opts|
@@ -88,11 +78,9 @@ index 465c588..e83b3ff 100755
  
      opts.on("-aID", "--array=ID", "Print detailed information about content array") do |id|
        options[:array] = id
-diff --git a/tools/exploit/jsobfu.rb b/tools/exploit/jsobfu.rb
-index be283b7..a743099 100755
 --- a/tools/exploit/jsobfu.rb
 +++ b/tools/exploit/jsobfu.rb
-@@ -20,7 +20,7 @@ module Jsobfu
+@@ -20,7 +20,7 @@
      def self.parse(args)
        options = {}
        parser = OptionParser.new do |opt|
@@ -101,12 +89,10 @@ index be283b7..a743099 100755
          opt.separator ''
          opt.separator 'Specific options:'
  
-diff --git a/tools/exploit/metasm_shell.rb b/tools/exploit/metasm_shell.rb
-index 3f46ffc..ecfe1c6 100755
 --- a/tools/exploit/metasm_shell.rb
 +++ b/tools/exploit/metasm_shell.rb
-@@ -42,7 +42,7 @@ require 'metasm'
- @endianess = ""
+@@ -42,7 +42,7 @@
+ @endianness = ""
  
  def usage
 -  $stderr.puts("\nUsage: #{$0} <options>\n" + $args.usage)
@@ -114,11 +100,9 @@ index 3f46ffc..ecfe1c6 100755
    exit
  end
  
-diff --git a/tools/exploit/pattern_create.rb b/tools/exploit/pattern_create.rb
-index 063f286..b7130a2 100755
 --- a/tools/exploit/pattern_create.rb
 +++ b/tools/exploit/pattern_create.rb
-@@ -22,7 +22,7 @@ module PatternCreate
+@@ -22,7 +22,7 @@
      def self.parse(args)
        options = {}
        parser = OptionParser.new do |opt|
@@ -127,11 +111,9 @@ index 063f286..b7130a2 100755
          opt.separator ''
          opt.separator 'Options:'
          opt.on('-l', '--length <length>', Integer, "The length of the pattern") do |len|
-diff --git a/tools/exploit/pattern_offset.rb b/tools/exploit/pattern_offset.rb
-index c6605c6..bb84ab6 100755
 --- a/tools/exploit/pattern_offset.rb
 +++ b/tools/exploit/pattern_offset.rb
-@@ -22,7 +22,7 @@ module PatternOffset
+@@ -22,7 +22,7 @@
      def self.parse(args)
        options = {}
        parser = OptionParser.new do |opt|
@@ -140,11 +122,9 @@ index c6605c6..bb84ab6 100755
          opt.separator ''
          opt.separator 'Options:'
  
-diff --git a/tools/exploit/pdf2xdp.rb b/tools/exploit/pdf2xdp.rb
-index f7318c7..27530b8 100755
 --- a/tools/exploit/pdf2xdp.rb
 +++ b/tools/exploit/pdf2xdp.rb
-@@ -15,7 +15,7 @@ pdf = ARGV.shift
+@@ -15,7 +15,7 @@
  xdp = ARGV.shift
  
  if ! xdp then
@@ -153,11 +133,9 @@ index f7318c7..27530b8 100755
    exit 1
  end
  
-diff --git a/tools/exploit/virustotal.rb b/tools/exploit/virustotal.rb
-index cb10b13..316472d 100755
 --- a/tools/exploit/virustotal.rb
 +++ b/tools/exploit/virustotal.rb
-@@ -288,7 +288,7 @@ class OptsConsole
+@@ -288,7 +288,7 @@
      options = {}
  
      opts = OptionParser.new do |opts|
@@ -166,11 +144,9 @@ index cb10b13..316472d 100755
  
        opts.separator ""
        opts.separator "Specific options:"
-diff --git a/tools/password/halflm_second.rb b/tools/password/halflm_second.rb
-index eb3d44d..3198b18 100755
 --- a/tools/password/halflm_second.rb
 +++ b/tools/password/halflm_second.rb
-@@ -24,7 +24,7 @@ $:.unshift(ENV['MSF_LOCAL_LIB']) if ENV['MSF_LOCAL_LIB']
+@@ -24,7 +24,7 @@
  require 'rex'
  
  def usage
@@ -179,11 +155,9 @@ index eb3d44d..3198b18 100755
    exit
  end
  
-diff --git a/tools/password/hmac_sha1_crack.rb b/tools/password/hmac_sha1_crack.rb
-index 243e78e..f8708ca 100755
 --- a/tools/password/hmac_sha1_crack.rb
 +++ b/tools/password/hmac_sha1_crack.rb
-@@ -28,7 +28,7 @@ require 'rex'
+@@ -28,7 +28,7 @@
  require 'openssl'
  
  def usage
@@ -192,11 +166,9 @@ index 243e78e..f8708ca 100755
    $stderr.puts("The format of hash file is <identifier>:<hex-salt>:<hash>\n\n")
    exit
  end
-diff --git a/tools/password/md5_lookup.rb b/tools/password/md5_lookup.rb
-index 1c0b919..2c3bc68 100755
 --- a/tools/password/md5_lookup.rb
 +++ b/tools/password/md5_lookup.rb
-@@ -271,7 +271,7 @@ module Md5LookupUtility
+@@ -271,7 +271,7 @@
      def self.get_parsed_options
        options = {}
        parser = OptionParser.new do |opt|
@@ -205,11 +177,9 @@ index 1c0b919..2c3bc68 100755
          opt.separator ''
          opt.separator 'Specific options:'
  
-diff --git a/tools/recon/makeiplist.rb b/tools/recon/makeiplist.rb
-index 4d38f6f..85765fa 100755
 --- a/tools/recon/makeiplist.rb
 +++ b/tools/recon/makeiplist.rb
-@@ -33,7 +33,7 @@ class OptsConsole
+@@ -33,7 +33,7 @@
  
      opts = OptionParser.new do |opts|
        opts.banner = %Q|This script takes a list of ranges and converts it to a per line IP list.
@@ -218,3 +188,4 @@ index 4d38f6f..85765fa 100755
  
        opts.separator ""
        opts.separator "Specific options:"
+

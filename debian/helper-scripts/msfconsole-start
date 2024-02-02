@@ -1,5 +1,5 @@
 #!/bin/bash
-pkexec service postgresql start
-pkexec msfdb init
-pkexec msfdb start
-pkexec msfconsole
+sudo service postgresql start
+sudo msfdb init
+sudo msfdb start
+sudo msfconsole
