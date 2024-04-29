@@ -4,37 +4,55 @@
 
 # A mixin used for providing Modules with post-exploitation options and helper methods
 #
-module Msf::OptionalSession
-  include Msf::SessionCompatibility
+module Msf
+  module OptionalSession
+    include Msf::SessionCompatibility
 
-  def initialize(info = {})
-    super
-    if framework.features.enabled?(Msf::FeatureManager::SMB_SESSION_TYPE)
-      register_options(
-        [
-          Msf::OptInt.new('SESSION', [ false, 'The session to run this module on' ]),
-          Msf::Opt::RHOST(nil, false),
-          Msf::Opt::RPORT(nil, false)
-        ]
-      )
+    # Validates options depending on whether we are using  SESSION or an RHOST for our connection
+    def validate
+      super
+      return unless optional_session_enabled?
+
+      # If the session is set use that by default regardless of rhost being (un)set
+      if session
+        validate_session
+      elsif rhost
+        validate_rhost
+      else
+        raise Msf::OptionValidateError.new(message: 'A SESSION or RHOST must be provided')
+      end
     end
 
-    if framework.features.enabled?(Msf::FeatureManager::POSTGRESQL_SESSION_TYPE)
-      register_options(
-        [
-          Msf::OptInt.new('SESSION', [ false, 'The session to run this module on' ]),
-          Msf::OptString.new('DATABASE', [ false, 'The database to authenticate against', 'postgres']),
-          Msf::OptString.new('USERNAME', [ false, 'The username to authenticate as', 'postgres']),
-          Msf::Opt::RHOST(nil, false),
-          Msf::Opt::RPORT(nil, false)
-        ]
-      )
+    def session
+      return nil unless optional_session_enabled?
+
+      super
     end
-  end
 
-  def session
-    return nil unless (framework.features.enabled?(Msf::FeatureManager::SMB_SESSION_TYPE) || framework.features.enabled?(Msf::FeatureManager::POSTGRESQL_SESSION_TYPE))
+    protected
 
-    super
+    # Used to validate options when RHOST has been set
+    def validate_rhost
+      validate_group('RHOST')
+    end
+
+    # Used to validate options when SESSION has been set
+    def validate_session
+      issues = {}
+      if session_types && !session_types.include?(session.type)
+        issues['SESSION'] = "Incompatible session type: #{session.type}. This module works with: #{session_types.join(', ')}."
+      end
+      raise Msf::OptionValidateError.new(issues.keys.to_a, reasons: issues) unless issues.empty?
+
+      validate_group('SESSION')
+    end
+
+    # Validates the options within an option group
+    #
+    # @param group_name [String] Name of the option group
+    def validate_group(group_name)
+      option_group = options.groups[group_name]
+      option_group.validate(options, datastore) if option_group
+    end
   end
 end

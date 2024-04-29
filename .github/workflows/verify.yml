@@ -33,7 +33,7 @@ jobs:
     name: Docker Build
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: docker-compose build
         run: |
@@ -76,7 +76,7 @@ jobs:
         include:
           - os: ubuntu-latest
             ruby: '3.1'
-            test_cmd: 'bundle exec rake rspec-rerun:spec SPEC_OPTS="--tag content" DATASTORE_FALLBACKS=1'
+            test_cmd: 'bundle exec rake rspec-rerun:spec SPEC_OPTS="--tag content" MSF_FEATURE_DEFER_MODULE_LOADS=1'
         test_cmd:
           - bundle exec rake rspec-rerun:spec SPEC_OPTS="--tag content"
           - bundle exec rake rspec-rerun:spec SPEC_OPTS="--tag ~content"
@@ -93,7 +93,7 @@ jobs:
         run: sudo apt-get install -y --no-install-recommends libpcap-dev graphviz
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Ruby
         env:
