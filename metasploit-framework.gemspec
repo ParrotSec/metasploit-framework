@@ -72,7 +72,7 @@ Gem::Specification.new do |spec|
   # are needed when there's no database
   spec.add_runtime_dependency 'metasploit-model'
   # Needed for Meterpreter
-  spec.add_runtime_dependency 'metasploit-payloads', '2.0.165'
+  spec.add_runtime_dependency 'metasploit-payloads', '2.0.166'
   # Needed for the next-generation POSIX Meterpreter
   spec.add_runtime_dependency 'metasploit_payloads-mettle', '1.0.26'
   # Needed by msfgui and other rpc components
@@ -147,7 +147,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'net-ssh'
   spec.add_runtime_dependency 'ed25519' # Adds ed25519 keys for net-ssh
   spec.add_runtime_dependency 'bcrypt_pbkdf'
-  spec.add_runtime_dependency 'ruby_smb', '~> 3.3.0'
+  spec.add_runtime_dependency 'ruby_smb', '~> 3.3.3'
   spec.add_runtime_dependency 'net-imap' # Used in Postgres auth for its SASL stringprep implementation
   spec.add_runtime_dependency 'net-ldap'
   spec.add_runtime_dependency 'net-smtp'
@@ -198,7 +198,7 @@ Gem::Specification.new do |spec|
   # Needed by some modules
   spec.add_runtime_dependency 'rubyzip'
   # Needed for some post modules
-  spec.add_runtime_dependency 'sqlite3'
+  spec.add_runtime_dependency 'sqlite3', '1.6.6'
   # required for Time::TZInfo in ActiveSupport
   spec.add_runtime_dependency 'tzinfo'
   # Needed so that disk size output isn't horrible
@@ -231,7 +231,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'faye-websocket'
   spec.add_runtime_dependency 'eventmachine'
 
-  spec.add_runtime_dependency 'faraday'
+  spec.add_runtime_dependency 'faraday', '2.7.11'
   spec.add_runtime_dependency 'faraday-retry'
 
   # Required for windows terminal colors as of Ruby 3.0
