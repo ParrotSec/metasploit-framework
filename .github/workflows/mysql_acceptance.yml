@@ -36,6 +36,7 @@ on:
       - 'spec/acceptance/**'
       - 'spec/support/acceptance/**'
       - 'spec/acceptance_spec_helper.rb'
+      - '.github/**'
 #   Example of running as a cron, to weed out flaky tests
 #  schedule:
 #    - cron: '*/15 * * * *'
@@ -65,12 +66,11 @@ jobs:
           - ubuntu-latest
         target:
           - { version: "mariadb:latest", health_cmd: "mariadb -uroot -ppassword -e 'SELECT version()'" }
-          - { version: "mariadb:5.5.42", health_cmd: "mysql -uroot -ppassword -e 'SELECT version()'" }
           - { version: "mysql:latest", health_cmd: "mysql -uroot -ppassword -e 'SELECT version()'" }
-          - { version: "mysql:5.5.42", health_cmd: "mysql -uroot -ppassword -e 'SELECT version()'" }
 
     env:
       RAILS_ENV: test
+      BUNDLE_WITHOUT: "coverage development pcap"
 
     name: ${{ matrix.target.version }} - ${{ matrix.os }} - Ruby ${{ matrix.ruby }}
     steps:
@@ -82,7 +82,6 @@ jobs:
 
       - name: Setup Ruby
         env:
-          BUNDLE_WITHOUT: "coverage development pcap"
           # Nokogiri doesn't release pre-compiled binaries for preview versions of Ruby; So force compilation with BUNDLE_FORCE_RUBY_PLATFORM
           BUNDLE_FORCE_RUBY_PLATFORM: "${{ contains(matrix.ruby, 'preview') && 'true' || 'false' }}"
         uses: ruby/setup-ruby@v1
@@ -141,7 +140,6 @@ jobs:
       - name: Setup Ruby
         if: always()
         env:
-          BUNDLE_WITHOUT: "coverage development"
           BUNDLE_FORCE_RUBY_PLATFORM: true
         uses: ruby/setup-ruby@v1
         with:

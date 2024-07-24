@@ -26,6 +26,9 @@ module Msf
     POSTGRESQL_SESSION_TYPE = 'postgresql_session_type'
     MYSQL_SESSION_TYPE = 'mysql_session_type'
     MSSQL_SESSION_TYPE = 'mssql_session_type'
+    LDAP_SESSION_TYPE = 'ldap_session_type'
+    SHOW_SUCCESSFUL_LOGINS = 'show_successful_logins'
+
     DEFAULTS = [
       {
         name: WRAPPED_TABLES,
@@ -93,6 +96,20 @@ module Msf
         requires_restart: true,
         default_value: true,
         developer_notes: 'Enabled in Metasploit 6.4.x'
+      }.freeze,
+      {
+        name: LDAP_SESSION_TYPE,
+        description: 'When enabled will allow for the creation/use of LDAP sessions',
+        requires_restart: true,
+        default_value: false,
+        developer_notes: 'To be enabled by default after appropriate testing'
+      }.freeze,
+      {
+        name: SHOW_SUCCESSFUL_LOGINS,
+        description: 'When enabled scanners/login modules will return a table off successful logins once the module completes',
+        requires_restart: false,
+        default_value: false,
+        developer_notes: 'To be enabled after appropriate testing'
       }.freeze,
       {
         name: DNS,

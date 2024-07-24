@@ -88,18 +88,10 @@ module Metasploit::Framework
     # @yieldparam credential [Metasploit::Framework::Credential]
     # @return [void]
     def each_filtered
-      if password_spray
-        each_unfiltered_password_first do |credential|
-          next unless self.filter.nil? || self.filter.call(credential)
+      each_unfiltered do |credential|
+        next unless self.filter.nil? || self.filter.call(credential)
 
-          yield credential
-        end
-      else
-        each_unfiltered_username_first do |credential|
-          next unless self.filter.nil? || self.filter.call(credential)
-
-          yield credential
-        end
+        yield credential
       end
     end
 
@@ -120,6 +112,9 @@ module Metasploit::Framework
       end
       if blank_passwords
         yield Metasploit::Framework::Credential.new(private: "", realm: realm, private_type: :password)
+      end
+      if nil_passwords
+        yield Metasploit::Framework::Credential.new(private: nil, realm: realm, private_type: :password)
       end
       if pass_fd
         pass_fd.each_line do |pass_from_file|
@@ -177,6 +172,12 @@ module Metasploit::Framework
   end
 
   class CredentialCollection < PrivateCredentialCollection
+    # @!attribute password_spray
+    #   Whether password spray is enabled. When true, each password is tried against each username first.
+    #   Otherwise the default bruteforce logic will attempt all passwords against the first user, before
+    #   continuing to the next user
+    #
+    #   @return [Boolean]
     attr_accessor :password_spray
 
     # @!attribute additional_publics
@@ -233,6 +234,29 @@ module Metasploit::Framework
       additional_publics << public_str
     end
 
+    # Combines all the provided credential sources into a stream of {Credential}
+    # objects, yielding them one at a time
+    #
+    # @yieldparam credential [Metasploit::Framework::Credential]
+    # @return [void]
+    def each_filtered
+      if password_spray
+        each_unfiltered_password_first do |credential|
+          next unless self.filter.nil? || self.filter.call(credential)
+
+          yield credential
+        end
+      else
+        each_unfiltered_username_first do |credential|
+          next unless self.filter.nil? || self.filter.call(credential)
+
+          yield credential
+        end
+      end
+    end
+
+    alias each each_filtered
+
     # When password spraying is enabled, do first passwords then usernames
     #  i.e.
     #   username1:password1
@@ -282,19 +306,19 @@ module Metasploit::Framework
         File.open(pass_file, 'r:binary') do |pass_fd|
           pass_fd.each_line do |pass_from_file|
             pass_from_file.chomp!
+            if username.present?
+              yield Metasploit::Framework::Credential.new(public: username, private: pass_from_file, realm: realm, private_type: :password)
+            end
             if user_as_pass
               yield Metasploit::Framework::Credential.new(public: pass_from_file, private: pass_from_file, realm: realm, private_type: :password)
             end
-            if user_fd
-              user_fd.each_line do |user_from_file|
-                user_from_file.chomp!
-                yield Metasploit::Framework::Credential.new(public: user_from_file, private: pass_from_file, realm: realm, private_type: private_type(pass_from_file))
-              end
-              user_fd.seek(0)
+            next unless user_fd
+
+            user_fd.each_line do |user_from_file|
+              user_from_file.chomp!
+              yield Metasploit::Framework::Credential.new(public: user_from_file, private: pass_from_file, realm: realm, private_type: private_type(pass_from_file))
             end
-            additional_privates.each do |add_private|
-              yield Metasploit::Framework::Credential.new(public: user_from_file, private: add_private, realm: realm, private_type: private_type(add_private))
-            end
+            user_fd.seek(0)
           end
         end
       end
@@ -313,6 +337,17 @@ module Metasploit::Framework
         end
       end
 
+      additional_privates.each do |add_private|
+        if username.present?
+          yield Metasploit::Framework::Credential.new(public: username, private: add_private, realm: realm, private_type: private_type(add_private))
+        end
+        user_fd.each_line do |user_from_file|
+          user_from_file.chomp!
+          yield Metasploit::Framework::Credential.new(public: user_from_file, private: add_private, realm: realm, private_type: private_type(add_private))
+        end
+        user_fd.seek(0)
+      end
+
       additional_publics.each do |add_public|
         if password.present?
           yield Metasploit::Framework::Credential.new(public: add_public, private: password, realm: realm, private_type: private_type(password) )
@@ -322,6 +357,9 @@ module Metasploit::Framework
         end
         if blank_passwords
           yield Metasploit::Framework::Credential.new(public: add_public, private: "", realm: realm, private_type: :password)
+        end
+        if nil_passwords
+          yield Metasploit::Framework::Credential.new(public: add_public, private: nil, realm: realm, private_type: :password)
         end
         if user_fd
           user_fd.each_line do |user_from_file|
