@@ -36,6 +36,7 @@ on:
       - 'spec/acceptance/**'
       - 'spec/support/acceptance/**'
       - 'spec/acceptance_spec_helper.rb'
+      - '.github/**'
 #   Example of running as a cron, to weed out flaky tests
 #  schedule:
 #    - cron: '*/15 * * * *'
@@ -57,6 +58,7 @@ jobs:
       RAILS_ENV: test
       SMB_USERNAME: acceptance_tests_user
       SMB_PASSWORD: acceptance_tests_password
+      BUNDLE_WITHOUT: "coverage development pcap"
 
     name: SMB Acceptance - ${{ matrix.os }} - Ruby ${{ matrix.ruby }}
     steps:
@@ -74,7 +76,6 @@ jobs:
 
       - name: Setup Ruby
         env:
-          BUNDLE_WITHOUT: "coverage development pcap"
           # Nokogiri doesn't release pre-compiled binaries for preview versions of Ruby; So force compilation with BUNDLE_FORCE_RUBY_PLATFORM
           BUNDLE_FORCE_RUBY_PLATFORM: "${{ contains(matrix.ruby, 'preview') && 'true' || 'false' }}"
         uses: ruby/setup-ruby@v1
@@ -125,7 +126,6 @@ jobs:
       - name: Setup Ruby
         if: always()
         env:
-          BUNDLE_WITHOUT: "coverage development"
           BUNDLE_FORCE_RUBY_PLATFORM: true
         uses: ruby/setup-ruby@v1
         with:

@@ -31,11 +31,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
 
+    env:
+      BUNDLE_WITHOUT: "coverage development pcap"
+
     strategy:
       fail-fast: true
       matrix:
         ruby:
-          - '3.0'
+          - '3.1'
 
     name: Lint msftidy
     steps:
@@ -53,8 +56,6 @@ jobs:
         with:
           ruby-version: '${{ matrix.ruby }}'
           bundler-cache: true
-        env:
-          BUNDLE_WITHOUT: "coverage development pcap"
 
       - name: Run msftidy
         run: |

@@ -1,6 +1,7 @@
 class MetasploitModule < Msf::Auxiliary
 
   include Msf::Exploit::Remote::LDAP
+  include Msf::OptionalSession::LDAP
 
   ADS_GROUP_TYPE_BUILTIN_LOCAL_GROUP = 0x00000001
   ADS_GROUP_TYPE_GLOBAL_GROUP = 0x00000002
@@ -177,7 +178,7 @@ class MetasploitModule < Msf::Auxiliary
   def convert_sids_to_human_readable_name(sids_array)
     output = []
     for sid in sids_array
-      raw_filter = "(objectSID=#{sid})"
+      raw_filter = "(objectSID=#{ldap_escape_filter(sid.to_s)})"
       attributes = ['sAMAccountName', 'name']
       base_prefix = 'CN=Configuration'
       sid_entry = query_ldap_server(raw_filter, attributes, base_prefix: base_prefix) # First try with prefix to find entries that may be group specific.
@@ -343,7 +344,7 @@ class MetasploitModule < Msf::Auxiliary
     # have permissions to enroll in certificates on each server.
 
     @vuln_certificate_details.each_key do |certificate_template|
-      certificate_enrollment_raw_filter = "(&(objectClass=pKIEnrollmentService)(certificateTemplates=#{certificate_template}))"
+      certificate_enrollment_raw_filter = "(&(objectClass=pKIEnrollmentService)(certificateTemplates=#{ldap_escape_filter(certificate_template.to_s)}))"
       attributes = ['cn', 'dnsHostname', 'ntsecuritydescriptor']
       base_prefix = 'CN=Enrollment Services,CN=Public Key Services,CN=Services,CN=Configuration'
       enrollment_ca_data = query_ldap_server(certificate_enrollment_raw_filter, attributes, base_prefix: base_prefix)
@@ -417,7 +418,7 @@ class MetasploitModule < Msf::Auxiliary
 
     if pki_object.nil?
       pki_object = query_ldap_server(
-        "(&(objectClass=msPKI-Enterprise-Oid)(msPKI-Cert-Template-OID=#{oid}))",
+        "(&(objectClass=msPKI-Enterprise-Oid)(msPKI-Cert-Template-OID=#{ldap_escape_filter(oid.to_s)}))",
         nil,
         base_prefix: 'CN=OID,CN=Public Key Services,CN=Services,CN=Configuration'
       )&.first
@@ -459,7 +460,7 @@ class MetasploitModule < Msf::Auxiliary
       else
         print_status('Discovering base DN automatically')
 
-        unless (@base_dn = discover_base_dn(ldap))
+        unless (@base_dn = ldap.base_dn)
           fail_with(Failure::NotFound, "Couldn't discover base DN!")
         end
       end
@@ -473,9 +474,13 @@ class MetasploitModule < Msf::Auxiliary
       find_enrollable_vuln_certificate_templates
       print_vulnerable_cert_info
     end
+  rescue Errno::ECONNRESET
+    fail_with(Failure::Disconnected, 'The connection was reset.')
   rescue Rex::ConnectionError => e
-    print_error("#{e.class}: #{e.message}")
+    fail_with(Failure::Unreachable, e.message)
+  rescue Rex::Proto::Kerberos::Model::Error::KerberosError => e
+    fail_with(Failure::NoAccess, e.message)
   rescue Net::LDAP::Error => e
-    print_error("#{e.class}: #{e.message}")
+    fail_with(Failure::Unknown, "#{e.class}: #{e.message}")
   end
 end
