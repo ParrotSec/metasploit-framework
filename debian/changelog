@@ -1,3 +1,9 @@
+metasploit-framework (6.4.36-0parrot1) lory-updates; urgency=medium
+
+  * New upstream version 6.4.36
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Thu, 14 Nov 2024 14:32:56 +0100
+
 metasploit-framework (6.4.6-0parrot1) lory-updates; urgency=medium
 
   * New upstream version 6.4.6
