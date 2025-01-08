@@ -11,16 +11,17 @@ diff --git a/metasploit-framework.gemspec b/metasploit-framework.gemspec
 index 9f00a10c6..9a167f24d 100644
 --- a/metasploit-framework.gemspec
 +++ b/metasploit-framework.gemspec
-@@ -239,4 +239,9 @@ Gem::Specification.new do |spec|
-   # Do not use this to process untrusted PNG files! This is only to be used
-   # to generate PNG files, not to parse untrusted PNG files.
-   spec.add_runtime_dependency 'chunky_png'
-+
+@@ -255,6 +255,10 @@
+ 
+   # Needed for multiline REPL support for interactive SQL sessions
+   spec.add_runtime_dependency 'reline'
++  
 +  # Add missing gem oci8 only for amd64 and i386 (oracle packages are only
-+  # available for these oachitectures in Kali)
++  # available for these architectures)
 +  spec.add_runtime_dependency 'ruby-oci8'
-+
- end
+ 
+   # Needed to parse sections of ELF files in order to retrieve symbols
+   spec.add_runtime_dependency 'elftools'
 -- 
 2.39.2
 
