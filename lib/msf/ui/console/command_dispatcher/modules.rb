@@ -380,11 +380,12 @@ module Msf
             print_line
             print_line "Keywords:"
             {
-              'adapter'     => 'Modules with a matching adater reference name',
+              'adapter'     => 'Modules with a matching adapter reference name',
               'aka'         => 'Modules with a matching AKA (also-known-as) name',
               'author'      => 'Modules written by this author',
               'arch'        => 'Modules affecting this architecture',
               'bid'         => 'Modules with a matching Bugtraq ID',
+              'osvdb'       => 'Modules with a matching OSVDB ID',
               'cve'         => 'Modules with a matching CVE ID',
               'edb'         => 'Modules with a matching Exploit-DB ID',
               'check'       => 'Modules that support the \'check\' method',
