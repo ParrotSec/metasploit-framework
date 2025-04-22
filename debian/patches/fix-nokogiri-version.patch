@@ -1,0 +1,15 @@
+Description: Fix nokogiri version
+Author: Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>
+Last-Update: 2025-04-22
+
+--- metasploit-framework-6.4.58.orig/metasploit-framework.gemspec
++++ metasploit-framework-6.4.58/metasploit-framework.gemspec
+@@ -85,7 +85,7 @@ Gem::Specification.new do |spec|
+   # NTLM authentication
+   spec.add_runtime_dependency 'rubyntlm'
+   # Needed by for XML parsing
+-  spec.add_runtime_dependency 'nokogiri', '1.13.10'
++  spec.add_runtime_dependency 'nokogiri', '1.14'
+   # Needed by db.rb and Msf::Exploit::Capture
+   spec.add_runtime_dependency 'packetfu'
+   # For sniffer and raw socket modules

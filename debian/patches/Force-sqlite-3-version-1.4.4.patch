@@ -1,0 +1,27 @@
+Since sqlite3 version 1.5.0, upstream provides pre-compiled gems for
+various architectures. But it fails on armel: the gem for "arm-linux"
+which is for armhf. So force version 1.4.4
+
+dh_shlibdeps --exclude=/data/ --exclude=/modules/
+objdump: debian/metasploit-framework/usr/share/metasploit-framework/vendor/bundle/ruby/3.1.0/gems/metasploit_payloads-mettle-1.0.26/build/powerpc64le-linux-musl/bin/mettle.bin: file format not recognized
+objdump: debian/metasploit-framework/usr/share/metasploit-framework/vendor/bundle/ruby/3.1.0/gems/metasploit_payloads-mettle-1.0.26/build/powerpc64le-linux-musl/bin/mettle: file format not recognized
+objdump: debian/metasploit-framework/usr/share/metasploit-framework/vendor/bundle/ruby/3.1.0/gems/metasploit_payloads-mettle-1.0.26/build/mips64-linux-muslsf/bin/sniffer.bin: file format not recognized
+objdump: debian/metasploit-framework/usr/share/metasploit-framework/vendor/bundle/ruby/3.1.0/gems/metasploit_payloads-mettle-1.0.26/build/i486-linux-musl/bin/sniffer.bin: file format not recognized
+objdump: debian/metasploit-framework/usr/share/metasploit-framework/vendor/bundle/ruby/3.1.0/gems/metasploit_payloads-mettle-1.0.26/build/x86_64-linux-musl/bin/mettle: file format not recognized
+dpkg-shlibdeps: error: cannot find library ld-linux-armhf.so.3 needed by debian/metasploit-framework/usr/share/metasploit-framework/vendor/bundle/ruby/3.1.0/gems/sqlite3-1.6.6-arm-linux/lib/sqlite3/2.7/sqlite3_native.so (ELF format: 'elf32-littlearm' abi: 'ELF:32:l:arm:0'; RPATH: '/usr/local/rake-compiler/ruby/arm-linux-gnueabihf/ruby-2.7.0/lib')
+
+---
+ metasploit-framework.gemspec | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/metasploit-framework.gemspec
++++ b/metasploit-framework.gemspec
+@@ -206,7 +206,7 @@
+   # Needed by some modules
+   spec.add_runtime_dependency 'rubyzip'
+   # Needed for some post modules
+-  spec.add_runtime_dependency 'sqlite3', '1.7.3'
++  spec.add_runtime_dependency 'sqlite3', '1.4.4'
+   # required for Time::TZInfo in ActiveSupport
+   spec.add_runtime_dependency 'tzinfo'
+   # Needed so that disk size output isn't horrible
