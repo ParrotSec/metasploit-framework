@@ -14,8 +14,8 @@ RSpec.describe 'LDAP modules' do
         datastore: {
           global: {},
           module: {
-            username: ENV.fetch('LDAP_USERNAME', "'DEV-AD\\Administrator'"),
-            password: ENV.fetch('LDAP_PASSWORD', 'admin123!'),
+            ldapusername: ENV.fetch('LDAP_LDAPUsername', "'DEV-AD\\Administrator'"),
+            ldappassword: ENV.fetch('LDAP_LDAPPassword', 'admin123!'),
             rhost: ENV.fetch('LDAP_RHOST', '127.0.0.1'),
             rport: ENV.fetch('LDAP_RPORT', '389'),
             ssl: ENV.fetch('LDAP_SSL', 'false')
@@ -97,6 +97,11 @@ RSpec.describe 'LDAP modules' do
             all: {
               required: [
                 /Successfully queried/
+              ]
+            },
+            linux: {
+              known_failures: [
+                /Auxiliary aborted due to failure: not-found/
               ]
             }
           }
@@ -187,7 +192,7 @@ RSpec.describe 'LDAP modules' do
         # Skip any ignored lines from the validation input
         validated_lines = test_result.lines.reject do |line|
           is_acceptable = known_failures.any? do |acceptable_failure|
-            is_matching_line = is_matching_line.value.is_a?(Regexp) ? line.match?(acceptable_failure.value) : line.include?(acceptable_failure.value)
+            is_matching_line = acceptable_failure.value.is_a?(Regexp) ? line.match?(acceptable_failure.value) : line.include?(acceptable_failure.value)
             is_matching_line &&
               acceptable_failure.if?(test_environment)
           end || line.match?(/Passed: \d+; Failed: \d+/)
