@@ -1232,6 +1232,16 @@ require 'digest/sha1'
     to_exe_elf(framework, opts, "template_aarch64_linux.bin", code)
   end
 
+  # self.to_linux_ppc64_elf
+  #
+  # @param framework [Msf::Framework]
+  # @param code       [String]
+  # @param opts       [Hash]
+  # @option           [String] :template
+  # @return           [String] Returns an elf
+  def self.to_linux_ppc64_elf(framework, code, opts = {})
+    to_exe_elf(framework, opts, "template_ppc64_linux.bin", code, true)
+  end
   # self.to_linux_mipsle_elf
   # Little Endian
   # @param framework [Msf::Framework]
@@ -1717,8 +1727,8 @@ require 'digest/sha1'
 </servlet>
 </web-app>
 }
-    web_xml.gsub!(/NAME/, app_name)
-    web_xml.gsub!(/PAYLOAD/, jsp_name)
+    web_xml.gsub!('NAME', app_name)
+    web_xml.gsub!('PAYLOAD', jsp_name)
 
     zip = Rex::Zip::Archive.new
     zip.add_file('META-INF/', '', meta_inf)
@@ -2178,6 +2188,8 @@ require 'digest/sha1'
           to_linux_x64_elf(framework, code, exeopts)
         when ARCH_AARCH64
           to_linux_aarch64_elf(framework, code, exeopts)
+        when ARCH_PPC64
+          to_linux_ppc64_elf(framework, code, exeopts)
         when ARCH_ARMLE
           to_linux_armle_elf(framework, code, exeopts)
         when ARCH_MIPSBE

@@ -303,7 +303,7 @@ module Auxiliary::Report
 
     timestamp  = opts[:timestamp]
     username   = opts[:username]
-    mname      = self.fullname # use module name when reporting attempt for correlation
+    mname      = opts[:module_fullname] || self.fullname # use module name when reporting attempt for correlation
 
     # report_vuln is only called in an identified case, consider setting value reported here
     attempt_info = {
@@ -515,7 +515,7 @@ module Auxiliary::Report
 
     # This will probably evolve into a new database table
     report_note(
-      :data => full_path.dup,
+      :data => { :full_path => full_path.dup },
       :type => "#{ltype}.localpath"
     )
 
@@ -590,4 +590,3 @@ module Auxiliary::Report
 
 end
 end
-

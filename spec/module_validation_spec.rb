@@ -25,6 +25,7 @@ RSpec.describe ModuleValidation::Validator do
       file_path: 'modules/exploits/windows/smb/cve_2020_0796_smbghost.rb',
       type: 'exploit',
       platform: Msf::Module::PlatformList.new(Msf::Module::Platform::Windows),
+      arch: [Rex::Arch::ARCH_X86],
       targets: [Msf::Module::Target.new('Windows 10 v1903-1909 x64', { 'Platform' => 'win', 'Arch' => ['x64'] })],
       description: %q{
           A vulnerability exists within the Microsoft Server Message Block 3.1.1 (SMBv3) protocol that can be leveraged to
@@ -184,6 +185,16 @@ RSpec.describe ModuleValidation::Validator do
       end
     end
 
+    context 'when the name has non-printable ascii characters' do
+      let(:mod_options) do
+        super().merge(name: 'Testing human-readable printable ascii characters ≤')
+      end
+
+      it 'has errors' do
+        expect(subject.errors.full_messages).to eq ['Name must only contain human-readable printable ascii characters']
+      end
+    end
+
     context 'when the module file path is not snake case' do
       let(:mod_options) do
         super().merge(file_path: 'modules/exploits/windows/smb/CVE_2020_0796_smbghost.rb')
@@ -204,6 +215,16 @@ RSpec.describe ModuleValidation::Validator do
       end
     end
 
+    context 'when the description has non-printable ascii characters' do
+      let(:mod_options) do
+        super().merge(description: "Testing human-readable printable ascii characters ≤\n\tand newlines/tabs")
+      end
+
+      it 'has errors' do
+        expect(subject.errors.full_messages).to eq ['Description must only contain human-readable printable ascii characters, including newlines and tabs']
+      end
+    end
+
     context 'when the platform value is invalid', skip_before: true do
       let(:mod_options) do
         super().merge(platform: Msf::Module::PlatformList.new('foo'))
@@ -214,6 +235,22 @@ RSpec.describe ModuleValidation::Validator do
       end
     end
 
+    context 'when the arch array contains a valid value' do
+      it 'has no errors' do
+        expect(subject.errors.full_messages).to be_empty
+      end
+    end
+
+    context 'when the arch array contains an invalid value' do
+      let(:mod_options) do
+        super().merge(arch: ["Rex::Arch::ARCH_X86"])
+      end
+
+      it 'has errors' do
+        expect(subject.errors.full_messages).to eq ["Arch contains invalid values [\"Rex::Arch::ARCH_X86\"] - only [\"x86\", \"x86_64\", \"x64\", \"mips\", \"mipsle\", \"mipsbe\", \"mips64\", \"mips64le\", \"ppc\", \"ppce500v2\", \"ppc64\", \"ppc64le\", \"cbea\", \"cbea64\", \"sparc\", \"sparc64\", \"armle\", \"armbe\", \"aarch64\", \"cmd\", \"php\", \"tty\", \"java\", \"ruby\", \"dalvik\", \"python\", \"nodejs\", \"firefox\", \"zarch\", \"r\", \"riscv32be\", \"riscv32le\", \"riscv64be\", \"riscv64le\", \"loongarch64\"] is allowed"]
+      end
+    end
+
     context 'when the platform is missing and targets does not contain platform values' do
       let(:mod_options) do
         super().merge(platform: nil, targets: [Msf::Module::Target.new('Windows 10 v1903-1909 x64', { 'Arch' => ['x64'] })])
@@ -221,6 +258,50 @@ RSpec.describe ModuleValidation::Validator do
 
       it 'has errors' do
         expect(subject.errors.full_messages).to eq ['Platform must be included either within targets or platform module metadata']
+      end
+    end
+
+    context 'when the notes section contains sentinel values' do
+      let(:mod_options) do
+        new_module_options = {
+          notes: {
+            'Stability' => Msf::UNKNOWN_STABILITY,
+            'SideEffects' => Msf::UNKNOWN_SIDE_EFFECTS,
+            'Reliability' => Msf::UNKNOWN_RELIABILITY,
+          },
+          stability: Msf::UNKNOWN_STABILITY,
+          side_effects: Msf::UNKNOWN_SIDE_EFFECTS,
+          reliability: Msf::UNKNOWN_RELIABILITY,
+        }
+        super().merge(new_module_options)
+      end
+
+      it 'has no errors' do
+        expect(subject.errors.full_messages).to be_empty
+      end
+    end
+
+    context 'when the notes section contains in correct sentinel values' do
+      let(:mod_options) do
+        new_module_options = {
+          notes: {
+            'Stability' => [Msf::UNKNOWN_STABILITY],
+            'SideEffects' => [Msf::UNKNOWN_SIDE_EFFECTS],
+            'Reliability' => [Msf::UNKNOWN_RELIABILITY],
+          },
+          stability: [Msf::UNKNOWN_STABILITY],
+          side_effects: [Msf::UNKNOWN_SIDE_EFFECTS],
+          reliability: [Msf::UNKNOWN_RELIABILITY],
+        }
+        super().merge(new_module_options, rank: Msf::GreatRanking, rank_to_s: 'great')
+      end
+
+      it 'has errors' do
+        expect(subject.errors.full_messages).to eq [
+          "Stability contains invalid values [[\"unknown-stability\"]] - only [\"crash-safe\", \"crash-service-restarts\", \"crash-service-down\", \"crash-os-restarts\", \"crash-os-down\", \"service-resource-loss\", \"os-resource-loss\"] is allowed",
+          "Side effects contains invalid values [[\"unknown-side-effects\"]] - only [\"artifacts-on-disk\", \"config-changes\", \"ioc-in-logs\", \"account-lockouts\", \"account-logout\", \"screen-effects\", \"audio-effects\", \"physical-effects\"] is allowed",
+          "Reliability contains invalid values [[\"unknown-reliability\"]] - only [\"first-attempt-fail\", \"repeatable-session\", \"unreliable-session\", \"event-dependent\"] is allowed"
+        ]
       end
     end
   end
