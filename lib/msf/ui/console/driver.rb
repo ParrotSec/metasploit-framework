@@ -17,7 +17,7 @@ class Driver < Msf::Ui::Driver
   ConfigCore  = "framework/core"
   ConfigGroup = "framework/ui/console"
 
-  DefaultPrompt     = "%undmsf#{Metasploit::Framework::Version::MAJOR}%clr"
+  DefaultPrompt     = "%undmsf%clr"
   DefaultPromptChar = "%clr>"
 
   #
@@ -70,6 +70,16 @@ class Driver < Msf::Ui::Driver
       FeatureManager.instance.load_config
     rescue StandardError => e
       elog(e)
+    end
+
+    # Check if files have been modified and force immediate loading if so
+    has_modified_metasploit_files = !Msf::Modules::Metadata::Store.valid_checksum?
+
+    if has_modified_metasploit_files
+      current_checksum = Msf::Modules::Metadata::Store.get_current_checksum
+      Msf::Modules::Metadata::Store.update_cache_checksum(current_checksum)
+      # Force immediate module loading when files have changed
+      opts['DeferModuleLoads'] = false
     end
 
     if opts['DeferModuleLoads'].nil?
@@ -163,7 +173,8 @@ class Driver < Msf::Ui::Driver
       self.framework.init_module_paths(module_paths: opts['ModulePath'], defer_module_loads: opts['DeferModuleLoads'])
     end
 
-    unless opts['DeferModuleLoads']
+    # Refresh module cache if modules are modified, or we're not deferring loads
+    if has_modified_metasploit_files || !opts['DeferModuleLoads']
       framework.threads.spawn("ModuleCacheRebuild", true) do
         framework.modules.refresh_cache_from_module_files
       end

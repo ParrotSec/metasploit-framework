@@ -32,8 +32,10 @@ module ModuleValidation
     validate :validate_reference_ctx_id
     validate :validate_author_bad_chars
     validate :validate_target_platforms
+    validate :validate_default_target
     validate :validate_description_does_not_contain_non_printable_chars
     validate :validate_name_does_not_contain_non_printable_chars
+    validate :validate_attack_reference_format
 
     attr_reader :mod
 
@@ -83,6 +85,7 @@ module ModuleValidation
     # Acceptable site references
     #
     VALID_REFERENCE_CTX_ID_VALUES = %w[
+      ATT&CK
       CVE
       CWE
       BID
@@ -151,6 +154,33 @@ module ModuleValidation
           if target.platform.blank?
             errors.add :platform, 'must be included either within targets or platform module metadata'
           end
+        end
+      end
+    end
+
+    def validate_default_target
+      return unless respond_to?(:default_target)
+      return if default_target == 0
+
+      number_of_targets = respond_to?(:targets) ? targets.size : 0
+
+      return if default_target < number_of_targets
+
+      errors.add :default_target, "is out of range. Must specify a valid target index between 0 and #{number_of_targets - 1}, got '#{default_target}'"
+    end
+
+    def validate_attack_reference_format
+      references.each do |ref|
+        next unless ref.respond_to?(:ctx_id) && ref.respond_to?(:ctx_val)
+        next unless ref.ctx_id == 'ATT&CK'
+
+        val = ref.ctx_val
+        prefix = val[/\A[A-Z]+/]
+        valid_format = Msf::Mitre::Attack::Categories::PATHS.key?(prefix) && val.match?(/\A#{prefix}[\d.]+\z/)
+        whitespace = val.match?(/\s/)
+
+        unless valid_format && !whitespace
+          errors.add :references, "ATT&CK reference '#{val}' is invalid. Must start with one of #{Msf::Mitre::Attack::Categories::PATHS.keys.inspect} and be followed by digits/periods, no whitespace."
         end
       end
     end
