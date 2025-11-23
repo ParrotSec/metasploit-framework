@@ -3,8 +3,18 @@ Restrictions: allow-stderr, needs-root
 
 Test-Command: debian/tests/runtests.sh test_msfconsole test_msf_db_port_scan test_tools test_msfrpcd test_msfd
 Restrictions: allow-stderr, needs-root, isolation-container, breaks-testbed
-Depends: @, apache2, screen, expect, netcat-traditional, net-tools
+Depends:
+ apache2,
+ expect,
+ net-tools,
+ netcat-traditional,
+ screen,
+ @,
 
 Test-Command: debian/tests/runtests.sh test_windows_meterpreter
 Restrictions: allow-stderr, needs-root, isolation-container, breaks-testbed, skippable
-Depends: @, expect, screen, wine
+Depends:
+ expect,
+ screen,
+ wine,
+ @,

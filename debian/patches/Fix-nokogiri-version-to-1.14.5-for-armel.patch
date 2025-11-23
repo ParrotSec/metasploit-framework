@@ -1,0 +1,19 @@
+From: Kali Developers <devel@kali.org>
+Date: Tue, 13 May 2025 13:51:07 +0200
+Subject: Fix-nokogiri-version-to-1.14.5-for-armel
+
+---
+ metasploit-framework.gemspec | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/metasploit-framework.gemspec
++++ b/metasploit-framework.gemspec
+@@ -85,7 +85,7 @@
+   # NTLM authentication
+   spec.add_runtime_dependency 'rubyntlm'
+   # Needed by for XML parsing
+-  spec.add_runtime_dependency 'nokogiri'
++  spec.add_runtime_dependency 'nokogiri', '1.14.5'
+   # Needed by db.rb and Msf::Exploit::Capture
+   spec.add_runtime_dependency 'packetfu'
+   # For sniffer and raw socket modules

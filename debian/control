@@ -7,53 +7,53 @@ Uploaders:
   Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>
   Nong Hoang Tu <dmknght@parrotsec.org>
 Build-Depends:
-  debhelper-compat (= 12),
-# Dependencies needed to fetch and build the gems in a bundle
-  ruby-dev,
-  bundler,
-  ca-certificates,
-  git,
-  libgmp-dev,
-  libpcap-dev,
-  libpq-dev,
-  libsqlite3-dev,
-  libxml2-dev,
-  libxslt-dev,
-  libffi-dev,
-  oracle-instantclient-basic [amd64 i386],
-  oracle-instantclient-devel (>= 19.3.0.0.0-0kali2) [amd64 i386],
-  oracle-instantclient-sqlplus [amd64 i386],
-  ruby-json (>= 1.8.3),
-  shared-mime-info,
-  zlib1g-dev,
-Standards-Version: 4.5.1
+ bundler,
+ ca-certificates,
+ debhelper-compat (= 13),
+ git,
+ libffi-dev,
+ libgmp-dev,
+ libpcap0.8-dev,
+ libpq-dev,
+ libsqlite3-dev,
+ libxml2-dev,
+ libxslt-dev,
+ libyaml-dev,
+ oracle-instantclient-basic [amd64 i386],
+ oracle-instantclient-devel [amd64 i386],
+ oracle-instantclient-sqlplus [amd64 i386],
+ ruby-dev,
+ ruby-json (>= 1.8.3),
+ shared-mime-info,
+ zlib1g-dev,
+Standards-Version: 4.7.2
 Homepage: https://www.metasploit.com/
-Vcs-Git: https://nest.parrotsec.org/packages/tools/metasploit-framework.git
-Vcs-Browser: https://nest.parrotsec.org/packages/tools/metasploit-framework
-
 
 Package: metasploit-framework
 Architecture: any
 Depends:
-  ${ruby:Depends},
-  postgresql,
-  bundler,
-  john,
-  nasm,
-  nmap,
-  curl,
-  git,
-  wget,
-  python3,
-  rake,
+ bundler,
+ curl,
+ gcc-mingw-w64-i686-win32,
+ gcc-mingw-w64-x86-64-win32,
+ git,
+ john,
+ nasm,
+ nmap,
 # For our own msfdb
-  openssl,
-# Generic dependencies 
-  ${misc:Depends},
-  ${shlibs:Depends},
-  ruby-json (>= 1.8.3),
-Conflicts: parrot-menu (<= 2:2021.02.19)
-Suggests: java7-runtime-headless, default-jdk, clamav, clamav-daemon
+ openssl,
+ postgresql,
+ python3,
+ rake,
+ ruby-json (>= 1.8.3),
+ wget,
+ ${misc:Depends},
+ ${ruby:Depends},
+ ${shlibs:Depends},
+Suggests:
+ clamav,
+ clamav-daemon,
+ default-jre-headless,
 Description: Framework for exploit development and vulnerability research
  The Metasploit Framework is an open source platform that supports
  vulnerability research, exploit development, and the creation of custom

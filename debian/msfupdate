@@ -3,4 +3,5 @@
 set -e
 
 echo "msfupdate is no longer supported when Metasploit is part of the operating
-system. Please use 'apt update; apt install metasploit-framework'"
+system. Checking for updates via the system package manager instead"
+apt update && apt -y install metasploit-framework

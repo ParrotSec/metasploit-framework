@@ -248,7 +248,7 @@ require 'digest/sha1'
       end
 
       # use
-      self.to_win32pe_exe_sub(framework, code, opts)
+      return self.to_win32pe_exe_sub(framework, code, opts)
     end
 
     # Allow the user to specify their own EXE template
@@ -536,6 +536,27 @@ require 'digest/sha1'
     pushes
   end
 
+  # Converts a raw AArch64 payload into a PE executable.
+  #
+  # @param framework [Msf::Framework] The framework instance.
+  # @param code [String] The raw AArch64 shellcode.
+  # @param opts [Hash] The options hash.
+  # @option opts [String] :template The path to a custom PE template.
+  # @return [String] The generated PE executable as a binary string.
+  def self.to_winaarch64pe(framework, code, opts = {})
+    # Use the standard template if not specified by the user.
+    # This helper finds the full path and stores it in opts[:template].
+    set_template_default(opts, 'template_aarch64_windows.exe')
+
+    # Read the template directly from the path now stored in the options.
+    pe = File.read(opts[:template], mode: 'rb')
+
+    # Find the tag and inject the payload
+    bo = find_payload_tag(pe, 'Invalid Windows AArch64 template: missing "PAYLOAD:" tag')
+    pe[bo, code.length] = code.dup
+    pe
+  end
+
   # self.exe_sub_method
   #
   # @param  code [String]
@@ -609,7 +630,6 @@ require 'digest/sha1'
     opts[:exe_type] = :exe_sub
     exe_sub_method(code,opts)
   end
-
   # self.to_win64pe
   #
   # @param framework  [Msf::Framework]  The framework of you want to use
@@ -653,24 +673,10 @@ require 'digest/sha1'
   #
   # @return [String] Windows Service PE file
   def self.to_win32pe_service(framework, code, opts = {})
+    # Allow the user to specify their own service EXE template
     set_template_default(opts, "template_x86_windows_svc.exe")
-    if opts[:sub_method]
-      # Allow the user to specify their own service EXE template
-      opts[:exe_type] = :service_exe
-      return exe_sub_method(code,opts)
-    else
-      ENV['MSF_SERVICENAME'] = opts[:servicename]
-
-      opts[:framework] = framework
-      opts[:payload] = 'stdin'
-      opts[:encoder] = '@x86/service,'+(opts[:serviceencoder] || '')
-
-      # XXX This should not be required, it appears there is a dependency inversion
-      # See https://github.com/rapid7/metasploit-framework/pull/9851
-      venom_generator = Msf::PayloadGenerator.new(opts)
-      code_service = venom_generator.multiple_encode_payload(code)
-      return to_winpe_only(framework, code_service, opts)
-    end
+    opts[:exe_type] = :service_exe
+    exe_sub_method(code,opts)
   end
 
   # self.to_win64pe_service
@@ -2137,6 +2143,8 @@ require 'digest/sha1'
         to_win32pe(framework, code, exeopts)
       when ARCH_X64
         to_win64pe(framework, code, exeopts)
+      when ARCH_AARCH64
+        to_winaarch64pe(framework, code, exeopts)
       end
     when 'exe-service'
       case arch

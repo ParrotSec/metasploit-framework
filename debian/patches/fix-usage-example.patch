@@ -23,11 +23,9 @@ Last-Update: 2018-01-30
  tools/recon/makeiplist.rb          | 2 +-
  15 files changed, 15 insertions(+), 15 deletions(-)
 
-Index: metasploit-framework/tools/exploit/egghunter.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/egghunter.rb
-+++ metasploit-framework/tools/exploit/egghunter.rb
-@@ -20,7 +20,7 @@ module Egghunter
+--- a/tools/exploit/egghunter.rb
++++ b/tools/exploit/egghunter.rb
+@@ -20,7 +20,7 @@
      def self.parse(args)
        options = {}
        parser = OptionParser.new do |opt|
@@ -36,11 +34,9 @@ Index: metasploit-framework/tools/exploit/egghunter.rb
          opt.separator ''
          opt.separator 'Specific options:'
  
-Index: metasploit-framework/tools/exploit/exe2vba.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/exe2vba.rb
-+++ metasploit-framework/tools/exploit/exe2vba.rb
-@@ -23,7 +23,7 @@ $:.unshift(ENV['MSF_LOCAL_LIB']) if ENV[
+--- a/tools/exploit/exe2vba.rb
++++ b/tools/exploit/exe2vba.rb
+@@ -23,7 +23,7 @@
  require 'rex'
  
  def usage
@@ -49,11 +45,9 @@ Index: metasploit-framework/tools/exploit/exe2vba.rb
    exit
  end
  
-Index: metasploit-framework/tools/exploit/exe2vbs.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/exe2vbs.rb
-+++ metasploit-framework/tools/exploit/exe2vbs.rb
-@@ -22,7 +22,7 @@ $:.unshift(ENV['MSF_LOCAL_LIB']) if ENV[
+--- a/tools/exploit/exe2vbs.rb
++++ b/tools/exploit/exe2vbs.rb
+@@ -22,7 +22,7 @@
  require 'rex'
  
  def usage
@@ -62,11 +56,9 @@ Index: metasploit-framework/tools/exploit/exe2vbs.rb
    exit
  end
  
-Index: metasploit-framework/tools/exploit/find_badchars.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/find_badchars.rb
-+++ metasploit-framework/tools/exploit/find_badchars.rb
-@@ -33,7 +33,7 @@ $args = Rex::Parser::Arguments.new(
+--- a/tools/exploit/find_badchars.rb
++++ b/tools/exploit/find_badchars.rb
+@@ -33,7 +33,7 @@
    "-t" => [ true, "The format that the memory contents are in (empty to list)"         ])
  
  def usage
@@ -75,11 +67,9 @@ Index: metasploit-framework/tools/exploit/find_badchars.rb
    exit
  end
  
-Index: metasploit-framework/tools/exploit/java_deserializer.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/java_deserializer.rb
-+++ metasploit-framework/tools/exploit/java_deserializer.rb
-@@ -142,7 +142,7 @@ if __FILE__ == $PROGRAM_NAME
+--- a/tools/exploit/java_deserializer.rb
++++ b/tools/exploit/java_deserializer.rb
+@@ -142,7 +142,7 @@
  
    options = {}
    OptionParser.new do |opts|
@@ -88,11 +78,9 @@ Index: metasploit-framework/tools/exploit/java_deserializer.rb
  
      opts.on("-aID", "--array=ID", "Print detailed information about content array") do |id|
        options[:array] = id
-Index: metasploit-framework/tools/exploit/jsobfu.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/jsobfu.rb
-+++ metasploit-framework/tools/exploit/jsobfu.rb
-@@ -20,7 +20,7 @@ module Jsobfu
+--- a/tools/exploit/jsobfu.rb
++++ b/tools/exploit/jsobfu.rb
+@@ -20,7 +20,7 @@
      def self.parse(args)
        options = {}
        parser = OptionParser.new do |opt|
@@ -101,11 +89,9 @@ Index: metasploit-framework/tools/exploit/jsobfu.rb
          opt.separator ''
          opt.separator 'Specific options:'
  
-Index: metasploit-framework/tools/exploit/metasm_shell.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/metasm_shell.rb
-+++ metasploit-framework/tools/exploit/metasm_shell.rb
-@@ -42,7 +42,7 @@ require 'metasm'
+--- a/tools/exploit/metasm_shell.rb
++++ b/tools/exploit/metasm_shell.rb
+@@ -42,7 +42,7 @@
  @endianness = ""
  
  def usage
@@ -114,11 +100,9 @@ Index: metasploit-framework/tools/exploit/metasm_shell.rb
    exit
  end
  
-Index: metasploit-framework/tools/exploit/pattern_create.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/pattern_create.rb
-+++ metasploit-framework/tools/exploit/pattern_create.rb
-@@ -22,7 +22,7 @@ module PatternCreate
+--- a/tools/exploit/pattern_create.rb
++++ b/tools/exploit/pattern_create.rb
+@@ -22,7 +22,7 @@
      def self.parse(args)
        options = {}
        parser = OptionParser.new do |opt|
@@ -127,11 +111,9 @@ Index: metasploit-framework/tools/exploit/pattern_create.rb
          opt.separator ''
          opt.separator 'Options:'
          opt.on('-l', '--length <length>', Integer, "The length of the pattern") do |len|
-Index: metasploit-framework/tools/exploit/pattern_offset.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/pattern_offset.rb
-+++ metasploit-framework/tools/exploit/pattern_offset.rb
-@@ -22,7 +22,7 @@ module PatternOffset
+--- a/tools/exploit/pattern_offset.rb
++++ b/tools/exploit/pattern_offset.rb
+@@ -22,7 +22,7 @@
      def self.parse(args)
        options = {}
        parser = OptionParser.new do |opt|
@@ -140,11 +122,9 @@ Index: metasploit-framework/tools/exploit/pattern_offset.rb
          opt.separator ''
          opt.separator 'Options:'
  
-Index: metasploit-framework/tools/exploit/pdf2xdp.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/pdf2xdp.rb
-+++ metasploit-framework/tools/exploit/pdf2xdp.rb
-@@ -15,7 +15,7 @@ pdf = ARGV.shift
+--- a/tools/exploit/pdf2xdp.rb
++++ b/tools/exploit/pdf2xdp.rb
+@@ -15,7 +15,7 @@
  xdp = ARGV.shift
  
  if ! xdp then
@@ -153,11 +133,9 @@ Index: metasploit-framework/tools/exploit/pdf2xdp.rb
    exit 1
  end
  
-Index: metasploit-framework/tools/exploit/virustotal.rb
-===================================================================
---- metasploit-framework.orig/tools/exploit/virustotal.rb
-+++ metasploit-framework/tools/exploit/virustotal.rb
-@@ -288,7 +288,7 @@ class OptsConsole
+--- a/tools/exploit/virustotal.rb
++++ b/tools/exploit/virustotal.rb
+@@ -288,7 +288,7 @@
      options = {}
  
      opts = OptionParser.new do |opts|
@@ -166,11 +144,9 @@ Index: metasploit-framework/tools/exploit/virustotal.rb
  
        opts.separator ""
        opts.separator "Specific options:"
-Index: metasploit-framework/tools/password/halflm_second.rb
-===================================================================
---- metasploit-framework.orig/tools/password/halflm_second.rb
-+++ metasploit-framework/tools/password/halflm_second.rb
-@@ -24,7 +24,7 @@ $:.unshift(ENV['MSF_LOCAL_LIB']) if ENV[
+--- a/tools/password/halflm_second.rb
++++ b/tools/password/halflm_second.rb
+@@ -24,7 +24,7 @@
  require 'rex'
  
  def usage
@@ -179,11 +155,9 @@ Index: metasploit-framework/tools/password/halflm_second.rb
    exit
  end
  
-Index: metasploit-framework/tools/password/hmac_sha1_crack.rb
-===================================================================
---- metasploit-framework.orig/tools/password/hmac_sha1_crack.rb
-+++ metasploit-framework/tools/password/hmac_sha1_crack.rb
-@@ -28,7 +28,7 @@ require 'rex'
+--- a/tools/password/hmac_sha1_crack.rb
++++ b/tools/password/hmac_sha1_crack.rb
+@@ -28,7 +28,7 @@
  require 'openssl'
  
  def usage
@@ -192,11 +166,9 @@ Index: metasploit-framework/tools/password/hmac_sha1_crack.rb
    $stderr.puts("The format of hash file is <identifier>:<hex-salt>:<hash>\n\n")
    exit
  end
-Index: metasploit-framework/tools/password/md5_lookup.rb
-===================================================================
---- metasploit-framework.orig/tools/password/md5_lookup.rb
-+++ metasploit-framework/tools/password/md5_lookup.rb
-@@ -271,7 +271,7 @@ module Md5LookupUtility
+--- a/tools/password/md5_lookup.rb
++++ b/tools/password/md5_lookup.rb
+@@ -271,7 +271,7 @@
      def self.get_parsed_options
        options = {}
        parser = OptionParser.new do |opt|
@@ -205,11 +177,9 @@ Index: metasploit-framework/tools/password/md5_lookup.rb
          opt.separator ''
          opt.separator 'Specific options:'
  
-Index: metasploit-framework/tools/recon/makeiplist.rb
-===================================================================
---- metasploit-framework.orig/tools/recon/makeiplist.rb
-+++ metasploit-framework/tools/recon/makeiplist.rb
-@@ -33,7 +33,7 @@ class OptsConsole
+--- a/tools/recon/makeiplist.rb
++++ b/tools/recon/makeiplist.rb
+@@ -33,7 +33,7 @@
  
      opts = OptionParser.new do |opts|
        opts.banner = %Q|This script takes a list of ranges and converts it to a per line IP list.

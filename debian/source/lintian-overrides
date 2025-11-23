@@ -1,9 +1,12 @@
 # Ignore problems on data
-source-is-missing data/*
-source-contains-prebuilt-ms-help-file data/*
-source-contains-prebuilt-windows-binary data/*
+source-is-missing [data/*]
+source-contains-prebuilt-ms-help-file [data/*]
+source-contains-prebuilt-windows-binary [data/*]
+elf-error * [data/*]
 
 # We don't care about external/* it's not used
-ancient-libtool external/*
-source-contains-prebuilt-windows-binary external/source/*
-source-is-missing external/source/flash_detector/bin/*
+ancient-libtool [external/*]
+source-contains-prebuilt-windows-binary [external/source/*]
+source-is-missing [external/source/flash_detector/bin/*]
+
+source-contains-prebuilt-windows-binary [tools/memdump/memdump.exe]

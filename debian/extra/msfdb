@@ -195,7 +195,7 @@ run_db() {
   fi
 
   ## Run metasploit-framework's main console
-  msfconsole
+  exec msfconsole
 }
 
 usage() {

@@ -1,3 +1,7 @@
+From: Sophie Brun <sophie@offensive-security.com>
+Date: Thu, 9 May 2024 11:44:21 +0200
+Subject: Force sqlite 3 version 1.4.4
+
 Since sqlite3 version 1.5.0, upstream provides pre-compiled gems for
 various architectures. But it fails on armel: the gem for "arm-linux"
 which is for armhf. So force version 1.4.4
@@ -16,7 +20,7 @@ dpkg-shlibdeps: error: cannot find library ld-linux-armhf.so.3 needed by debian/
 
 --- a/metasploit-framework.gemspec
 +++ b/metasploit-framework.gemspec
-@@ -206,7 +206,7 @@
+@@ -212,7 +212,7 @@
    # Needed by some modules
    spec.add_runtime_dependency 'rubyzip'
    # Needed for some post modules

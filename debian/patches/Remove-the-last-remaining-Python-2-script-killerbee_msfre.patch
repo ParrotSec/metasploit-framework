@@ -8,9 +8,6 @@ See https://gitlab.com/kalilinux/packages/metasploit-framework/-/issues/1
  1 file changed, 254 deletions(-)
  delete mode 100755 tools/hardware/killerbee_msfrelay.py
 
-diff --git a/tools/hardware/killerbee_msfrelay.py b/tools/hardware/killerbee_msfrelay.py
-deleted file mode 100755
-index e66dfbf..0000000
 --- a/tools/hardware/killerbee_msfrelay.py
 +++ /dev/null
 @@ -1,254 +0,0 @@

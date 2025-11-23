@@ -1,0 +1,6 @@
+Name: metasploit-framework
+Repository: https://github.com/rapid7/metasploit-framework.git
+Repository-Browse: https://github.com/rapid7/metasploit-framework
+Bug-Database: https://github.com/rapid7/metasploit-framework/issues
+Bug-Submit: https://github.com/rapid7/metasploit-framework/issues/new
+Security-Contact: https://github.com/rapid7/metasploit-framework/tree/HEAD/.github/SECURITY.md

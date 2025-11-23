@@ -25,7 +25,12 @@ ifeq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),amd64 i386))
 endif
 
 	# Build binary gems
-	bundle install --without development test --path vendor/bundle
+	bundle config set --local path vendor/bundle
+	bundle config set --local without 'development test coverage'
+	# GCC 14 is stricter, and sqlite3 1.4.4 fails to build. Please remove the
+	# line below when the patch Force-sqlite-3-version-1.4.4.patch is dropped.
+	bundle config --local build.sqlite3 --with-cflags="'-Wno-error=incompatible-pointer-types -Wno-error=int-conversion'"
+	bundle install
 	bundle config --local frozen true
 
 override_dh_gencontrol:
@@ -38,6 +43,10 @@ override_dh_install:
 	  sed -i $${binfile} -e '1,1s|#!.*ruby|#!/usr/share/metasploit-framework/ruby|' ; \
 	done
 	chmod -x debian/metasploit-framework/usr/share/metasploit-framework/data/wordlists/*
+
+	# install bash completion for msfvenom
+	mkdir -p debian/metasploit-framework/usr/share/bash-completion/completions
+	HOME=/tmp RUBYLIB=debian/metasploit-framework/usr/share/metasploit-framework/lib debian/generate-msfvenom-bash-completion.rb > debian/metasploit-framework/usr/share/bash-completion/completions/msfvenom
 
 override_dh_shlibdeps:
 	dh_shlibdeps --exclude=/data/ --exclude=/modules/

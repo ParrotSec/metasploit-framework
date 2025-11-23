@@ -1,8 +1,9 @@
-metasploit-framework (6.4.71-0parrot1) lory; urgency=medium
+metasploit-framework (6.4.98-0parrot1) echo; urgency=medium
 
-  * New upstream version 6.4.71
+  * New upstream version 6.4.98.
+  * Rebuild for Parrot 7.
 
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 27 Jun 2025 16:04:02 +0200
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sun, 23 Nov 2025 23:54:34 +0100
 
 metasploit-framework (6.4.58-0parrot1) lory-updates; urgency=medium
 

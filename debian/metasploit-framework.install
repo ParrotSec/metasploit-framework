@@ -1,10 +1,11 @@
 Gemfile Gemfile.lock *.gemspec Rakefile .bundle vendor usr/share/metasploit-framework
 app config data db lib modules plugins scripts tools usr/share/metasploit-framework
-msf* usr/share/metasploit-framework
-debian/msfupdate usr/share/metasploit-framework
-debian/extra/ruby usr/share/metasploit-framework/
 debian/extra/msfdb usr/share/metasploit-framework/
+debian/extra/ruby usr/share/metasploit-framework/
+debian/msfupdate usr/share/metasploit-framework
 debian/script-* usr/share/metasploit-framework/
+external/zsh/_* usr/share/zsh/vendor-completions/
+msfconsole msfd msf-json-rpc.ru msfrpc msfrpcd msfvenom msf-ws.ru docs usr/share/metasploit-framework
 debian/helper-scripts/msfstart usr/bin/
 debian/helper-scripts/msfstop usr/bin/
 debian/helper-scripts/msfconsole-start usr/bin/

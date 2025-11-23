@@ -1,28 +1,24 @@
 From 4734bc7e39bc789429589f912d1d2d9da4518587 Mon Sep 17 00:00:00 2001
 From: Sophie Brun <sophie@offensive-security.com>
-Date: Thu, 6 Apr 2023 14:20:27 +0200
+Date: Wed, 26 Jun 2024 11:57:47 +0200
 Subject: [PATCH] Fix patch
 
 ---
- metasploit-framework.gemspec | 5 +++++
- 1 file changed, 5 insertions(+)
+ metasploit-framework.gemspec | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/metasploit-framework.gemspec b/metasploit-framework.gemspec
-index 9f00a10c6..9a167f24d 100644
+index a001a54ec1..c13cc85b26 100644
 --- a/metasploit-framework.gemspec
 +++ b/metasploit-framework.gemspec
-@@ -255,6 +255,10 @@
- 
-   # Needed for multiline REPL support for interactive SQL sessions
-   spec.add_runtime_dependency 'reline'
-+  
-+  # Add missing gem oci8 only for amd64 and i386 (oracle packages are only
-+  # available for these architectures)
-+  spec.add_runtime_dependency 'ruby-oci8'
- 
+@@ -258,6 +258,10 @@ Gem::Specification.new do |spec|
    # Needed to parse sections of ELF files in order to retrieve symbols
    spec.add_runtime_dependency 'elftools'
--- 
-2.39.2
-
-
+ 
++  # Add missing gem oci8 only for amd64 and i386 (oracle packages are only
++  # available for these oachitectures in Kali)
++  spec.add_runtime_dependency 'ruby-oci8'
++
+   # Standard libraries: https://www.ruby-lang.org/en/news/2023/12/25/ruby-3-3-0-released/
+   %w[
+     abbrev

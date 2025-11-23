@@ -119,15 +119,17 @@ RSpec.describe ModuleValidation::Validator do
           Msf::Module::SiteReference.new('FOO', 'https://example.com'),
           Msf::Module::SiteReference.new('NOCVE', 'Reason not given'),
           Msf::Module::SiteReference.new('AKA', 'Foobar'),
+          Msf::Module::SiteReference.new('ATTACK', 'Foobar'),
         ])
       end
 
       it 'has errors' do
         expect(subject.errors.full_messages).to eq [
-          'References url is not valid, must be in ["CVE", "CWE", "BID", "MSB", "EDB", "US-CERT-VU", "ZDI", "URL", "WPVDB", "PACKETSTORM", "LOGO", "SOUNDTRACK", "OSVDB", "VTS", "OVE"]',
-          'References FOO is not valid, must be in ["CVE", "CWE", "BID", "MSB", "EDB", "US-CERT-VU", "ZDI", "URL", "WPVDB", "PACKETSTORM", "LOGO", "SOUNDTRACK", "OSVDB", "VTS", "OVE"]',
+          "References url is not valid, must be in [\"ATT&CK\", \"CVE\", \"CWE\", \"BID\", \"MSB\", \"EDB\", \"US-CERT-VU\", \"ZDI\", \"URL\", \"WPVDB\", \"PACKETSTORM\", \"LOGO\", \"SOUNDTRACK\", \"OSVDB\", \"VTS\", \"OVE\"]",
+          "References FOO is not valid, must be in [\"ATT&CK\", \"CVE\", \"CWE\", \"BID\", \"MSB\", \"EDB\", \"US-CERT-VU\", \"ZDI\", \"URL\", \"WPVDB\", \"PACKETSTORM\", \"LOGO\", \"SOUNDTRACK\", \"OSVDB\", \"VTS\", \"OVE\"]",
           "References NOCVE please include NOCVE values in the 'notes' section, rather than in 'references'",
-          "References AKA please include AKA values in the 'notes' section, rather than in 'references'"
+          "References AKA please include AKA values in the 'notes' section, rather than in 'references'",
+          "References ATTACK is not valid, must be in [\"ATT&CK\", \"CVE\", \"CWE\", \"BID\", \"MSB\", \"EDB\", \"US-CERT-VU\", \"ZDI\", \"URL\", \"WPVDB\", \"PACKETSTORM\", \"LOGO\", \"SOUNDTRACK\", \"OSVDB\", \"VTS\", \"OVE\"]"
         ]
       end
     end
@@ -302,6 +304,75 @@ RSpec.describe ModuleValidation::Validator do
           "Side effects contains invalid values [[\"unknown-side-effects\"]] - only [\"artifacts-on-disk\", \"config-changes\", \"ioc-in-logs\", \"account-lockouts\", \"account-logout\", \"screen-effects\", \"audio-effects\", \"physical-effects\"] is allowed",
           "Reliability contains invalid values [[\"unknown-reliability\"]] - only [\"first-attempt-fail\", \"repeatable-session\", \"unreliable-session\", \"event-dependent\"] is allowed"
         ]
+      end
+    end
+
+
+    context 'when the references contains ATT&CK values' do
+      let(:mod_options) do
+        super().merge(references: [
+          Msf::Module::SiteReference.new('ATT&CK', 'T1059.001'),
+          Msf::Module::SiteReference.new('ATT&CK', 'BAD1059.001')
+        ])
+      end
+
+      it 'has errors for invalid ATT&CK references' do
+        expect(subject.errors.full_messages).to eq ["References ATT&CK reference 'BAD1059.001' is invalid. Must start with one of [\"TA\", \"DS\", \"S\", \"M\", \"A\", \"G\", \"C\", \"T\"] and be followed by digits/periods, no whitespace."]
+      end
+
+      context 'with only valid ATT&CK references' do
+        let(:mod_options) do
+          super().merge(references: [Msf::Module::SiteReference.new('ATT&CK', 'T1059.001')])
+        end
+
+        it 'has no errors' do
+          expect(subject.errors.full_messages).to be_empty
+        end
+      end
+    end
+
+    context 'when targets and default target are present' do
+      let(:mod_options) do
+        super().merge(
+          targets: [
+            [
+              'Automatic (Unix In-Memory)',
+              {
+                'Platform' => 'unix',
+                'Arch' => ARCH_CMD,
+                'DefaultOptions' => { 'PAYLOAD' => 'cmd/unix/reverse_bash' },
+                'Type' => :unix_memory
+              }
+            ],
+            [
+              'Automatic (Linux Dropper)',
+              {
+                'Platform' => 'linux',
+                'Arch' => [ARCH_X86, ARCH_X64],
+                'CmdStagerFlavor' => ['echo', 'printf', 'wget', 'curl'],
+                'DefaultOptions' => { 'PAYLOAD' => 'linux/x86/meterpreter/reverse_tcp' },
+                'Type' => :linux_dropper
+              }
+            ]
+          ],
+          default_target: 1
+        )
+      end
+
+      it 'has no errors' do
+        expect(subject.errors.full_messages).to be_empty
+      end
+
+      context 'when the default_target is out of bounds' do
+        let(:mod_options) do
+          super().merge(
+            default_target: 4
+          )
+        end
+
+        it 'has errors for default_target' do
+          expect(subject.errors.full_messages).to eq ["Default target is out of range. Must specify a valid target index between 0 and 1, got '4'"]
+        end
       end
     end
   end
