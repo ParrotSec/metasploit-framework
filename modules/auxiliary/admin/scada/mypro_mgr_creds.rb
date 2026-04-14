@@ -64,19 +64,19 @@ class MetasploitModule < Msf::Auxiliary
         'uri' => normalize_uri(target_uri.path, 'assets/index-DBkpc6FO.js')
       })
     rescue ::Rex::ConnectionRefused, ::Rex::HostUnreachable, ::Rex::ConnectionTimeout, ::Rex::ConnectionError
-      return CheckCode::Unknown
+      return Exploit::CheckCode::Unknown
     end
 
     if res.to_s =~ /const S="([^"]+)"/
       version = ::Regexp.last_match(1)
       vprint_status('Version retrieved: ' + version)
       if Rex::Version.new(version) <= Rex::Version.new('1.3')
-        return CheckCode::Appears
+        return Exploit::CheckCode::Appears
       end
 
-      return CheckCode::Safe
+      return Exploit::CheckCode::Safe
     end
-    return CheckCode::Unknown
+    return Exploit::CheckCode::Unknown
   end
 
   def run

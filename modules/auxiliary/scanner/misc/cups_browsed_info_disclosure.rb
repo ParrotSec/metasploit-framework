@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # This module requires Metasploit: https://metasploit.com/download
 # Current source: https://github.com/rapid7/metasploit-framework
@@ -21,7 +23,7 @@ class MetasploitModule < Msf::Auxiliary
       'License' => MSF_LICENSE,
       'References' => [
         ['CVE', '2024-47176'],
-        ['URL', 'https://github.com/OpenPrinting/cups-browsed/security/advisories/GHSA-rj88-6mr5-rcw8' ],
+        ['GHSA', 'rj88-6mr5-rcw8', 'OpenPrinting/cups-browsed'],
         ['URL', 'https://www.evilsocket.net/2024/09/26/Attacking-UNIX-systems-via-CUPS-Part-I/' ],
       ],
       'DefaultOptions' => { 'RPORT' => 631 },

@@ -46,15 +46,15 @@ class MetasploitModule < Msf::Auxiliary
 
   def check
     @auth = auth
-    return CheckCode::Unknown('Target is unreachable') unless @auth
+    return Exploit::CheckCode::Unknown('Target is unreachable') unless @auth
 
     if @auth.code == 401
-      return CheckCode::Safe
+      return Exploit::CheckCode::Safe
     elsif @auth.code == 200
-      return CheckCode::Appears
+      return Exploit::CheckCode::Appears
     end
 
-    CheckCode::Unknown
+    Exploit::CheckCode::Unknown
   end
 
   def auth

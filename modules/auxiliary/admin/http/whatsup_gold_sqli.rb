@@ -51,14 +51,14 @@ class MetasploitModule < Msf::Auxiliary
       'uri' => normalize_uri(target_uri.path, 'NmConsole/app.json')
     })
 
-    return CheckCode::Unknown unless res && res.code == 200
+    return Exploit::CheckCode::Unknown unless res && res.code == 200
 
     data = res.get_json_document
     data_js = data['js']
     version_path = data_js.find { |item| item['path'] =~ /app-/ }['path']
     version = version_path[/app-(.*)\.js/, 1]
     if version.nil?
-      return CheckCode::Unknown
+      return Exploit::CheckCode::Unknown
     else
       vprint_status('Version retrieved: ' + version)
     end

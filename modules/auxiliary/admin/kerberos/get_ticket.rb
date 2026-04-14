@@ -39,7 +39,11 @@ class MetasploitModule < Msf::Auxiliary
           [ 'GET_HASH', { 'Description' => 'Request a TGS to recover the NTLM hash' } ]
         ],
         'DefaultAction' => 'GET_TGT',
-        'AKA' => ['PKINIT']
+        'AKA' => ['PKINIT'],
+        'References' => [
+          ['ATT&CK', Mitre::Attack::Technique::T1550_003_PASS_THE_TICKET],
+          ['ATT&CK', Mitre::Attack::Technique::T1550_002_PASS_THE_HASH]
+        ]
       )
     )
 
@@ -133,6 +137,10 @@ class MetasploitModule < Msf::Auxiliary
 
     if datastore['SPN'].present? && !datastore['SPN'].match(%r{.+/.+})
       fail_with(Failure::BadConfig, 'SPN format must be service_name/FQDN (ex: cifs/dc01.mydomain.local)')
+    end
+
+    if datastore['IMPERSONATE'].present? && datastore['IMPERSONATE_TYPE'] == 'none'
+      fail_with(Failure::BadConfig, 'IMPERSONATE_TYPE must be set to "generic", "dmsa" or "auto" when IMPERSONATE is provided')
     end
   end
 

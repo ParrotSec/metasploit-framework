@@ -78,7 +78,9 @@ class MetasploitModule < Msf::Auxiliary
           'Spencer McIntyre', # ESC13 and ESC15 updates
           'jheysel-r7' # ESC4, ESC9 and ESC10 update
         ],
-        'References' => REFERENCES.values.flatten.map { |r| [ r.ctx_id, r.ctx_val ] }.uniq,
+        'References' => (REFERENCES.values.flatten.map { |r| [ r.ctx_id, r.ctx_val ] }.uniq + [
+          ['ATT&CK', Mitre::Attack::Technique::T1649_STEAL_OR_FORGE_AUTHENTICATION_CERTIFICATES]
+        ]).uniq,
         'DisclosureDate' => '2021-06-17',
         'License' => MSF_LICENSE,
         'DefaultOptions' => {
@@ -609,13 +611,7 @@ class MetasploitModule < Msf::Auxiliary
     ca_server_ip_address = get_ip_addresses_by_fqdn(ca_server_fqdn)&.first
 
     if ca_server_ip_address
-      report_service({
-        host: ca_server_ip_address,
-        port: 445,
-        proto: 'tcp',
-        name: 'AD CS',
-        info: "AD CS CA name: #{ldap_object[:name][0]}"
-      })
+      report_service_icertpassage(ca_server_ip_address, ca_name: ldap_object[:name][0])
 
       report_host({
         host: ca_server_ip_address,
@@ -886,13 +882,7 @@ class MetasploitModule < Msf::Auxiliary
           info = nil if info.blank?
 
           hash[:ca_servers].each_value do |ca_server|
-            service = report_service(
-              host: ca_server[:ip_address],
-              port: 445,
-              proto: 'tcp',
-              name: 'AD CS',
-              info: "AD CS CA name: #{ca_server[:name]}"
-            )
+            service = report_service_icertpassage(ca_server[:ip_address], ca_name: ca_server[:name])
 
             if ca_server[:ip_address].present?
               vuln = report_vuln(
@@ -900,11 +890,11 @@ class MetasploitModule < Msf::Auxiliary
                 host: ca_server[:ip_address],
                 port: 445,
                 proto: 'tcp',
-                sname: 'AD CS',
-                name: "#{vuln} - #{key}",
+                name: vuln.to_s,
                 info: info,
                 refs: REFERENCES[vuln],
-                service: service
+                service: service,
+                resource: { template_name: key, ldap_dn: hash[:dn] }
               )
             else
               vuln = nil
@@ -1086,8 +1076,14 @@ class MetasploitModule < Msf::Auxiliary
   end
 
   def domain_controller_version_check
-    domain = adds_get_domain_info(@ldap)[:dns_name]
-    user = adds_get_current_user(@ldap)[:sAMAccountName].first.to_s
+    domain_info = adds_get_domain_info(@ldap)
+    return unless domain_info
+
+    user_info = adds_get_current_user(@ldap)
+    return unless user_info
+
+    user = user_info[:sAMAccountName].first.to_s
+    domain = domain_info[:dns_name]
     print_status("user: #{user}, domain: #{domain}")
 
     version_raw = nil
@@ -1232,5 +1228,42 @@ class MetasploitModule < Msf::Auxiliary
     fail_with(Failure::NoAccess, e.message)
   rescue Net::LDAP::Error => e
     fail_with(Failure::Unknown, "#{e.class}: #{e.message}")
+  end
+
+  def report_service_icertpassage(host, ca_name:)
+    common = {
+      host: host,
+      port: 445,
+      proto: 'tcp'
+    }
+
+    report_service({
+      name: ::Msf::Exploit::Remote::MsIcpr::ADCS_CA_SERVICE_NAME,
+      resource: {
+        'name' => ca_name
+      },
+      parents: {
+        name: 'icertpassage',
+        resource: {
+          'dcerpc' => {
+            'pipe' => 'cert'
+          }
+        },
+        parents: {
+          name: 'dcerpc',
+          resource: {
+            'smb' => {
+              'share' => 'IPC$'
+            }
+          },
+          parents: {
+            name: 'smb',
+            parents: {
+              name: 'tcp'
+            }
+          }.merge(common)
+        }.merge(common)
+      }.merge(common)
+    }.merge(common))
   end
 end
