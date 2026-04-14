@@ -70,7 +70,7 @@ class MetasploitModule < Msf::Auxiliary
   def check
     res = post_auth_bypass_request({ data: {} })
 
-    return CheckCode::Unknown('Connection failed') unless res
+    return Exploit::CheckCode::Unknown('Connection failed') unless res
 
     return Exploit::CheckCode::Safe('Received a 403 Forbidden response') if res.code == 403
 

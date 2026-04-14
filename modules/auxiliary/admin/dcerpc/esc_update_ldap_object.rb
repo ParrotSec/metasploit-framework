@@ -43,7 +43,9 @@ class MetasploitModule < Msf::Auxiliary
           [ 'URL', 'https://github.com/GhostPack/Certify' ],
           [ 'URL', 'https://github.com/ly4k/Certipy' ],
           [ 'URL', 'https://medium.com/@offsecdeer/adcs-exploitation-series-part-2-certificate-mapping-esc15-6e19a6037760' ],
-          [ 'URL', 'https://www.thehacker.recipes/ad/movement/adcs/certificate-templates#esc16-a-compatibility-mode' ]
+          [ 'URL', 'https://www.thehacker.recipes/ad/movement/adcs/certificate-templates#esc16-a-compatibility-mode' ],
+          [ 'ATT&CK', Mitre::Attack::Technique::T1098_ACCOUNT_MANIPULATION ],
+          [ 'ATT&CK', Mitre::Attack::Technique::T1649_STEAL_OR_FORGE_AUTHENTICATION_CERTIFICATES ]
         ],
         'Notes' => {
           'Reliability' => [],
@@ -222,7 +224,7 @@ class MetasploitModule < Msf::Auxiliary
       datastore['SMBUser'] = datastore['TARGET_USERNAME']
       datastore['SMBPass'] = smbpass
       datastore['RHOSTS'] = ca_ip
-      request_certificate(opts)
+      icpr_request_certificate(opts)
     end
   ensure
     datastore['RHOSTS'] = @dc_ip

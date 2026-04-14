@@ -28,7 +28,8 @@ class MetasploitModule < Msf::Auxiliary
         ],
         'References' => [
           ['URL', 'https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab'],
-          ['URL', 'https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/shadow-credentials']
+          ['URL', 'https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/shadow-credentials'],
+          ['ATT&CK', Mitre::Attack::Technique::T1098_ACCOUNT_MANIPULATION]
         ],
         'License' => MSF_LICENSE,
         'Actions' => [
@@ -142,7 +143,15 @@ class MetasploitModule < Msf::Auxiliary
         return Exploit::CheckCode::Unknown('Failed to check the permissions on the target object.')
       end
 
-      Exploit::CheckCode::Vulnerable('The object can be written to.')
+      Exploit::CheckCode::Vulnerable(
+        'The object can be written to.',
+        vuln: {
+          resource: {
+            ldap_dn: obj.dn
+          },
+          service: report_ldap_service
+        }
+      )
     end
   end
 

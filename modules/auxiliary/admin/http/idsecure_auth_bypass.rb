@@ -47,19 +47,19 @@ class MetasploitModule < Msf::Auxiliary
         'uri' => normalize_uri(target_uri.path, 'api/util/configUI')
       })
     rescue ::Rex::ConnectionRefused, ::Rex::HostUnreachable, ::Rex::ConnectionTimeout, ::Rex::ConnectionError
-      return CheckCode::Unknown
+      return Exploit::CheckCode::Unknown
     end
 
-    return CheckCode::Unknown unless res&.code == 401
+    return Exploit::CheckCode::Unknown unless res&.code == 401
 
     data = res.get_json_document
     version = data['Version']
-    return CheckCode::Unknown if version.nil?
+    return Exploit::CheckCode::Unknown if version.nil?
 
     print_status('Got version: ' + version)
-    return CheckCode::Safe unless Rex::Version.new(version) <= Rex::Version.new('4.7.43.0')
+    return Exploit::CheckCode::Safe unless Rex::Version.new(version) <= Rex::Version.new('4.7.43.0')
 
-    return CheckCode::Appears
+    return Exploit::CheckCode::Appears
   end
 
   def run
