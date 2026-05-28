@@ -72,7 +72,7 @@ class MetasploitModule < Msf::Auxiliary
     )
     disconnect
 
-    return Exploit::CheckCode::Unknown if res.nil?
+    return Exploit::CheckCode::Unknown('No response received from target') if res.nil?
     unless res.code == 401
       return Exploit::CheckCode::Safe('The target does not require authentication.')
     end

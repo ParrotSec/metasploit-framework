@@ -65,7 +65,7 @@ class MetasploitModule < Msf::Auxiliary
       end
 
     end
-    return Exploit::CheckCode::Safe
+    return Exploit::CheckCode::Safe('Target does not appear to be Sante PACS Server')
   end
 
   def run

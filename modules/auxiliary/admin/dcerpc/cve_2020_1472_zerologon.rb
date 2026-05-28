@@ -101,9 +101,9 @@ class MetasploitModule < Msf::Auxiliary
       fail_with(Failure::UnexpectedReply, windows_error)
     end
 
-    return Exploit::CheckCode::Detected unless status == 0
+    return Exploit::CheckCode::Detected('Target responded but Zerologon exploit did not succeed') unless status == 0
 
-    Exploit::CheckCode::Vulnerable
+    Exploit::CheckCode::Vulnerable('Zerologon authentication bypass succeeded')
   end
 
   def run

@@ -67,9 +67,9 @@ class MetasploitModule < Msf::Auxiliary
         return Exploit::CheckCode::Detected('UPSMON PRO Web seems to be running on target system.')
       end
 
-      return Exploit::CheckCode::Safe
+      return Exploit::CheckCode::Safe('Target does not appear to be UPSMON PRO')
     end
-    return Exploit::CheckCode::Unknown
+    return Exploit::CheckCode::Unknown('No response received from the target')
   end
 
   def print_ini_field(label, value)
