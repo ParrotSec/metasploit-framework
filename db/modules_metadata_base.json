@@ -4242,7 +4242,7 @@
       "https"
     ],
     "targets": null,
-    "mod_time": "2026-04-15 11:57:01 +0000",
+    "mod_time": "2026-05-10 09:25:30 +0000",
     "path": "/modules/auxiliary/admin/http/netgear_pnpx_getsharefolderlist_auth_bypass.rb",
     "is_install_path": true,
     "ref_name": "admin/http/netgear_pnpx_getsharefolderlist_auth_bypass",
@@ -12761,7 +12761,7 @@
     "autofilter_ports": [],
     "autofilter_services": [],
     "targets": null,
-    "mod_time": "2025-05-07 21:38:27 +0000",
+    "mod_time": "2026-05-25 10:01:04 +0000",
     "path": "/modules/auxiliary/analyze/apply_pot.rb",
     "is_install_path": true,
     "ref_name": "analyze/apply_pot",
@@ -12964,7 +12964,7 @@
     "autofilter_ports": [],
     "autofilter_services": [],
     "targets": null,
-    "mod_time": "2025-05-07 21:38:27 +0000",
+    "mod_time": "2026-03-11 08:38:17 +0000",
     "path": "/modules/auxiliary/analyze/crack_mobile.rb",
     "is_install_path": true,
     "ref_name": "analyze/crack_mobile",
@@ -13054,7 +13054,7 @@
     "autofilter_ports": [],
     "autofilter_services": [],
     "targets": null,
-    "mod_time": "2025-07-30 14:10:49 +0000",
+    "mod_time": "2026-05-25 09:59:49 +0000",
     "path": "/modules/auxiliary/analyze/crack_webapps.rb",
     "is_install_path": true,
     "ref_name": "analyze/crack_webapps",
@@ -13099,7 +13099,7 @@
       "hdm <x@hdm.io>",
       "h00die"
     ],
-    "description": "This module uses John the Ripper or Hashcat to identify weak passwords that have been\n        acquired from Windows systems.\n        LANMAN is format 3000 in hashcat.\n        NTLM is format 1000 in hashcat.\n        MSCASH is format 1100 in hashcat.\n        MSCASH2 is format 2100 in hashcat.\n        NetNTLM is format 5500 in hashcat.\n        NetNTLMv2 is format 5600 in hashcat.",
+    "description": "This module uses John the Ripper or Hashcat to identify weak passwords that have been\n        acquired from Windows systems.\n        LANMAN is format 3000 in hashcat.\n        NTLM is format 1000 in hashcat.\n        MSCASH is format 1100 in hashcat.\n        MSCASH2 is format 2100 in hashcat.\n        NetNTLM is format 5500 in hashcat.\n        NetNTLMv2 is format 5600 in hashcat.\n        krb5tgs is format 13100 in hashcat.\n        krb5tgs-aes128 is format 19600 in hashcat.\n        krb5tgs-aes256 is format 19700 in hashcat.\n        krb5asrep is format 18200 in hashcat.\n        timeroast is format 31300 in hashcat.",
     "references": [
       "ATT&CK-T1110.002"
     ],
@@ -13109,7 +13109,7 @@
     "autofilter_ports": [],
     "autofilter_services": [],
     "targets": null,
-    "mod_time": "2026-02-09 22:58:04 +0000",
+    "mod_time": "2026-05-24 17:58:29 +0000",
     "path": "/modules/auxiliary/analyze/crack_windows.rb",
     "is_install_path": true,
     "ref_name": "analyze/crack_windows",
@@ -15465,7 +15465,7 @@
     "autofilter_ports": [],
     "autofilter_services": [],
     "targets": null,
-    "mod_time": "2022-01-29 00:51:56 +0000",
+    "mod_time": "2026-05-19 16:08:26 +0000",
     "path": "/modules/auxiliary/dos/http/slowloris.py",
     "is_install_path": true,
     "ref_name": "dos/http/slowloris",
@@ -23532,6 +23532,7 @@
     ],
     "description": "This module forges access tickets for the Gladinet CentreStack/Triofox\n          `/storage/filesvr.dn` endpoint. The vulnerability exists because\n          the application uses hardcoded cryptographic keys in GladCtrl64.dll to encrypt/decrypt\n          access tickets.\n\n          The access ticket is an encrypted string that contains:\n          - Filepath: The absolute path to the file on the server\n          - Username: Empty (Application Pool Identity will be used)\n          - Password: Empty\n          - Timestamp: Creation time (set to excessive year to never expire)\n\n          This module can forge tickets to read arbitrary files from the server's file system.\n\n          Gladinet CentreStack versions up to 16.12.10420.56791 are vulnerable.\n          Gladinet Triofox versions up to 16.12.10420.56791 are vulnerable.",
     "references": [
+      "CVE-2025-14611",
       "URL-https://www.huntress.com/blog/active-exploitation-gladinet-centrestack-triofox-insecure-cryptography-vulnerability"
     ],
     "platform": "",
@@ -23553,7 +23554,7 @@
       "https"
     ],
     "targets": null,
-    "mod_time": "2026-01-26 18:43:16 +0000",
+    "mod_time": "2026-05-26 13:05:42 +0000",
     "path": "/modules/auxiliary/gather/gladinet_storage_access_ticket_forge.rb",
     "is_install_path": true,
     "ref_name": "gather/gladinet_storage_access_ticket_forge",
@@ -33642,6 +33643,7 @@
     ],
     "description": "This module exploits an unauthenticated directory traversal vulnerability in Cassandra Web\n          'Cassandra Web' version 0.5.0 and earlier, allowing arbitrary file read with the web server privileges.\n          This vulnerability occurred due to the disabled Rack::Protection module",
     "references": [
+      "CVE-2020-36939",
       "URL-https://github.com/avalanche123/cassandra-web/commit/f11e47a26f316827f631d7bcfec14b9dd94f44be",
       "EDB-49362"
     ],
@@ -33664,7 +33666,7 @@
       "https"
     ],
     "targets": null,
-    "mod_time": "2024-01-07 15:02:53 +0000",
+    "mod_time": "2026-05-27 08:49:48 +0000",
     "path": "/modules/auxiliary/scanner/http/cassandra_web_file_read.rb",
     "is_install_path": true,
     "ref_name": "scanner/http/cassandra_web_file_read",
@@ -37516,7 +37518,7 @@
       "https"
     ],
     "targets": null,
-    "mod_time": "2025-05-21 10:45:08 +0000",
+    "mod_time": "2026-06-02 17:22:45 +0000",
     "path": "/modules/auxiliary/scanner/http/gitlab_version.rb",
     "is_install_path": true,
     "ref_name": "scanner/http/gitlab_version",
@@ -42339,14 +42341,19 @@
     "fullname": "auxiliary/scanner/http/pretalx_file_read_cve_2023_28459",
     "aliases": [],
     "rank": 300,
-    "disclosure_date": null,
+    "disclosure_date": "2023-03-07",
     "type": "auxiliary",
     "author": [
       "Stefan Schiller",
       "msutovsky-r7"
     ],
     "description": "This module exploits functionality in Pretalx that export conference schedule as zipped file. The Pretalx will iteratively include any file referenced by any HTML tag and does not properly check the path of the file, which can lead to arbitrary file read. The module requires credentials that allow schedule export, schedule release and approval of proposals. Additionally, module requires conference name and URL for media files.",
-    "references": [],
+    "references": [
+      "CVE-2023-28459",
+      "CVE-2023-28458",
+      "URL-https://www.sonarsource.com/blog/pretalx-vulnerabilities-how-to-get-accepted-at-every-conference/",
+      "URL-https://pretalx.com/p/news/security-release-232/"
+    ],
     "platform": "",
     "arch": "",
     "rport": 80,
@@ -42366,7 +42373,7 @@
       "https"
     ],
     "targets": null,
-    "mod_time": "2026-04-22 11:52:36 +0000",
+    "mod_time": "2026-05-26 13:05:42 +0000",
     "path": "/modules/auxiliary/scanner/http/pretalx_file_read_cve_2023_28459.rb",
     "is_install_path": true,
     "ref_name": "scanner/http/pretalx_file_read_cve_2023_28459",
@@ -49016,7 +49023,7 @@
     "autofilter_ports": [],
     "autofilter_services": [],
     "targets": null,
-    "mod_time": "2025-06-20 13:20:44 +0000",
+    "mod_time": "2026-05-29 16:53:50 +0000",
     "path": "/modules/auxiliary/scanner/ipmi/ipmi_cipher_zero.rb",
     "is_install_path": true,
     "ref_name": "scanner/ipmi/ipmi_cipher_zero",
@@ -49053,7 +49060,7 @@
     "autofilter_ports": [],
     "autofilter_services": [],
     "targets": null,
-    "mod_time": "2025-06-20 13:20:44 +0000",
+    "mod_time": "2026-05-29 16:55:40 +0000",
     "path": "/modules/auxiliary/scanner/ipmi/ipmi_dumphashes.rb",
     "is_install_path": true,
     "ref_name": "scanner/ipmi/ipmi_dumphashes",
@@ -49086,7 +49093,7 @@
     "autofilter_ports": [],
     "autofilter_services": [],
     "targets": null,
-    "mod_time": "2025-06-20 13:20:44 +0000",
+    "mod_time": "2026-05-29 16:56:13 +0000",
     "path": "/modules/auxiliary/scanner/ipmi/ipmi_version.rb",
     "is_install_path": true,
     "ref_name": "scanner/ipmi/ipmi_version",
@@ -58079,7 +58086,7 @@
     "autofilter_ports": [],
     "autofilter_services": [],
     "targets": null,
-    "mod_time": "2025-05-28 01:19:53 +0000",
+    "mod_time": "2026-05-26 11:28:37 +0000",
     "path": "/modules/auxiliary/scanner/snmp/snmp_enum.rb",
     "is_install_path": true,
     "ref_name": "scanner/snmp/snmp_enum",
@@ -71926,6 +71933,7 @@
     ],
     "description": "An authenticated user with sufficient administrative rights to manage pollers can use this functionality to\n          execute arbitrary commands remotely. Usually, the miscellaneous commands are used by the additional modules\n          (to perform certain actions), by the scheduler for data processing, etc.\n\n          This module uses this functionality to obtain a remote shell on the target.",
     "references": [
+      "CVE-2019-19699",
       "EDB-47977"
     ],
     "platform": "Linux,Unix",
@@ -71950,7 +71958,7 @@
       "Reverse shell (In-Memory)",
       "Meterpreter (Dropper)"
     ],
-    "mod_time": "2025-12-17 16:12:31 +0000",
+    "mod_time": "2026-05-26 13:05:42 +0000",
     "path": "/modules/exploits/linux/http/centreon_pollers_auth_rce.rb",
     "is_install_path": true,
     "ref_name": "linux/http/centreon_pollers_auth_rce",
@@ -99440,7 +99448,7 @@
     "targets": [
       "Automatic"
     ],
-    "mod_time": "2026-02-23 18:29:22 +0000",
+    "mod_time": "2026-05-26 15:36:36 +0000",
     "path": "/modules/exploits/linux/persistence/wsl/startup_folder.rb",
     "is_install_path": true,
     "ref_name": "linux/persistence/wsl/startup_folder",
@@ -105686,6 +105694,67 @@
     "session_types": false,
     "needs_cleanup": null
   },
+  "exploit_multi/http/apache_activemq_jolokia_rce": {
+    "name": "Apache ActiveMQ RCE via Jolokia addNetworkConnector",
+    "fullname": "exploit/multi/http/apache_activemq_jolokia_rce",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2026-04-29",
+    "type": "exploit",
+    "author": [
+      "dinosn",
+      "h00die"
+    ],
+    "description": "Apache ActiveMQ exposes a Jolokia JMX-over-HTTP API at /api/jolokia/.\n          An authenticated attacker can invoke the addNetworkConnector() MBean\n          operation with a crafted URI that causes the broker to fetch a remote\n          Spring XML configuration over HTTP. The Spring XML instantiates a\n          ProcessBuilder bean that executes attacker-supplied OS commands.\n\n          Default credentials (admin:admin) are accepted by many installations.\n\n          Verified on docker image",
+    "references": [
+      "CVE-2026-34197",
+      "URL-https://github.com/dinosn/CVE-2026-34197",
+      "URL-https://horizon3.ai/attack-research/disclosures/cve-2026-34197-activemq-rce-jolokia/"
+    ],
+    "platform": "Linux,Unix,Windows",
+    "arch": "cmd",
+    "rport": 8161,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Windows",
+      "Linux",
+      "Unix"
+    ],
+    "mod_time": "2026-05-28 12:56:10 +0000",
+    "path": "/modules/exploits/multi/http/apache_activemq_jolokia_rce.rb",
+    "is_install_path": true,
+    "ref_name": "multi/http/apache_activemq_jolokia_rce",
+    "check": true,
+    "post_auth": true,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "Reliability": [
+        "repeatable-session"
+      ],
+      "SideEffects": [
+        "ioc-in-logs"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": null
+  },
   "exploit_multi/http/apache_activemq_upload_jsp": {
     "name": "ActiveMQ web shell upload",
     "fullname": "exploit/multi/http/apache_activemq_upload_jsp",
@@ -111573,6 +111642,65 @@
       "Reliability": [
         "repeatable-session"
       ]
+    },
+    "session_types": false,
+    "needs_cleanup": null
+  },
+  "exploit_multi/http/gogs_rebase_rce": {
+    "name": "Gogs Git Rebase Argument Injection RCE",
+    "fullname": "exploit/multi/http/gogs_rebase_rce",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2026-03-17",
+    "type": "exploit",
+    "author": [
+      "Crypto-Cat"
+    ],
+    "description": "This module exploits an argument injection vulnerability in the\n          pull request merge flow of Gogs (<= 0.14.2 and <= 0.15.0+dev).\n\n          The Merge() function in internal/database/pull.go passes the PR\n          base branch name to `git rebase` without a `--` separator. A\n          branch named `--exec=<CMD>` is parsed by Git as the --exec flag\n          rather than a positional argument, causing `sh -c <CMD>` to run\n          after each replayed commit during the rebase.\n\n          Two exploitation methods are supported:\n\n          - own_repo: The attacker creates a temporary repository, enables\n          rebase merge, and operates entirely within their own account.\n          Any authenticated user who can create repositories (the default)\n          can exploit this with no interaction from other users required.\n\n          - existing_repo: The attacker exploits a repository they already\n          have write and merge access to, where \"Rebase before merging\"\n          is enabled (or the attacker has repo admin permissions to\n          enable it). This path is useful on instances where repository\n          creation is restricted.\n\n          Both methods use git to push divergent branches (including the\n          malicious --exec= branch), open a pull request, and trigger a\n          rebase merge to execute the payload. A local git installation\n          is required.\n\n          On Unix targets, the payload is base64-encoded inline in\n          the malicious branch name, avoiding the need to commit files\n          to the repository. On Windows targets, the payload is\n          delivered via a script file committed to the repository,\n          since NTFS forbids pipe characters in filenames. Git for\n          Windows uses MSYS2 sh for --exec commands, enabling\n          cross-platform exploitation.\n\n          Note: a successful rebase merge may leave the server-side\n          repository in a corrupted git state (mid-rebase). For\n          own_repo this is inconsequential because the repository is\n          deleted. For existing_repo this can break the target\n          repository and prevent re-exploitation against the same repo.\n\n          The Gogs API does not support token deletion, so the API\n          access token created during exploitation cannot be removed\n          automatically and will persist under the attacker account.",
+    "references": [
+      "GHSA-qf6p-p7ww-cwr9",
+      "URL-https://www.rapid7.com/blog/post/ve-authenticated-rce-via-argument-injection-gogs-unfixed",
+      "URL-https://github.com/gogs/gogs"
+    ],
+    "platform": "Linux,Unix,Windows",
+    "arch": "cmd",
+    "rport": 3000,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Unix Command",
+      "Windows Command"
+    ],
+    "mod_time": "2026-06-03 16:27:03 +0000",
+    "path": "/modules/exploits/multi/http/gogs_rebase_rce.rb",
+    "is_install_path": true,
+    "ref_name": "multi/http/gogs_rebase_rce",
+    "check": true,
+    "post_auth": true,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "SideEffects": [
+        "config-changes",
+        "artifacts-on-disk",
+        "ioc-in-logs"
+      ],
+      "Reliability": []
     },
     "session_types": false,
     "needs_cleanup": null
@@ -126980,6 +127108,7 @@
     ],
     "description": "This module exploits an arbitrary file upload vulnerability in Responsive Thumbnail Slider\n          Plugin v1.0 for WordPress post authentication.",
     "references": [
+      "CVE-2015-10144",
       "EDB-37998"
     ],
     "platform": "PHP",
@@ -127003,7 +127132,7 @@
     "targets": [
       "Responsive Thumbnail Slider Plugin v1.0"
     ],
-    "mod_time": "2026-04-22 11:58:04 +0000",
+    "mod_time": "2026-05-26 13:05:42 +0000",
     "path": "/modules/exploits/multi/http/wp_responsive_thumbnail_slider_upload.rb",
     "is_install_path": true,
     "ref_name": "multi/http/wp_responsive_thumbnail_slider_upload",
@@ -127716,6 +127845,7 @@
     ],
     "description": "This module exploits an authentication bypass allowing arbitrary\n          file upload in versions 3.14 and earlier to upload and execute a shell.\n          Specifically, this targets /website_code/php/import/import.php\n\n          OPSEC\n          This module results in directories being created and database entries which can\n          not easily be cleaned up automatically.",
     "references": [
+      "CVE-2026-32985",
       "URL-https://blog.haicen.me/posts/xerte-online-toolkits/",
       "URL-https://www.xerte.org.uk/index.php/en/news/blog/80-news/357-xerte-3-13-en-3-14-important-security-update-now-available"
     ],
@@ -127740,7 +127870,7 @@
     "targets": [
       "PHP"
     ],
-    "mod_time": "2026-04-22 11:58:04 +0000",
+    "mod_time": "2026-05-26 13:05:42 +0000",
     "path": "/modules/exploits/multi/http/xerte_unauthenticated_template_import_rce.rb",
     "is_install_path": true,
     "ref_name": "multi/http/xerte_unauthenticated_template_import_rce",
@@ -187851,6 +187981,7 @@
     ],
     "description": "This module exploits a SQL injection found in Solarwinds Storage Manager\n          login interface.  It will send a malicious SQL query to create a JSP file\n          under the web root directory, and then let it download and execute our malicious\n          executable under the context of SYSTEM.",
     "references": [
+      "CVE-2012-2576",
       "OSVDB-81634",
       "EDB-18818",
       "URL-http://ddilabs.blogspot.com/2012/02/solarwinds-storage-manager-server-sql.html",
@@ -187877,7 +188008,7 @@
     "targets": [
       "Windows Universal"
     ],
-    "mod_time": "2026-04-22 11:58:31 +0000",
+    "mod_time": "2026-05-26 13:05:42 +0000",
     "path": "/modules/exploits/windows/http/solarwinds_storage_manager_sql.rb",
     "is_install_path": true,
     "ref_name": "windows/http/solarwinds_storage_manager_sql",
@@ -229713,7 +229844,7 @@
     "autofilter_ports": null,
     "autofilter_services": null,
     "targets": null,
-    "mod_time": "2026-04-09 22:08:26 +0000",
+    "mod_time": "2026-05-20 15:09:58 +0000",
     "path": "/modules/payloads/singles/cmd/unix/reverse_python_ssl.rb",
     "is_install_path": true,
     "ref_name": "cmd/unix/reverse_python_ssl",
@@ -280951,7 +281082,7 @@
     "autofilter_ports": null,
     "autofilter_services": null,
     "targets": null,
-    "mod_time": "2025-04-20 02:57:34 +0000",
+    "mod_time": "2026-05-19 16:08:26 +0000",
     "path": "/modules/payloads/singles/python/shell_reverse_tcp_ssl.rb",
     "is_install_path": true,
     "ref_name": "python/shell_reverse_tcp_ssl",
@@ -298453,7 +298584,7 @@
     "autofilter_ports": null,
     "autofilter_services": null,
     "targets": null,
-    "mod_time": "2025-09-25 16:38:50 +0000",
+    "mod_time": "2026-05-10 09:25:30 +0000",
     "path": "/modules/post/multi/recon/local_exploit_suggester.rb",
     "is_install_path": true,
     "ref_name": "multi/recon/local_exploit_suggester",
@@ -298534,7 +298665,7 @@
     "autofilter_ports": null,
     "autofilter_services": null,
     "targets": null,
-    "mod_time": "2025-09-25 16:38:50 +0000",
+    "mod_time": "2026-05-10 09:25:30 +0000",
     "path": "/modules/post/multi/recon/persistence_suggester.rb",
     "is_install_path": true,
     "ref_name": "multi/recon/persistence_suggester",
@@ -307676,6 +307807,44 @@
     "path": "/modules/post/windows/gather/win_privs.rb",
     "is_install_path": true,
     "ref_name": "windows/gather/win_privs",
+    "check": false,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "Reliability": [],
+      "SideEffects": []
+    },
+    "session_types": [
+      "meterpreter"
+    ],
+    "needs_cleanup": null,
+    "actions": []
+  },
+  "post_windows/gather/windows_kernel_pointer_enum": {
+    "name": "Windows Kernel Pointer Exposure Enumerator",
+    "fullname": "post/windows/gather/windows_kernel_pointer_enum",
+    "aliases": [],
+    "rank": 300,
+    "disclosure_date": null,
+    "type": "post",
+    "author": [
+      "CharlesQuinnDev"
+    ],
+    "description": "This module enumerates kernel object pointers exposed via\n          NtQuerySystemInformation with SystemExtendedHandleInformation.\n\n          It categorizes exposed pointers by object type and provides\n          observational data about kernel address space layout for\n          research and educational purposes.",
+    "references": [],
+    "platform": "Windows",
+    "arch": "",
+    "rport": null,
+    "autofilter_ports": null,
+    "autofilter_services": null,
+    "targets": null,
+    "mod_time": "2026-05-30 16:42:18 +0000",
+    "path": "/modules/post/windows/gather/windows_kernel_pointer_enum.rb",
+    "is_install_path": true,
+    "ref_name": "windows/gather/windows_kernel_pointer_enum",
     "check": false,
     "post_auth": false,
     "default_credential": false,
