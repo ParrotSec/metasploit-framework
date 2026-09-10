@@ -25,7 +25,7 @@ class MetasploitModule < Msf::Auxiliary
         ['OSVDB', '95057'],
         ['BID', '61076'],
       ],
-      'DisclosureDate' => 'Jun 20 2013'
+      'DisclosureDate' => '2013-06-20'
     )
 
     register_options(
@@ -355,8 +355,10 @@ class MetasploitModule < Msf::Auxiliary
   end
 
   def udp_recv(timeo)
-    r = udp_sock.recvfrom(65535, timeo)
-    r[1] ? r : nil
+    r = udp_sock.timed_recvfrom(65535, timeo)
+    return nil unless r
+
+    [r[0], r[1][3], r[1][1]]
   end
 
   def rhost
