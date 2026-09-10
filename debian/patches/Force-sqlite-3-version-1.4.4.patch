@@ -20,12 +20,12 @@ dpkg-shlibdeps: error: cannot find library ld-linux-armhf.so.3 needed by debian/
 
 --- a/metasploit-framework.gemspec
 +++ b/metasploit-framework.gemspec
-@@ -212,7 +212,7 @@
+@@ -211,7 +211,7 @@
    # Needed by some modules
    spec.add_runtime_dependency 'rubyzip'
-   # Needed for some post modules
--  spec.add_runtime_dependency 'sqlite3', '1.7.3'
-+  spec.add_runtime_dependency 'sqlite3', '1.4.4'
+   # Needed for some post modules; Rails 8 requires >= 2.1
+-  spec.add_runtime_dependency 'sqlite3', '~> 2.1'
++  spec.add_runtime_dependency 'sqlite3', '~> 1.4.4'
    # required for Time::TZInfo in ActiveSupport
    spec.add_runtime_dependency 'tzinfo'
    # Needed so that disk size output isn't horrible
