@@ -11,7 +11,7 @@ module Msf
         #
         # Returns uname output
         #
-        # @param opt [String] uname options, defaults to -a
+        # @param opts [String] uname options, defaults to -a
         # @return [String]
         # @raise [RuntimeError] If execution fails.
         #
@@ -28,6 +28,26 @@ module Msf
         #
         def kernel_release
           uname('-r')
+        end
+        
+        # Returns the kernel release information as a hashable object
+        #
+        #
+        def kernel_rex_release
+          release = kernel_release
+
+          # regex for parsing kernel release
+          # (5.15.0)-(25-generic) 
+          # consists of two groups - the kernel upstream version (xx.zz.yy) and distro-specific information
+          # this regex should make it easier to parse it
+          
+          return nil unless release =~ /(\d+\.\d+\.?\d*\.?\d*)[-.]?(.+)/
+          
+          { 
+            :upstream => Rex::Version.new(Regexp.last_match(1)),
+            :distro_suffix => Regexp.last_match(2)
+          }
+
         end
 
         #
