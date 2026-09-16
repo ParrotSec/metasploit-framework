@@ -36318,6 +36318,65 @@
       }
     ]
   },
+  "auxiliary_scanner/http/elasticsearch_tika_xfa_xxe": {
+    "name": "Elasticsearch ingest-attachment Apache Tika XFA XXE Local File Read",
+    "fullname": "auxiliary/scanner/http/elasticsearch_tika_xfa_xxe",
+    "aliases": [],
+    "rank": 300,
+    "disclosure_date": "2025-08-20",
+    "type": "auxiliary",
+    "author": [
+      "Jean-Marie Bourbon",
+      "Bourbon Offensive Security Services"
+    ],
+    "description": "This module validates CVE-2025-54988 / CVE-2025-66516 through an\n          Elasticsearch ingest pipeline using the attachment processor. It creates\n          a temporary pipeline, submits an in-memory PDF containing crafted XFA data\n          to the _simulate API, extracts a caller-selected local file, and removes\n          the pipeline in an ensure block.\n\n          The target must permit pipeline creation, simulation, and deletion. The\n          default proof file is /etc/hostname. No index or document is created.",
+    "references": [
+      "CVE-2025-54988",
+      "CVE-2025-66516",
+      "URL-https://discuss.elastic.co/t/381427"
+    ],
+    "platform": "",
+    "arch": "",
+    "rport": 9200,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": null,
+    "mod_time": "2026-09-08 21:22:11 +0000",
+    "path": "/modules/auxiliary/scanner/http/elasticsearch_tika_xfa_xxe.rb",
+    "is_install_path": true,
+    "ref_name": "scanner/http/elasticsearch_tika_xfa_xxe",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "Reliability": [
+        "repeatable-session"
+      ],
+      "SideEffects": [
+        "ioc-in-logs",
+        "config-changes"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": false,
+    "actions": []
+  },
   "auxiliary_scanner/http/elasticsearch_traversal": {
     "name": "ElasticSearch Snapshot API Directory Traversal",
     "fullname": "auxiliary/scanner/http/elasticsearch_traversal",
@@ -44551,6 +44610,62 @@
     "needs_cleanup": false,
     "actions": []
   },
+  "auxiliary_scanner/http/spip_annee_sqli": {
+    "name": "SPIP Unauthenticated Blind SQLi via Date Field Escaping Bypass",
+    "fullname": "auxiliary/scanner/http/spip_annee_sqli",
+    "aliases": [],
+    "rank": 300,
+    "disclosure_date": "2026-08-10",
+    "type": "auxiliary",
+    "author": [
+      "Benoit Hua",
+      "ka3n1x",
+      "Franck Chevalier",
+      "Julien Voisin"
+    ],
+    "description": "This module exploits an unauthenticated blind SQL injection in\n          SPIP < 4.4.18. The SQL quoting function for date-type columns\n          skips escaping when the value matches /^\\w+\\(/ (intended for\n          NOW()). By passing a value like abs(X)) UNION SELECT ... in the\n          annee parameter of the public sitemap.xml page, an attacker can\n          inject arbitrary SQL.\n\n          The module uses boolean-based blind injection to extract bcrypt\n          password hashes from spip_auteurs. A UNION SELECT with a WHERE\n          condition produces 2 URLs in the sitemap on TRUE vs 1 on FALSE.",
+    "references": [
+      "URL-https://blog.spip.net/Mise-a-jour-critique-de-securite-sortie-de-SPIP-4-4-18.html"
+    ],
+    "platform": "",
+    "arch": "",
+    "rport": 80,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": null,
+    "mod_time": "2026-08-25 16:11:18 +0000",
+    "path": "/modules/auxiliary/scanner/http/spip_annee_sqli.rb",
+    "is_install_path": true,
+    "ref_name": "scanner/http/spip_annee_sqli",
+    "check": false,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "SideEffects": [
+        "ioc-in-logs"
+      ],
+      "Reliability": []
+    },
+    "session_types": false,
+    "needs_cleanup": false,
+    "actions": []
+  },
   "auxiliary_scanner/http/splunk_web_login": {
     "name": "Splunk Web Interface Login Utility",
     "fullname": "auxiliary/scanner/http/splunk_web_login",
@@ -51245,6 +51360,44 @@
     "post_auth": true,
     "default_credential": false,
     "notes": {},
+    "session_types": false,
+    "needs_cleanup": false,
+    "actions": []
+  },
+  "auxiliary_scanner/msf/handler_detect": {
+    "name": "Metasploit Payload Handler Detection (TCP/UDP/HTTP/HTTPS)",
+    "fullname": "auxiliary/scanner/msf/handler_detect",
+    "aliases": [],
+    "rank": 300,
+    "disclosure_date": null,
+    "type": "auxiliary",
+    "author": [
+      "h00die"
+    ],
+    "description": "Detect Metasploit exploit/multi/handler listeners and other reverse\n        payload handlers by fingerprinting their wire behavior. Several\n        techniques are combined:\n\n          * Staged reverse handlers \"talk first\": on connect they transmit the\n            stage with a 4-byte length prefix whose endianness identifies the\n            family\n            - little-endian (pack 'V') for Windows native (metsrv)\n            - big-endian (pack 'N') for Python/PHP/Java/Android\n            - Linux/OSX native stagers send the raw machine-code stage with\n              no length prefix, and unix staged shells send a tiny execve(\"/bin/sh\")\n              shellcode.\n          * Reverse command shells \"talk first\" with an \"echo <token>\" probe.\n            Echoing the token back marks the shell valid and can capture an\n            operator's AutoRunScript / follow-up commands.\n          * reverse_http(s) Meterpreter handlers answer any unknown URI with the\n            default \"It works!\" body and Server: Apache. HTTP servers\n            (web_delivery, fetch handlers, exploit module servers) return a\n            distinctive 404 page.\n          * reverse_tcp_ssl handlers stage over TLS; an SSL probe reads the\n            stage/echo through the handshake.\n          * reverse_udp handlers send the stage in response to any datagram, so\n            an optional UDP probe (SCAN_UDP) catches them too.\n\n        Transports that are not TCP/UDP (reverse_sctp, reverse_named_pipe/SMB)\n        and silent stageless payloads that wait for the client cannot be\n        fingerprinted and appear as a silent open port.",
+    "references": [],
+    "platform": "",
+    "arch": "",
+    "rport": null,
+    "autofilter_ports": [],
+    "autofilter_services": [],
+    "targets": null,
+    "mod_time": "2026-08-31 12:42:42 +0000",
+    "path": "/modules/auxiliary/scanner/msf/handler_detect.rb",
+    "is_install_path": true,
+    "ref_name": "scanner/msf/handler_detect",
+    "check": false,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "SideEffects": [
+        "ioc-in-logs"
+      ],
+      "Reliability": []
+    },
     "session_types": false,
     "needs_cleanup": false,
     "actions": []
@@ -63612,6 +63765,66 @@
       }
     ]
   },
+  "auxiliary_server/relay/esc8_kerberos": {
+    "name": "ESC8 Relay: SMB to HTTP(S) via Kerberos",
+    "fullname": "auxiliary/server/relay/esc8_kerberos",
+    "aliases": [],
+    "rank": 300,
+    "disclosure_date": null,
+    "type": "auxiliary",
+    "author": [
+      "Pushpender Rathore"
+    ],
+    "description": "This module creates an SMB server and relays the Kerberos AP-REQ passed to it\n        (for example from a coerced host, CVE-2026-20929) to an AD CS Web Enrollment\n        HTTP endpoint to gain an authenticated connection. Once that connection is\n        established, the module makes an authenticated request for a certificate based\n        on a given template.\n\n        Unlike NTLM, a Kerberos AP-REQ is a complete, self-contained credential bound\n        to the SPN the victim was coerced into requesting, so there is no\n        challenge/response and the relay is a single request. The captured AP-REQ can\n        only be relayed to the service matching that SPN.",
+    "references": [
+      "CVE-2026-20929",
+      "ATT&CK-T1557",
+      "ATT&CK-T1649"
+    ],
+    "platform": "",
+    "arch": "",
+    "rport": 80,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": null,
+    "mod_time": "2026-09-04 19:03:24 +0000",
+    "path": "/modules/auxiliary/server/relay/esc8_kerberos.rb",
+    "is_install_path": true,
+    "ref_name": "server/relay/esc8_kerberos",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "SideEffects": [
+        "ioc-in-logs"
+      ],
+      "Reliability": []
+    },
+    "session_types": false,
+    "needs_cleanup": false,
+    "actions": [
+      {
+        "name": "Relay",
+        "description": "Run SMB ESC8 Kerberos relay server"
+      }
+    ]
+  },
   "auxiliary_server/relay/http_to_ldap": {
     "name": "Microsoft Windows HTTP to LDAP Relay",
     "fullname": "auxiliary/server/relay/http_to_ldap",
@@ -67733,6 +67946,37 @@
     "path": "/modules/evasion/linux/x64/rc4_packer.rb",
     "is_install_path": true,
     "ref_name": "linux/x64/rc4_packer",
+    "check": false,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {},
+    "session_types": false,
+    "needs_cleanup": false
+  },
+  "evasion_linux/x64/sandbox_gate": {
+    "name": "Linux x64 Sandbox Environment Gate",
+    "fullname": "evasion/linux/x64/sandbox_gate",
+    "aliases": [],
+    "rank": 300,
+    "disclosure_date": null,
+    "type": "evasion",
+    "author": [
+      "Massimo Bertocchi"
+    ],
+    "description": "Generates a Linux x64 ELF whose entry point is a pre-execution\n          environment gate designed to detect and evade automated malware\n          analysis sandboxes, hypervisors and containerized environments.",
+    "references": [],
+    "platform": "Linux",
+    "arch": "x64",
+    "rport": null,
+    "autofilter_ports": null,
+    "autofilter_services": null,
+    "targets": [
+      "Linux x64"
+    ],
+    "mod_time": "2026-08-27 23:04:40 +0000",
+    "path": "/modules/evasion/linux/x64/sandbox_gate.rb",
+    "is_install_path": true,
+    "ref_name": "linux/x64/sandbox_gate",
     "check": false,
     "post_auth": false,
     "default_credential": false,
@@ -73456,6 +73700,69 @@
     },
     "session_types": false,
     "needs_cleanup": null
+  },
+  "exploit_linux/http/cisco_fmc_auth_bypass_rce": {
+    "name": "Cisco Secure Firewall Management Center Authentication Bypass RCE",
+    "fullname": "exploit/linux/http/cisco_fmc_auth_bypass_rce",
+    "aliases": [],
+    "rank": 300,
+    "disclosure_date": "2026-03-04",
+    "type": "exploit",
+    "author": [
+      "Brandon Sakai",
+      "Cale Black",
+      "Arian Eidizadeh"
+    ],
+    "description": "This module exploits CVE-2026-20079, an authentication bypass in the\n          web interface of Cisco Secure Firewall Management Center (FMC). It\n          upgrades a boot-created machine session, obtains its session-specific\n          action token, writes a Makeself-compatible shell script, and executes\n          the selected command payload as root.\n\n          Exploitation requires the transient csm_processes startup session to\n          still exist. Normal authenticated activity or session cleanup may\n          remove that session, so an affected appliance may not be exploitable\n          at the time of testing. The underlying request sequence and\n          FIFO/netcat payload were tested against Cisco Secure FMC 10.0.1-1.",
+    "references": [
+      "CVE-2026-20079",
+      "URL-https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-onprem-fmc-authbypass-5JPp45V2",
+      "URL-https://www.vulncheck.com/blog/cisco-fmc-auth-bypass-cve-2026-20079",
+      "URL-https://github.com/CyberAuth/CVE-2026-20079",
+      "URL-https://banks.tools/writeups/cve-2026-20079-cisco-secure-fmc"
+    ],
+    "platform": "Linux,Unix",
+    "arch": "cmd",
+    "rport": 443,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Unix/Linux Command"
+    ],
+    "mod_time": "2026-09-08 12:58:07 +0000",
+    "path": "/modules/exploits/linux/http/cisco_fmc_auth_bypass_rce.rb",
+    "is_install_path": true,
+    "ref_name": "linux/http/cisco_fmc_auth_bypass_rce",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "Reliability": [
+        "unreliable-session"
+      ],
+      "SideEffects": [
+        "artifacts-on-disk",
+        "ioc-in-logs"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": true
   },
   "exploit_linux/http/cisco_hyperflex_file_upload_rce": {
     "name": "Cisco HyperFlex HX Data Platform unauthenticated file upload to RCE (CVE-2021-1499)",
@@ -87887,6 +88194,71 @@
       "SideEffects": [
         "ioc-in-logs",
         "artifacts-on-disk"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": null
+  },
+  "exploit_linux/http/sonicwall_sma1000_couchdb_rce": {
+    "name": "SonicWall SMA1000 WorkPlace SSRF to Root Remote Code Execution",
+    "fullname": "exploit/linux/http/sonicwall_sma1000_couchdb_rce",
+    "aliases": [],
+    "rank": 500,
+    "disclosure_date": "2026-09-01",
+    "type": "exploit",
+    "author": [
+      "sfewer-r7",
+      "William Perry",
+      "Adam Babis"
+    ],
+    "description": "This module chains three issues in SonicWall SMA1000 appliances. An\n          unauthenticated, absolute-form OPTIONS request makes the WorkPlace\n          listener act as an unintended forward proxy (CVE-2026-83548). The\n          module uses this access and a vendor-installed CouchDB update handler\n          to obtain read and write access to loopback CouchDB (SMA1000-9427),\n          then enables CouchDB's native Erlang query server and executes one\n          command as the couchdb service account.\n\n          That command derives the appliance-local ctrl-service credential and\n          invokes sysCtrl.execCmsSnmpTrap. A command injection in the SNMP trap\n          script (CVE-2026-83549) executes the selected command as root.\n\n          The module attempts to restore the original CouchDB logger\n          configuration, remove its injected INI data, disable the Erlang query\n          server, and delete its randomized CouchDB documents. SonicWall fixed\n          the issues in platform hotfixes 12.4.3-03526 and 12.5.0-02952.",
+    "references": [
+      "CVE-2026-83548",
+      "CVE-2026-83549",
+      "URL-https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0016",
+      "URL-https://www.sonicwall.com/support/notices/product-notice-sma-1000-series-affected-by-multiple-vulnerabilities-snwlid-2026-0016/kA1VN000002AXmQ0AW",
+      "URL-https://software.sonicwall.com/PFORMSMAHOTFIX/Documentation/TechNotepform-hotfix-12.5.0-02952.txt",
+      "URL-https://www.rapid7.com/blog/post/etr-critical-sonicwall-sma1000-vulnerabilities-cve-2026-83548-cve-2026-83549-exploited-in-the-wild/"
+    ],
+    "platform": "Linux,Unix",
+    "arch": "cmd",
+    "rport": 443,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Linux Command"
+    ],
+    "mod_time": "2026-09-09 15:07:31 +0000",
+    "path": "/modules/exploits/linux/http/sonicwall_sma1000_couchdb_rce.rb",
+    "is_install_path": true,
+    "ref_name": "linux/http/sonicwall_sma1000_couchdb_rce",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-service-restarts"
+      ],
+      "SideEffects": [
+        "artifacts-on-disk",
+        "config-changes",
+        "ioc-in-logs"
+      ],
+      "Reliability": [
+        "repeatable-session"
       ]
     },
     "session_types": false,
@@ -110547,7 +110919,7 @@
       "Windows",
       "Linux"
     ],
-    "mod_time": "2026-04-22 11:57:58 +0000",
+    "mod_time": "2026-08-29 17:12:33 +0000",
     "path": "/modules/exploits/multi/http/coldfusion_rds_auth_bypass.rb",
     "is_install_path": true,
     "ref_name": "multi/http/coldfusion_rds_auth_bypass",
@@ -114966,6 +115338,69 @@
     "session_types": false,
     "needs_cleanup": true
   },
+  "exploit_multi/http/jetbrains_teamcity_rce_cve_2026_63077": {
+    "name": "JetBrains TeamCity Agent Polling Unauthenticated Remote Code Execution",
+    "fullname": "exploit/multi/http/jetbrains_teamcity_rce_cve_2026_63077",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2026-07-27",
+    "type": "exploit",
+    "author": [
+      "Antoni Tremblay",
+      "sfewer-r7"
+    ],
+    "description": "This module exploits an unsafe XStream deserialization vulnerability in the JetBrains TeamCity agent polling\n          protocol. An unauthenticated attacker can register a build agent, then submit a crafted error response\n          that causes TeamCity to deserialize an attacker-controlled object graph.\n\n          The object graph uses FreeMarker and Commons Collections to invoke BasicDataSource.getConnection(). HSQLDB\n          initialization statements then write a one-shot JSPWS file to the TeamCity webroot. Requesting the JSPWS file\n          executes the payload with the privileges of the TeamCity server process, deletes the JSPWS source file, and\n          removes the build agent registered by the module.\n\n          This vulnerability was patched in TeamCity version 2025.11.7, and version 2026.1.3.",
+    "references": [
+      "CVE-2026-63077",
+      "URL-https://blog.jetbrains.com/teamcity/2026/07/cve-2026-63077/",
+      "URL-https://www.rapid7.com/blog/post/ra-unauthenticated-rce-in-jetbrains-teamcity-cve-2026-63077/",
+      "URL-https://github.com/sfewer-r7/CVE-2026-63077/"
+    ],
+    "platform": "Linux,Unix,Windows",
+    "arch": "java, cmd",
+    "rport": 8111,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Java Server Page",
+      "Windows Command",
+      "Linux Command"
+    ],
+    "mod_time": "2026-08-27 17:12:17 +0000",
+    "path": "/modules/exploits/multi/http/jetbrains_teamcity_rce_cve_2026_63077.rb",
+    "is_install_path": true,
+    "ref_name": "multi/http/jetbrains_teamcity_rce_cve_2026_63077",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "Reliability": [
+        "repeatable-session"
+      ],
+      "SideEffects": [
+        "artifacts-on-disk",
+        "ioc-in-logs"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": null
+  },
   "exploit_multi/http/jira_hipchat_template": {
     "name": "Atlassian HipChat for Jira Plugin Velocity Template Injection",
     "fullname": "exploit/multi/http/jira_hipchat_template",
@@ -115329,6 +115764,64 @@
     },
     "session_types": false,
     "needs_cleanup": true
+  },
+  "exploit_multi/http/langflow_auth_rce_cve_2026_19295": {
+    "name": "Langflow AI authenticated RCE",
+    "fullname": "exploit/multi/http/langflow_auth_rce_cve_2026_19295",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2026-08-28",
+    "type": "exploit",
+    "author": [
+      "Richard Howe <rhowe425>"
+    ],
+    "description": "Langflow versions 1.11.1 and below are susceptible to authenticated\n          remote code execution. By saving a flow where `data.type` is empty,\n          an authenticated user can bypass the flow guard and execute\n          arbitrary Python code.",
+    "references": [
+      "CVE-2026-19295",
+      "URL-https://www.ibm.com/support/pages/node/7284733"
+    ],
+    "platform": "Python",
+    "arch": "python",
+    "rport": 7860,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Python payload"
+    ],
+    "mod_time": "2026-09-08 16:02:58 +0000",
+    "path": "/modules/exploits/multi/http/langflow_auth_rce_cve_2026_19295.rb",
+    "is_install_path": true,
+    "ref_name": "multi/http/langflow_auth_rce_cve_2026_19295",
+    "check": true,
+    "post_auth": true,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "SideEffects": [
+        "artifacts-on-disk",
+        "ioc-in-logs"
+      ],
+      "Reliability": [
+        "repeatable-session"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": null
   },
   "exploit_multi/http/langflow_rce_cve_2026_27966": {
     "name": "Langflow RCE",
@@ -116861,6 +117354,65 @@
     },
     "session_types": false,
     "needs_cleanup": true
+  },
+  "exploit_multi/http/mcpjam_inspector_rce": {
+    "name": "MCPJam Inspector Connect API Command Execution",
+    "fullname": "exploit/multi/http/mcpjam_inspector_rce",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2026-01-16",
+    "type": "exploit",
+    "author": [
+      "Louay-075",
+      "earthenvessel"
+    ],
+    "description": "This module exploits an unauthenticated command execution vulnerability in\n          MCPJam Inspector. The /api/mcp/connect endpoint accepts a JSON serverConfig\n          object containing a command and argument list used to start an MCP server.\n          A remote attacker can abuse this endpoint to execute arbitrary operating\n          system commands as the user running MCPJam Inspector.\n\n          By default, this module starts a transient Node.js stdio MCP server, then\n          invokes a tool that executes the Metasploit command payload. A direct\n          /bin/sh -c mode is also available via EXEC_METHOD=direct_sh, but the MCP\n          tool mode is more reliable when the inspector expects a valid MCP\n          handshake.",
+    "references": [
+      "CVE-2026-23744",
+      "URL-https://github.com/mcpjam/inspector",
+      "URL-https://packetinside.github.io/cves/cve-2026-23744/"
+    ],
+    "platform": "Linux,Unix",
+    "arch": "cmd",
+    "rport": 443,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Unix/Linux Command"
+    ],
+    "mod_time": "2026-08-31 15:14:30 +0000",
+    "path": "/modules/exploits/multi/http/mcpjam_inspector_rce.rb",
+    "is_install_path": true,
+    "ref_name": "multi/http/mcpjam_inspector_rce",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "Reliability": [
+        "repeatable-session"
+      ],
+      "SideEffects": [
+        "ioc-in-logs"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": null
   },
   "exploit_multi/http/mediawiki_syntaxhighlight": {
     "name": "MediaWiki SyntaxHighlight extension option injection vulnerability",
@@ -119781,6 +120333,69 @@
     "session_types": false,
     "needs_cleanup": null
   },
+  "exploit_multi/http/papercut_ng_external_user_lookup_rce": {
+    "name": "PaperCut NG/MF Unauthenticated RCE (CVE-2026-81578 + CVE-2026-82078)",
+    "fullname": "exploit/multi/http/papercut_ng_external_user_lookup_rce",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2026-08-27",
+    "type": "exploit",
+    "author": [
+      "sfewer-r7"
+    ],
+    "description": "This module exploits an authentication bypass in PaperCut NG and MF. A crafted Apache Tapestry\n          complex-direct request invokes privileged ConfigEditor components through the public Home\n          page. On version 26, the module reconfigures external user lookup to use an H2 JDBC URL whose\n          initialization SQL evaluates Groovy code. On versions 24 and 25, it uses a bundled Derby\n          procedure to write a temporary Groovy bootstrap class to the application classpath, then loads\n          it as a database driver. The Java target serves an executable payload JAR and a generic\n          memory-backed JAR loader over HTTP. Its payload classes and resources remain in memory; however,\n          versions 24 and 25 still require the temporary Derby bootstrap class. The command targets execute\n          a Windows or Linux command payload directly.\n\n          This module was successfully tested against:\n          * PaperCut MF 26.0.4 (Build 76494) <-- emergency patch v1\n          * PaperCut NG 26.0.4 (Build 76495) <-- emergency patch v1\n          * PaperCut NG 26.0.3 (Build 76225)\n          * PaperCut NG 25.0.11 (Build 75758)\n          * PaperCut NG 24.1.9 (Build 73376)",
+    "references": [
+      "CVE-2026-81578",
+      "CVE-2026-82078",
+      "URL-https://www.rapid7.com/blog/post/etr-papercut-ng-mf-critical-zero-day-exploited-in-the-wild/",
+      "URL-https://www.papercut.com/kb/Main/security-bulletin-27-aug-2026-urgent-security-advisory/"
+    ],
+    "platform": "Java,Linux,Unix,Windows",
+    "arch": "java, cmd",
+    "rport": 9191,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Java",
+      "Windows Command",
+      "Linux Command"
+    ],
+    "mod_time": "2026-09-02 10:28:21 +0000",
+    "path": "/modules/exploits/multi/http/papercut_ng_external_user_lookup_rce.rb",
+    "is_install_path": true,
+    "ref_name": "multi/http/papercut_ng_external_user_lookup_rce",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "SideEffects": [
+        "ioc-in-logs",
+        "artifacts-on-disk",
+        "config-changes"
+      ],
+      "Reliability": [
+        "repeatable-session"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": null
+  },
   "exploit_multi/http/pentaho_business_server_authbypass_and_ssti": {
     "name": "Pentaho Business Server Auth Bypass and Server Side Template Injection RCE",
     "fullname": "exploit/multi/http/pentaho_business_server_authbypass_and_ssti",
@@ -122690,6 +123305,71 @@
     "session_types": false,
     "needs_cleanup": null
   },
+  "exploit_multi/http/simplehelp_oidc_auth_bypass_rce": {
+    "name": "SimpleHelp OIDC Authentication Bypass Remote Code Execution",
+    "fullname": "exploit/multi/http/simplehelp_oidc_auth_bypass_rce",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2026-06-12",
+    "type": "exploit",
+    "author": [
+      "Zach Hanley",
+      "Horizon3.ai",
+      "Blackpoint Cyber",
+      "jheysel-r7"
+    ],
+    "description": "This module exploits CVE-2026-48558 to forge an OpenID Connect identity token and\n          obtain a SimpleHelp technician session. It then uses SimpleHelp's legitimate remote\n          access WebSocket protocol to connect to an online managed machine and execute a\n          payload through the remote terminal.\n\n          An OIDC provider must be enabled for a technician group that permits group-authenticated\n          logins. The group must be allowed to access the selected machine and run remote commands.\n          The SimpleHelp server must have a valid session license, and at least one managed machine\n          must be online.\n\n          SimpleHelp 5.5.0 through 5.5.15 are affected. Some SimpleHelp 6.0 prerelease builds before\n          6.0 RC2 are also affected.",
+    "references": [
+      "CVE-2026-48558",
+      "URL-https://horizon3.ai/attack-research/disclosures/cve-2026-48558-simplehelp-authentication-bypass-iocs/",
+      "URL-https://guides.simple-help.com/kb---security-vulnerabilities-05-2026",
+      "URL-https://blackpointcyber.com/blog/a-djinn-in-the-machine-taskweavers-node-js-intrusion-chain/"
+    ],
+    "platform": "Linux,OSX,Unix,Windows",
+    "arch": "cmd",
+    "rport": 443,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Unix/Linux/macOS Command",
+      "Windows Command"
+    ],
+    "mod_time": "2026-09-01 14:06:12 +0000",
+    "path": "/modules/exploits/multi/http/simplehelp_oidc_auth_bypass_rce.rb",
+    "is_install_path": true,
+    "ref_name": "multi/http/simplehelp_oidc_auth_bypass_rce",
+    "check": true,
+    "post_auth": true,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "Reliability": [
+        "repeatable-session"
+      ],
+      "SideEffects": [
+        "ioc-in-logs",
+        "config-changes",
+        "artifacts-on-disk"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": null
+  },
   "exploit_multi/http/sit_file_upload": {
     "name": "Support Incident Tracker Remote Command Execution",
     "fullname": "exploit/multi/http/sit_file_upload",
@@ -123246,6 +123926,62 @@
       ],
       "SideEffects": [
         "artifacts-on-disk"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": null
+  },
+  "exploit_multi/http/spip_autosave_rce": {
+    "name": "SPIP Autosave Session Unauthenticated RCE",
+    "fullname": "exploit/multi/http/spip_autosave_rce",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2026-08-30",
+    "type": "exploit",
+    "author": [
+      "Julien Voisin"
+    ],
+    "description": "This module exploits an unauthenticated RCE in SPIP <= 4.4.21\n          via the forum autosave session handler. The action=session\n          endpoint allows any visitor to store arbitrary data in a PHP\n          session variable. By writing PHP code into an autosave_forum_*\n          session key, the code is executed by the template engine when\n          the forum form page is rendered with the poisoned session.\n\n          Requires a published article with public forums enabled.",
+    "references": [
+      "URL-https://blog.spip.net/Mise-a-jour-critique-de-securite-sortie-de-SPIP-4-4-22.html"
+    ],
+    "platform": "Linux,Unix",
+    "arch": "cmd",
+    "rport": 80,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Unix/Linux Command Shell"
+    ],
+    "mod_time": "2026-08-31 14:13:32 +0000",
+    "path": "/modules/exploits/multi/http/spip_autosave_rce.rb",
+    "is_install_path": true,
+    "ref_name": "multi/http/spip_autosave_rce",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "Reliability": [
+        "repeatable-session"
+      ],
+      "SideEffects": [
+        "ioc-in-logs"
       ]
     },
     "session_types": false,
@@ -139140,9 +139876,10 @@
     "autofilter_ports": [],
     "autofilter_services": [],
     "targets": [
-      "Linux/Unix Command"
+      "Linux/Unix Command",
+      "Backdoor Command Shell"
     ],
-    "mod_time": "2026-04-22 11:59:31 +0000",
+    "mod_time": "2026-09-02 06:58:16 +0000",
     "path": "/modules/exploits/unix/ftp/vsftpd_234_backdoor.rb",
     "is_install_path": true,
     "ref_name": "unix/ftp/vsftpd_234_backdoor",
@@ -187540,6 +188277,67 @@
     "session_types": false,
     "needs_cleanup": null
   },
+  "exploit_windows/http/nextjs_unauth_rce_cve_2026_75604": {
+    "name": "Next.js Unauthenticated RCE on Windows Servers",
+    "fullname": "exploit/windows/http/nextjs_unauth_rce_cve_2026_75604",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2026-08-26",
+    "type": "exploit",
+    "author": [
+      "Maksim Rogov",
+      "Bogyeom Lee",
+      "Avishek Sarkar"
+    ],
+    "description": "This module exploits a Remote Code Execution (RCE) vulnerability in Next.js applications\n          hosted on Windows servers. Specifically crafted requests can execute arbitrary code on the target server.\n\n          The affected versions include releases from 13.4.0 up to 15.5.24, and 16.0.0 up to 16.3.3,\n          utilizing both Pages and App Routers without Cache Components.",
+    "references": [
+      "CVE-2026-75604",
+      "URL-https://nextjs.org/blog/august-2026-security-release",
+      "URL-https://github.com/vercel/next.js/security/advisories/GHSA-p293-qw3h-jr36",
+      "URL-https://sybr1d.xyz/posts/nextjs-path-traversal-rce-windows/"
+    ],
+    "platform": "Windows",
+    "arch": "cmd",
+    "rport": 80,
+    "autofilter_ports": [
+      80,
+      8080,
+      443,
+      8000,
+      8888,
+      8880,
+      8008,
+      3000,
+      8443
+    ],
+    "autofilter_services": [
+      "http",
+      "https"
+    ],
+    "targets": [
+      "Next.js >=13.4 <15.5.24, >=16.0 <16.3.3 / Windows payload"
+    ],
+    "mod_time": "2026-09-09 09:33:06 +0000",
+    "path": "/modules/exploits/windows/http/nextjs_unauth_rce_cve_2026_75604.rb",
+    "is_install_path": true,
+    "ref_name": "windows/http/nextjs_unauth_rce_cve_2026_75604",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Stability": [
+        "crash-safe"
+      ],
+      "SideEffects": [
+        "ioc-in-logs"
+      ],
+      "Reliability": [
+        "unreliable-session"
+      ]
+    },
+    "session_types": false,
+    "needs_cleanup": null
+  },
   "exploit_windows/http/northstar_c2_xss_to_agent_rce": {
     "name": "NorthStar C2 XSS to Agent RCE",
     "fullname": "exploit/windows/http/northstar_c2_xss_to_agent_rce",
@@ -207675,6 +208473,57 @@
     "needs_cleanup": null,
     "actions": []
   },
+  "exploit_windows/persistence/boot_verification_program": {
+    "name": "Boot Verification Program Persistence",
+    "fullname": "exploit/windows/persistence/boot_verification_program",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2020-01-23",
+    "type": "exploit",
+    "author": [
+      "Emanuele Cervelli"
+    ],
+    "description": "This module establishes persistence by configuring the BootVerificationProgram\n          registry key. It uploads a payload executable and modifies the 'ImagePath'\n          value under HKLM\\SYSTEM\\CurrentControlSet\\Control\\BootVerificationProgram.\n\n          The payload is executed by the Service Control Manager early in the boot cycle,\n          running with SYSTEM privileges before user logon.\n\n          Administrator or SYSTEM privileges are required to execute this persistence technique.",
+    "references": [
+      "ATT&CK-T1547",
+      "ATT&CK-T1546",
+      "URL-https://www.cyberark.com/resources/ransomware-protection/persistence-techniques-that-persist"
+    ],
+    "platform": "Windows",
+    "arch": "x64, x86",
+    "rport": null,
+    "autofilter_ports": [],
+    "autofilter_services": [],
+    "targets": [
+      "Automatic"
+    ],
+    "mod_time": "2026-08-27 16:15:40 +0000",
+    "path": "/modules/exploits/windows/persistence/boot_verification_program.rb",
+    "is_install_path": true,
+    "ref_name": "windows/persistence/boot_verification_program",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Reliability": [
+        "event-dependent",
+        "repeatable-session"
+      ],
+      "Stability": [
+        "crash-safe"
+      ],
+      "SideEffects": [
+        "artifacts-on-disk",
+        "config-changes",
+        "ioc-in-logs"
+      ]
+    },
+    "session_types": [
+      "meterpreter"
+    ],
+    "needs_cleanup": null,
+    "actions": []
+  },
   "exploit_windows/persistence/image_exec_options": {
     "name": "Windows Silent Process Exit Persistence",
     "fullname": "exploit/windows/persistence/image_exec_options",
@@ -208463,6 +209312,56 @@
         "crash-safe"
       ],
       "SideEffects": [
+        "config-changes",
+        "ioc-in-logs"
+      ]
+    },
+    "session_types": [
+      "meterpreter"
+    ],
+    "needs_cleanup": null,
+    "actions": []
+  },
+  "exploit_windows/persistence/time_provider": {
+    "name": "Windows Time Provider Persistence",
+    "fullname": "exploit/windows/persistence/time_provider",
+    "aliases": [],
+    "rank": 600,
+    "disclosure_date": "2020-01-24",
+    "type": "exploit",
+    "author": [
+      "Emanuele Cervelli"
+    ],
+    "description": "This module establishes persistence by registering a malicious Time Provider DLL\n          under HKLM\\SYSTEM\\CurrentControlSet\\Services\\W32Time\\TimeProviders\\.\n          When the W32Time service starts or restarts, the configured payload DLL is executed.",
+    "references": [
+      "ATT&CK-T1209",
+      "URL-https://hadess.io/the-art-of-windows-persistence/"
+    ],
+    "platform": "Windows",
+    "arch": "x64, x86",
+    "rport": null,
+    "autofilter_ports": [],
+    "autofilter_services": [],
+    "targets": [
+      "Automatic"
+    ],
+    "mod_time": "2026-08-27 18:17:48 +0000",
+    "path": "/modules/exploits/windows/persistence/time_provider.rb",
+    "is_install_path": true,
+    "ref_name": "windows/persistence/time_provider",
+    "check": true,
+    "post_auth": false,
+    "default_credential": false,
+    "notes": {
+      "Reliability": [
+        "event-dependent",
+        "repeatable-session"
+      ],
+      "Stability": [
+        "crash-safe"
+      ],
+      "SideEffects": [
+        "artifacts-on-disk",
         "config-changes",
         "ioc-in-logs"
       ]
@@ -212731,7 +213630,7 @@
       "MOF upload",
       "Command"
     ],
-    "mod_time": "2026-08-17 18:01:09 +0000",
+    "mod_time": "2026-08-31 23:54:17 +0000",
     "path": "/modules/exploits/windows/smb/psexec.rb",
     "is_install_path": true,
     "ref_name": "windows/smb/psexec",
