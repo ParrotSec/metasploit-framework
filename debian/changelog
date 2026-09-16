@@ -1,3 +1,9 @@
+metasploit-framework (6.5.4-0parrot1) echo; urgency=medium
+
+  * New upstream version 6.5.4
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Thu, 17 Sep 2026 01:08:44 +0200
+
 metasploit-framework (6.5.3-0parrot1) echo; urgency=medium
 
   * New upstream version 6.5.3
